@@ -7,19 +7,81 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum UserRole {
+  USER
+  ADMIN
+  ORGANIZER
+  TEAM
+}
+
+enum TeamRole {
+  LEADER
+  MEMBER
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum CheckpointStatus {
+  PENDING
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+enum OAuthProvider {
+  google
+}
+
 model User {
-  id            String          @id @default(uuid()) @db.Uuid
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String    @unique
   name          String?
-  email         String          @unique
-  emailVerified DateTime?
+  username      String?   @unique
+  passwordHash  String?   // null for OAuth users
   image         String?
+  role          UserRole  @default(USER)
+  isActive      Boolean   @default(true)
+  isVerified    Boolean   @default(false)
+  emailVerified DateTime?
+
   accounts      Account[]
   sessions      Session[]
-  authenticator Authenticator[]
+  authenticators Authenticator[]
 
-  // Role-based access control
-  role    String  @default("USER") // USER, ADMIN, ORGANIZER
-  isAdmin Boolean @default(false)
+  // Relationships
+  createdEvents   Event[] @relation("EventCreator")
+  updatedEvents   Event[] @relation("EventUpdater")
+
+  createdTeams    Team[] @relation("TeamCreator")
+  updatedTeams    Team[] @relation("TeamUpdater")
+
+  createdMembers  TeamMember[] @relation("MemberCreator")
+  updatedMembers  TeamMember[] @relation("MemberUpdater")
+
+  createdNotifications Notification[] @relation("NotificationCreator")
+  notifications        Notification[] @relation("UserNotification")
+
+  createdSubmissions   Submission[] @relation("SubmissionCreator")
+  updatedSubmissions   Submission[] @relation("SubmissionUpdater")
+
+  createdCheckpoints   Checkpoint[] @relation("CheckpointCreator")
+  updatedCheckpoints   Checkpoint[] @relation("CheckpointUpdater")
+
+  createdProgress      CheckpointProgress[] @relation("ProgressCreator")
+  updatedProgress      CheckpointProgress[] @relation("ProgressUpdater")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -39,11 +101,24 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
+  
+  // Profile snapshot
+  email             String?
+  email_verified    Boolean @default(false)
+  name              String?
+  given_name        String?
+  family_name       String?
+  picture_url       String?
+  locale            String?
+  hd                String? // Hosted domain
+  raw_data          Json?
+
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@unique([userId, provider]) // uq_oauth_user_provider
 }
 
 model Session {
@@ -77,10 +152,196 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
+model Event {
+  id                   String    @id @default(uuid()) @db.Uuid
+  name                 String
+  description          String?   @db.Text
+  startsAt             DateTime?
+  endsAt               DateTime?
+  registrationDeadline DateTime?
+  isPublic             Boolean   @default(true)
+  maxTeamSize          Int       @default(4)
+  minTeamSize          Int       @default(1)
+  settings             Json?     @db.JsonB
+
+  // Audit
+  createdById          String    @db.Uuid
+  updatedById          String    @db.Uuid
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  // Relations
+  createdBy            User      @relation("EventCreator", fields: [createdById], references: [id])
+  updatedBy            User      @relation("EventUpdater", fields: [updatedById], references: [id])
+  
+  teams                Team[]
+  checkpoints          Checkpoint[]
+  notifications        Notification[]
+  submissions          Submission[]
+  checkpointProgress   CheckpointProgress[]
+}
+
+model Team {
+  id             String    @id @default(uuid()) @db.Uuid
+  eventId        String    @db.Uuid
+  name           String
+  email          String?
+  username       String    @unique
+  passwordHash   String
+  meta           Json?     @db.JsonB
+  isActive       Boolean   @default(true)
+  settings       Json?     @db.JsonB
+
+  // Audit
+  createdById    String    @db.Uuid
+  updatedById    String    @db.Uuid
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  event          Event     @relation(fields: [eventId], references: [id])
+  createdBy      User      @relation("TeamCreator", fields: [createdById], references: [id])
+  updatedBy      User      @relation("TeamUpdater", fields: [updatedById], references: [id])
+  
+  members        TeamMember[]
+  submissions    Submission[]
+  progress       CheckpointProgress[]
+  notifications  Notification[]
+
+  @@unique([eventId, username])
+  @@unique([eventId, email])
+}
+
+model TeamMember {
+  id           String    @id @default(uuid()) @db.Uuid
+  teamId       String    @db.Uuid
+  name         String
+  role         TeamRole  @default(MEMBER)
+  isAccepted   Boolean   @default(false)
+  meta         Json?     @db.JsonB
+  invitedAt    DateTime  @default(now())
+  acceptedAt   DateTime?
+
+  // Audit
+  createdById  String    @db.Uuid
+  updatedById  String    @db.Uuid
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  team         Team      @relation(fields: [teamId], references: [id])
+  createdBy    User      @relation("MemberCreator", fields: [createdById], references: [id])
+  updatedBy    User      @relation("MemberUpdater", fields: [updatedById], references: [id])
+  
+  @@unique([teamId]) // Only one "TeamMember" entry per team? (based on user's UniqueConstraint("team_id", name="uq_team_member"))
+  // Wait, if it's many TeamMembers, that constraint seems wrong in user's code. 
+  // But I will follow the user's provided Python code which had a UniqueConstraint("team_id").
+}
+
+model Notification {
+  id          String           @id @default(uuid()) @db.Uuid
+  eventId     String           @db.Uuid
+  teamId      String?          @db.Uuid
+  userId      String?          @db.Uuid
+  type        NotificationType @default(INFO)
+  title       String
+  body        String?          @db.Text
+  meta        Json?            @db.JsonB
+  isRead      Boolean          @default(false)
+  readAt      DateTime?
+  createdAt   DateTime         @default(now())
+
+  // Audit (Creator is enough for notification)
+  createdById String           @db.Uuid
+
+  // Relations
+  event       Event            @relation(fields: [eventId], references: [id])
+  team        Team?            @relation(fields: [teamId], references: [id])
+  user        User?            @relation("UserNotification", fields: [userId], references: [id])
+  createdBy   User             @relation("NotificationCreator", fields: [createdById], references: [id])
+}
+
+model Submission {
+  id          String           @id @default(uuid()) @db.Uuid
+  eventId     String           @db.Uuid
+  teamId      String           @db.Uuid
+  title       String
+  description String?          @db.Text
+  repoUrl     String?
+  demoUrl     String?
+  status      SubmissionStatus @default(DRAFT)
+  version     Int              @default(1)
+  content     Json?            @db.JsonB
+  submittedAt DateTime?
+
+  // Audit
+  createdById String?          @db.Uuid
+  updatedById String?          @db.Uuid
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  event       Event            @relation(fields: [eventId], references: [id])
+  team        Team             @relation(fields: [teamId], references: [id])
+  createdBy   User?            @relation("SubmissionCreator", fields: [createdById], references: [id])
+  updatedBy   User?            @relation("SubmissionUpdater", fields: [updatedById], references: [id])
+}
+
+model Checkpoint {
+  id           String    @id @default(uuid()) @db.Uuid
+  eventId      String    @db.Uuid
+  title        String
+  description  String?   @db.Text
+  order        Int       @default(0)
+  dueAt        DateTime?
+  isRequired   Boolean   @default(true)
+  requirements Json?     @db.JsonB
+
+  // Audit
+  createdById  String    @db.Uuid
+  updatedById  String    @db.Uuid
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  event        Event     @relation(fields: [eventId], references: [id])
+  createdBy    User      @relation("CheckpointCreator", fields: [createdById], references: [id])
+  updatedBy    User      @relation("CheckpointUpdater", fields: [updatedById], references: [id])
+  
+  progress     CheckpointProgress[]
+}
+
+model CheckpointProgress {
+  id             String           @id @default(uuid()) @db.Uuid
+  checkpointId   String           @db.Uuid
+  teamId         String           @db.Uuid
+  eventId        String           @db.Uuid
+  status         CheckpointStatus @default(PENDING)
+  submissionData Json?            @db.JsonB
+  reviewerNotes  String?          @db.Text
+  meta           Json?            @db.JsonB
+  completedAt    DateTime?
+
+  // Audit
+  createdById    String?          @db.Uuid
+  updatedById    String?          @db.Uuid
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  // Relations
+  checkpoint     Checkpoint       @relation(fields: [checkpointId], references: [id])
+  team           Team             @relation(fields: [teamId], references: [id])
+  event          Event            @relation(fields: [eventId], references: [id])
+  createdBy      User?            @relation("ProgressCreator", fields: [createdById], references: [id])
+  updatedBy      User?            @relation("ProgressUpdater", fields: [updatedById], references: [id])
+
+  @@unique([checkpointId, teamId])
+}
+
+
 model AppFeedback {
   id          String   @id @default(uuid()) @db.Uuid
   email       String
   description String
   createdAt   DateTime @default(now())
 }
-
