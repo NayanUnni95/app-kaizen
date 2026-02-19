@@ -10,10 +10,11 @@ export default async function Home() {
 
     if (session?.user) {
         const role = (session.user as any).role
+        // If they have a specific role, redirect them to their dashboard
         if (role === UserRole.ADMIN) redirect("/admin")
         if (role === UserRole.ORGANIZER) redirect("/organizer")
         if (role === UserRole.TEAM) redirect("/team")
-        // If they are just a regular USER, we stay on this page but show a dynamic button
+        // If they are just a regular USER, we stay on this page
     }
 
     return (
@@ -47,12 +48,12 @@ export default async function Home() {
                 <div className="flex flex-col gap-4 w-full max-w-xs mt-4">
                     {session?.user ? (
                         <div className="flex flex-col gap-2">
-                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-2">Welcome, {session.user.name || session.user.email}</p>
+                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-2">Authenticated as {(session.user as any).role}</p>
                             <Link
-                                href="/admin"
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black italic uppercase tracking-tighter text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl shadow-blue-500/20"
+                                href="/profile"
+                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-zinc-900 border border-white/10 text-white rounded-2xl font-black italic uppercase tracking-tighter text-base hover:bg-zinc-800 transition-all shadow-2xl"
                             >
-                                Admin Dashboard
+                                Go to Profile
                             </Link>
                         </div>
                     ) : (
