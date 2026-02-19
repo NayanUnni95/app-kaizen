@@ -68,7 +68,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (user) {
                 token.id = user.id
                 token.role = (user as any).role
-                token.isAdmin = (user as any).isAdmin || false
                 token.teamId = (user as any).teamId || null
                 token.eventId = (user as any).eventId || null
             } else if (token.sub) {
@@ -82,7 +81,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (token && session.user) {
                 session.user.id = token.id as string;
                 (session.user as any).role = token.role;
-                (session.user as any).isAdmin = token.isAdmin;
                 (session.user as any).teamId = token.teamId;
                 (session.user as any).eventId = token.eventId;
             }

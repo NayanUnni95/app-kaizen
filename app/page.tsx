@@ -13,6 +13,7 @@ export default async function Home() {
         if (role === UserRole.ADMIN) redirect("/admin")
         if (role === UserRole.ORGANIZER) redirect("/organizer")
         if (role === UserRole.TEAM) redirect("/team")
+        // If they are just a regular USER, we stay on this page but show a dynamic button
     }
 
     return (
@@ -25,9 +26,9 @@ export default async function Home() {
 
             <main className="relative z-10 flex flex-col items-center gap-8 px-6 text-center">
                 {/* Logo */}
-                <div className="relative w-20 h-20">
+                {/* <div className="relative w-20 h-20">
                     <Image src="/assets/favicon.png" alt="Logo" fill className="object-contain animate-pulse" />
-                </div>
+                </div> */}
 
                 <div className="flex flex-col items-center gap-2">
                     <div className="flex items-center gap-2">
@@ -44,12 +45,24 @@ export default async function Home() {
                 </p>
 
                 <div className="flex flex-col gap-4 w-full max-w-xs mt-4">
-                    <Link
-                        href="/hackathon-login"
-                        className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black rounded-2xl font-black italic uppercase tracking-tighter text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl"
-                    >
-                        Enter Platform
-                    </Link>
+                    {session?.user ? (
+                        <div className="flex flex-col gap-2">
+                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-2">Welcome, {session.user.name || session.user.email}</p>
+                            <Link
+                                href="/admin"
+                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black italic uppercase tracking-tighter text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl shadow-blue-500/20"
+                            >
+                                Admin Dashboard
+                            </Link>
+                        </div>
+                    ) : (
+                        <Link
+                            href="/hackathon-login"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black rounded-2xl font-black italic uppercase tracking-tighter text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl"
+                        >
+                            Enter Platform
+                        </Link>
+                    )}
                 </div>
             </main>
 

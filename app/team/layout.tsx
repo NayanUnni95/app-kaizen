@@ -1,4 +1,4 @@
-import { TeamBottomNav } from "@/components/hackathon/TeamBottomNav"
+import { FloatingNav } from "@/components/hackathon/FloatingNav"
 import { protect } from "@/lib/hackathon/auth-helpers"
 import { UserRole } from "@prisma/client"
 
@@ -7,15 +7,14 @@ export default async function TeamLayout({
 }: {
     children: React.ReactNode
 }) {
-    // Shared protection check for all team pages
     await protect([UserRole.TEAM])
 
     return (
-        <div className="min-h-screen bg-black text-white pb-32">
-            <main className="max-w-xl mx-auto px-6 py-10">
+        <div className="min-h-screen bg-black text-white">
+            <FloatingNav role="TEAM" />
+            <main className="max-w-2xl mx-auto px-6 py-10 pb-32">
                 {children}
             </main>
-            <TeamBottomNav />
         </div>
     )
 }

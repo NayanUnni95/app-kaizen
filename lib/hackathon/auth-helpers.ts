@@ -13,17 +13,17 @@ export async function getCurrentUser() {
 
 export async function isAdmin() {
     const user = await getCurrentUser()
-    return user?.role === UserRole.ADMIN || (user as any)?.isAdmin === true
+    return (user as any)?.role === UserRole.ADMIN
 }
 
 export async function isOrganizer() {
     const user = await getCurrentUser()
-    return user?.role === UserRole.ORGANIZER || user?.role === UserRole.ADMIN || (user as any)?.isAdmin === true
+    return (user as any)?.role === UserRole.ORGANIZER || (user as any)?.role === UserRole.ADMIN
 }
 
 export async function isTeam() {
     const user = await getCurrentUser()
-    return user?.role === UserRole.TEAM
+    return (user as any)?.role === UserRole.TEAM
 }
 
 export async function getTeamId() {

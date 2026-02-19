@@ -61,9 +61,9 @@ export default function LoginPage() {
 
             <div className="w-full max-w-md relative z-10">
                 <div className="flex flex-col items-center mb-10">
-                    <div className="relative w-16 h-16 mb-4">
+                    {/* <div className="relative w-16 h-16 mb-4">
                         <Image src="/assets/favicon.png" alt="Logo" fill className="object-contain" />
-                    </div>
+                    </div> */}
                     <h1 className="text-3xl font-black tracking-tight mb-2">Welcome Back</h1>
                     <p className="text-zinc-500 text-sm font-medium uppercase tracking-widest">Entry Portal</p>
                 </div>

@@ -40,7 +40,6 @@ export const getAllUsersCached = unstable_cache(
                 email: true,
                 image: true,
                 role: true,
-                isAdmin: true,
                 createdAt: true,
             }
         })

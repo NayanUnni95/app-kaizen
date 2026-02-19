@@ -18,7 +18,10 @@ export async function getTeamById(id: string) {
         where: { id },
         include: {
             members: true,
-            event: true,
+            event: {
+                include: { checkpoints: true }
+            },
+            submissions: true,
             progress: {
                 include: { checkpoint: true }
             }

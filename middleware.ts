@@ -34,16 +34,15 @@ export default auth((req) => {
     // 4. Role Guards
     if (isLoggedIn) {
         const role = (req.auth?.user as any)?.role
-        const isAdmin = (req.auth?.user as any)?.isAdmin
 
         if (nextUrl.pathname.startsWith("/admin")) {
-            if (role !== "ADMIN" && !isAdmin) {
+            if (role !== "ADMIN") {
                 return NextResponse.redirect(new URL("/", nextUrl))
             }
         }
 
         if (nextUrl.pathname.startsWith("/organizer")) {
-            if (role !== "ORGANIZER" && role !== "ADMIN" && !isAdmin) {
+            if (role !== "ORGANIZER" && role !== "ADMIN") {
                 return NextResponse.redirect(new URL("/", nextUrl))
             }
         }

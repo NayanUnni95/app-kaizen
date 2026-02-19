@@ -4,11 +4,13 @@ import { useEffect, useState } from "react"
 import { DataTable } from "@/components/hackathon/DataTable"
 import { Plus, MoreHorizontal, CheckSquare, Clock, AlertCircle } from "lucide-react"
 import { toast } from "sonner"
+import { CreateCheckpointModal } from "@/components/hackathon/CreateCheckpointModal"
 
 export default function CheckpointsPage() {
-    const [checkpoints, setCheckpoints] = useState([])
+    const [checkpoints, setCheckpoints] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
         fetchCheckpoints()
@@ -28,6 +30,11 @@ export default function CheckpointsPage() {
         }
     }
 
+    const filteredCheckpoints = checkpoints.filter((cp: any) =>
+        cp.title.toLowerCase().includes(search.toLowerCase()) ||
+        cp.event?.name.toLowerCase().includes(search.toLowerCase())
+    )
+
     const columns = [
         {
             header: "Milestone",
@@ -38,7 +45,7 @@ export default function CheckpointsPage() {
                     </div>
                     <div>
                         <p className="font-bold text-white text-sm">{cp.title}</p>
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">{cp.event.name}</p>
+                        <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">{cp.event?.name || 'No Event'}</p>
                     </div>
                 </div>
             )
@@ -70,6 +77,7 @@ export default function CheckpointsPage() {
                     <p className="text-zinc-500 font-medium italic">Defining the critical path for participant success.</p>
                 </div>
                 <button
+                    onClick={() => setIsModalOpen(true)}
                     className="flex items-center justify-center gap-2 px-8 h-12 bg-white text-black rounded-xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-all"
                 >
                     <Plus className="w-4 h-4" />
@@ -79,7 +87,7 @@ export default function CheckpointsPage() {
 
             <DataTable
                 columns={columns}
-                data={checkpoints}
+                data={filteredCheckpoints}
                 isLoading={isLoading}
                 searchPlaceholder="Search milestones..."
                 searchValue={search}
@@ -89,6 +97,12 @@ export default function CheckpointsPage() {
                         <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
                     </button>
                 )}
+            />
+
+            <CreateCheckpointModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={fetchCheckpoints}
             />
         </div>
     )

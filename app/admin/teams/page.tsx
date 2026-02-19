@@ -4,11 +4,13 @@ import { useEffect, useState } from "react"
 import { DataTable } from "@/components/hackathon/DataTable"
 import { Plus, MoreHorizontal, User, Mail, ShieldCheck } from "lucide-react"
 import { toast } from "sonner"
+import { RegisterTeamModal } from "@/components/hackathon/RegisterTeamModal"
 
 export default function TeamsPage() {
     const [teams, setTeams] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
         fetchTeams()
@@ -61,12 +63,12 @@ export default function TeamsPage() {
             header: "Members",
             accessor: (team: any) => (
                 <div className="flex -space-x-2">
-                    {[...Array(team._count.members)].map((_, i) => (
+                    {[...Array(team._count?.members || 0)].map((_, i) => (
                         <div key={i} className="w-6 h-6 rounded-full border-2 border-zinc-950 bg-zinc-800 flex items-center justify-center">
                             <User className="w-3 h-3 text-zinc-500" />
                         </div>
                     ))}
-                    {team._count.members === 0 && <span className="text-xs text-zinc-600 font-bold italic">Unassigned</span>}
+                    {(team._count?.members || 0) === 0 && <span className="text-xs text-zinc-600 font-bold italic">Unassigned</span>}
                 </div>
             )
         },
@@ -84,6 +86,7 @@ export default function TeamsPage() {
                     <p className="text-zinc-500 font-medium italic">Directory of registered squads and their members.</p>
                 </div>
                 <button
+                    onClick={() => setIsModalOpen(true)}
                     className="flex items-center justify-center gap-2 px-8 h-14 bg-white text-black rounded-2xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-all shadow-xl shadow-white/5 active:scale-[0.98]"
                 >
                     <Plus className="w-5 h-5" />
@@ -103,6 +106,12 @@ export default function TeamsPage() {
                         <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
                     </button>
                 )}
+            />
+
+            <RegisterTeamModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={fetchTeams}
             />
         </div>
     )

@@ -5,11 +5,13 @@ import { DataTable } from "@/components/hackathon/DataTable"
 import { Plus, MoreHorizontal, Calendar, Users, MapPin, Clock } from "lucide-react"
 import { toast } from "sonner"
 import { StatusBadge } from "@/components/hackathon/StatusBadge"
+import { CreateEventModal } from "@/components/hackathon/CreateEventModal"
 
 export default function EventsPage() {
     const [events, setEvents] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
         fetchEvents()
@@ -95,6 +97,7 @@ export default function EventsPage() {
                     <p className="text-zinc-500 font-medium italic">Scheduling and orchestration of hackathon activities.</p>
                 </div>
                 <button
+                    onClick={() => setIsModalOpen(true)}
                     className="flex items-center justify-center gap-2 px-8 h-14 bg-white text-black rounded-2xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-all shadow-xl shadow-white/5 active:scale-[0.98]"
                 >
                     <Plus className="w-5 h-5" />
@@ -114,6 +117,12 @@ export default function EventsPage() {
                         <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
                     </button>
                 )}
+            />
+
+            <CreateEventModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={fetchEvents}
             />
         </div>
     )
