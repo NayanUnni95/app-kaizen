@@ -15,6 +15,7 @@ export default function AdminNotificationsPage() {
     const [body, setBody] = useState("")
     const [type, setType] = useState("INFO")
     const [targetEvent, setTargetEvent] = useState("") // Should be eventId
+    const [category, setCategory] = useState("NOTIFICATION")
     const [events, setEvents] = useState<any[]>([])
 
     useEffect(() => {
@@ -54,6 +55,7 @@ export default function AdminNotificationsPage() {
                     title,
                     body,
                     type,
+                    category,
                     eventId: targetEvent
                 })
             })
@@ -88,6 +90,14 @@ export default function AdminNotificationsPage() {
             accessor: (n: any) => (
                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${n.type === 'ERROR' ? 'text-red-400 bg-red-400/10' : 'text-blue-400 bg-blue-400/10'}`}>
                     {n.type}
+                </span>
+            )
+        },
+        {
+            header: "Category",
+            accessor: (n: any) => (
+                <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${n.category === 'ANNOUNCEMENT' ? 'text-amber-400 bg-amber-400/10' : 'text-zinc-400 bg-zinc-400/10'}`}>
+                    {n.category || 'NOTIFICATION'}
                 </span>
             )
         },
@@ -140,6 +150,17 @@ export default function AdminNotificationsPage() {
                                     <option value="SUCCESS">Success</option>
                                     <option value="WARNING">Warning</option>
                                     <option value="ERROR">Critical/Error</option>
+                                </select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500 ml-1">Category</label>
+                                <select
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    className="w-full h-12 bg-zinc-950 border border-white/5 rounded-xl px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
+                                >
+                                    <option value="NOTIFICATION">Notification</option>
+                                    <option value="ANNOUNCEMENT">Announcement</option>
                                 </select>
                             </div>
                         </div>

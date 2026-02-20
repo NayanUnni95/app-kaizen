@@ -11,8 +11,15 @@ export async function GET(req: NextRequest) {
     const eventId = (session.user as any).eventId
 
     try {
-        const notifications = await notifyService.getAllNotifications({ teamId, eventId })
-        return NextResponse.json(notifications)
+        const allNotifications = await notifyService.getAllNotifications({ teamId, eventId })
+
+        const announcements = allNotifications.filter(n => (n as any).category === "ANNOUNCEMENT")
+        const notifications = allNotifications.filter(n => (n as any).category === "NOTIFICATION")
+
+        return NextResponse.json({
+            announcements,
+            notifications
+        })
     } catch (error) {
         return NextResponse.json({ error: "Failed to fetch notifications" }, { status: 500 })
     }
