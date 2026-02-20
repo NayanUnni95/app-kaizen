@@ -236,10 +236,8 @@ model TeamMember {
   team      Team @relation(fields: [teamId], references: [id])
   createdBy User @relation("MemberCreator", fields: [createdById], references: [id])
   updatedBy User @relation("MemberUpdater", fields: [updatedById], references: [id])
-  // Wait, if it's many TeamMembers, that constraint seems wrong in user's code. 
-  // But I will follow the user's provided Python code which had a UniqueConstraint("team_id").
 
-  @@unique([teamId]) // Only one "TeamMember" entry per team? (based on user's UniqueConstraint("team_id", name="uq_team_member"))
+  @@index([teamId])
 }
 
 model Notification {

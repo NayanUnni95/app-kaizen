@@ -1,20 +1,38 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { DataTable } from "@/components/hackathon/DataTable"
-import { Plus, MoreHorizontal, User, Mail, ShieldCheck } from "lucide-react"
+import { Plus, MoreHorizontal, User, Edit3, Trash2, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { RegisterTeamModal } from "@/components/hackathon/RegisterTeamModal"
+import { TeamDetailModal } from "@/components/hackathon/TeamDetailModal"
 
 export default function TeamsPage() {
     const [teams, setTeams] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedTeam, setSelectedTeam] = useState<any>(null)
+    const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+    const [deletingId, setDeletingId] = useState<string | null>(null)
+    const menuRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         fetchTeams()
     }, [])
+
+    // Close action menu on outside click
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setOpenMenuId(null)
+            }
+        }
+        if (openMenuId) {
+            document.addEventListener("mousedown", handleClickOutside)
+            return () => document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [openMenuId])
 
     const fetchTeams = async () => {
         setIsLoading(true)
@@ -28,6 +46,28 @@ export default function TeamsPage() {
         } finally {
             setIsLoading(false)
         }
+    }
+
+    const handleDeleteTeam = async (teamId: string) => {
+        if (!confirm("Are you sure you want to delete this team? This action cannot be undone.")) return
+        setDeletingId(teamId)
+        setOpenMenuId(null)
+        try {
+            const res = await fetch(`/api/hackathon/admin/teams?id=${teamId}`, {
+                method: "DELETE",
+            })
+            if (!res.ok) throw new Error("Failed")
+            toast.success("Team deleted successfully")
+            fetchTeams()
+        } catch {
+            toast.error("Failed to delete team")
+        } finally {
+            setDeletingId(null)
+        }
+    }
+
+    const handleRowClick = (team: any) => {
+        setSelectedTeam(team)
     }
 
     const filteredTeams = teams.filter(team =>
@@ -73,6 +113,14 @@ export default function TeamsPage() {
             )
         },
         {
+            header: "Event",
+            accessor: (team: any) => (
+                <span className="text-xs text-zinc-400 font-medium">
+                    {team.event?.name || "—"}
+                </span>
+            )
+        },
+        {
             header: "Created",
             accessor: (team: any) => new Date(team.createdAt).toLocaleDateString()
         }
@@ -101,17 +149,65 @@ export default function TeamsPage() {
                 searchPlaceholder="Search by name or username..."
                 searchValue={search}
                 onSearchChange={setSearch}
-                actions={(team) => (
-                    <button className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
-                        <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
-                    </button>
-                )}
+                onRowClick={handleRowClick}
+                actions={(team: any) => {
+                    const isMenuOpen = openMenuId === team.id
+                    const isDeleting = deletingId === team.id
+
+                    return (
+                        <div className="relative" ref={isMenuOpen ? menuRef : undefined}>
+                            <button
+                                onClick={() => setOpenMenuId(isMenuOpen ? null : team.id)}
+                                className="p-2 hover:bg-white/5 rounded-lg transition-colors group"
+                            >
+                                {isDeleting ? (
+                                    <Loader2 className="w-5 h-5 text-red-400 animate-spin" />
+                                ) : (
+                                    <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
+                                )}
+                            </button>
+
+                            {/* Dropdown menu */}
+                            {isMenuOpen && (
+                                <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                                    <button
+                                        onClick={() => {
+                                            setOpenMenuId(null)
+                                            setSelectedTeam(team)
+                                        }}
+                                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+                                    >
+                                        <Edit3 className="w-4 h-4 text-blue-400" />
+                                        Edit Team
+                                    </button>
+                                    <div className="h-px bg-white/5" />
+                                    <button
+                                        onClick={() => handleDeleteTeam(team.id)}
+                                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                        Delete Team
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )
+                }}
             />
 
+            {/* Register Team Modal */}
             <RegisterTeamModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSuccess={fetchTeams}
+            />
+
+            {/* Team Detail Modal */}
+            <TeamDetailModal
+                isOpen={!!selectedTeam}
+                onClose={() => setSelectedTeam(null)}
+                onSuccess={fetchTeams}
+                team={selectedTeam}
             />
         </div>
     )

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { protect, isAdmin } from "@/lib/hackathon/auth-helpers"
+import { protect } from "@/lib/hackathon/auth-helpers"
 import * as teamService from "@/lib/hackathon/teams"
 import { UserRole } from "@prisma/client"
 
@@ -32,5 +32,48 @@ export async function POST(req: NextRequest) {
     } catch (error) {
         console.error("Create team error:", error)
         return NextResponse.json({ error: "Failed to create team" }, { status: 500 })
+    }
+}
+
+export async function PUT(req: NextRequest) {
+    const session = await protect([UserRole.ADMIN, UserRole.ORGANIZER])
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    try {
+        const body = await req.json()
+        const { id, ...data } = body
+
+        if (!id) {
+            return NextResponse.json({ error: "Team ID is required" }, { status: 400 })
+        }
+
+        const team = await teamService.updateTeam(id, {
+            ...data,
+            updatedById: session?.user?.id || "system",
+        })
+        return NextResponse.json(team)
+    } catch (error) {
+        console.error("Update team error:", error)
+        return NextResponse.json({ error: "Failed to update team" }, { status: 500 })
+    }
+}
+
+export async function DELETE(req: NextRequest) {
+    const session = await protect([UserRole.ADMIN])
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get("id")
+
+    if (!id) {
+        return NextResponse.json({ error: "Team ID is required" }, { status: 400 })
+    }
+
+    try {
+        await teamService.deleteTeam(id)
+        return NextResponse.json({ success: true })
+    } catch (error) {
+        console.error("Delete team error:", error)
+        return NextResponse.json({ error: "Failed to delete team" }, { status: 500 })
     }
 }

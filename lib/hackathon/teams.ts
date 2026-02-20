@@ -7,7 +7,8 @@ export async function getAllTeams(eventId?: string) {
         where: eventId ? { eventId } : {},
         include: {
             _count: { select: { members: true } },
-            members: true
+            members: true,
+            event: { select: { id: true, name: true } }
         },
         orderBy: { createdAt: "desc" }
     })
@@ -107,3 +108,24 @@ export async function addTeamMember(teamId: string, data: { name: string, role?:
         }
     })
 }
+
+export async function getTeamMembers(teamId: string) {
+    return await prisma.teamMember.findMany({
+        where: { teamId },
+        orderBy: { createdAt: "asc" },
+    })
+}
+
+export async function updateTeamMember(id: string, data: any) {
+    return await prisma.teamMember.update({
+        where: { id },
+        data,
+    })
+}
+
+export async function deleteTeamMember(id: string) {
+    return await prisma.teamMember.delete({
+        where: { id },
+    })
+}
+

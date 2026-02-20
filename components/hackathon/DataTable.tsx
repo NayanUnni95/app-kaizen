@@ -16,6 +16,7 @@ interface DataTableProps<T> {
     onSearchChange?: (value: string) => void
     searchValue?: string
     actions?: (item: T) => ReactNode
+    onRowClick?: (item: T) => void
 }
 
 export function DataTable<T extends { id: string }>({
@@ -25,7 +26,8 @@ export function DataTable<T extends { id: string }>({
     searchPlaceholder = "Search...",
     onSearchChange,
     searchValue,
-    actions
+    actions,
+    onRowClick
 }: DataTableProps<T>) {
     return (
         <div className="space-y-6">
@@ -77,14 +79,18 @@ export function DataTable<T extends { id: string }>({
                                 </tr>
                             ) : (
                                 data.map((item) => (
-                                    <tr key={item.id} className="group hover:bg-white/[0.02] transition-colors">
+                                    <tr
+                                        key={item.id}
+                                        className={`group hover:bg-white/[0.02] transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
+                                        onClick={() => onRowClick?.(item)}
+                                    >
                                         {columns.map((col, idx) => (
                                             <td key={idx} className="px-6 py-5 text-sm font-medium text-zinc-300">
                                                 {typeof col.accessor === "function" ? col.accessor(item) : (item[col.accessor] as ReactNode)}
                                             </td>
                                         ))}
                                         {actions && (
-                                            <td className="px-6 py-5 text-right">
+                                            <td className="px-6 py-5 text-right" onClick={(e) => e.stopPropagation()}>
                                                 {actions(item)}
                                             </td>
                                         )}

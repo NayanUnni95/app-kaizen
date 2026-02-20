@@ -115,9 +115,9 @@ export default async function TeamProfilePage() {
                                                     Leader
                                                 </span>
                                             )}
-                                            <span className="flex items-center gap-1 text-[10px] font-semibold text-[#16A34A]">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]" />
-                                                Checked in
+                                            <span className={`flex items-center gap-1 text-[10px] font-semibold ${member.isAccepted ? "text-[#16A34A]" : "text-[#EF4444]"}`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full ${member.isAccepted ? "bg-[#16A34A]" : "bg-[#EF4444]"}`} />
+                                                {member.isAccepted ? "Checked in" : "Not Checked-in"}
                                             </span>
                                         </div>
                                         <div className="flex flex-wrap gap-3 mt-1">
