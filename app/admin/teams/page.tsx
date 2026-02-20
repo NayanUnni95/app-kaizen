@@ -121,6 +121,27 @@ export default function TeamsPage() {
             )
         },
         {
+            header: "Progress",
+            accessor: (team: any) => {
+                const total = team.event?._count?.checkpoints || 0
+                const approved = team.progress?.filter((pr: any) => pr.status === 'APPROVED').length || 0
+
+                return (
+                    <div className="flex items-center gap-2">
+                        <div className="w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                                style={{ width: `${total > 0 ? (approved / total) * 100 : 0}%` }}
+                            />
+                        </div>
+                        <span className="text-[10px] font-black text-zinc-500 uppercase">
+                            {approved}/{total}
+                        </span>
+                    </div>
+                )
+            }
+        },
+        {
             header: "Created",
             accessor: (team: any) => new Date(team.createdAt).toLocaleDateString()
         }

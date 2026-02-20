@@ -39,17 +39,17 @@ export default function TeamCheckpointsPage() {
         }
     }
 
-    // Ensure exactly 3 checkpoints are shown. Merge real data with placeholders.
-    const MOCK_CHECKPOINTS = [
-        { id: 'mock-1', title: 'Ideation', description: 'Complete the required tasks and document your progress to move forward.', order: 1 },
-        { id: 'mock-2', title: 'Checkpoint 2', description: 'Complete the required tasks and document your progress to move forward.', order: 2 },
-        { id: 'mock-3', title: 'Checkpoint 3', description: 'Complete the required tasks and document your progress to move forward.', order: 3 },
-    ]
-
-    const displayCheckpoints = MOCK_CHECKPOINTS.map(mock => {
-        const real = checkpoints.find(c => c.order === mock.order)
-        return real || mock
-    })
+    if (!isLoading && checkpoints.length === 0) {
+        return (
+            <div className="max-w-6xl mx-auto py-20 px-4">
+                <EmptyState
+                    icon={AlertCircle}
+                    title="No Checkpoints Found"
+                    description="Your event organizer hasn't set up any milestones for your team yet."
+                />
+            </div>
+        )
+    }
 
     return (
         <div className="max-w-6xl mx-auto space-y-12 pb-20 pt-4 px-4">
@@ -69,7 +69,7 @@ export default function TeamCheckpointsPage() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    {displayCheckpoints.map((cp, i) => {
+                    {checkpoints.map((cp, i) => {
                         const status = (cp as any).teamProgress?.status || 'PENDING'
 
                         // Logic for unlocking: Admin provides access by creating a progress record
