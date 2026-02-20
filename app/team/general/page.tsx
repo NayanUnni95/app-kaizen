@@ -6,7 +6,7 @@ import { Layout, Users, Info, MessageSquare, ChevronRight, ShieldCheck, Heart } 
 
 export default async function GeneralPage() {
     const session = await auth()
-    if (!session?.user) redirect("/user")
+    if (!session?.user) redirect("/hackathon-login")
 
     const team = await getTeamBySession(session.user)
 
@@ -22,7 +22,7 @@ export default async function GeneralPage() {
         <div className="max-w-none mx-auto space-y-12 pb-20 pt-4 px-4 overflow-hidden">
             {/* Header */}
             <header className="kz-animate-fade-in px-2">
-                <h1 className="font-heading font-black text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tighter leading-none mb-3 uppercase">GENERAL OVERVIEW</h1>
+                <h1 className="font-heading font-black text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tighter leading-none mb-3 uppercase">GENERAL OVERVIEW</h1>
                 <p className="font-mono-tech text-slate-500 text-[10px] font-bold uppercase tracking-widest">
                     Executive overview, global stats, and event intelligence.
                 </p>
@@ -36,7 +36,7 @@ export default async function GeneralPage() {
                     </div>
                     <div>
                         <p className="text-[9px] lg:text-[15px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-1">TOTAL TEAMS</p>
-                        <h3 className="text-3xl font-mono-tech font-bold text-slate-900 dark:text-white tracking-tight">{totalTeams}</h3>
+                        <h3 className="text-xl font-mono-tech font-bold text-slate-900 dark:text-white tracking-tight">{totalTeams}</h3>
                     </div>
                 </div>
                 <div className="kz-card-rich p-6 flex items-center gap-5 bg-white/[0.02] border-white/5">
@@ -45,7 +45,7 @@ export default async function GeneralPage() {
                     </div>
                     <div>
                         <p className="text-[9px] lg:text-[15px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-1">TOTAL STUDENTS</p>
-                        <h3 className="text-3xl font-mono-tech font-bold text-slate-900 dark:text-white tracking-tight">{totalMembers}</h3>
+                        <h3 className="text-xl font-mono-tech font-bold text-slate-900 dark:text-white tracking-tight">{totalMembers}</h3>
                     </div>
                 </div>
             </section>

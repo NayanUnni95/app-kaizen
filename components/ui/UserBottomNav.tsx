@@ -2,10 +2,11 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, CheckSquare, Calendar, Bell, User, Layout } from "lucide-react"
+import { Home, CheckSquare, Calendar, Bell, User, Layout, Globe } from "lucide-react"
 
 const NAV_ITEMS = [
     { name: "Home", href: "/team", icon: Home, label: "Home" },
+    { name: "Discover", href: "/team/discover", icon: Globe, label: "Units" },
     { name: "Checkpoints", href: "/team/checkpoints", icon: CheckSquare, label: "Tasks" },
     { name: "Schedule", href: "/team/schedule", icon: Calendar, label: "Schedule" },
     { name: "General", href: "/team/general", icon: Layout, label: "Meta" },
@@ -33,18 +34,18 @@ export function UserBottomNav() {
                                 key={item.href}
                                 href={item.href}
                                 className={`
-                                    relative flex flex-col items-center justify-center w-12 h-12 rounded-full transition-all duration-300
+                                    relative flex flex-col items-center justify-center w-[52px] h-[52px] rounded-2xl transition-all duration-500
                                     ${isActive
-                                        ? "bg-black/5 dark:bg-white/10 text-slate-900 dark:text-white shadow-sm"
-                                        : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                                        ? "bg-indigo-600/[0.08] dark:bg-indigo-500/[0.12] text-indigo-600 dark:text-indigo-400 shadow-inner border border-indigo-500/10"
+                                        : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-200"
                                     }
                                 `}
                                 aria-current={isActive ? "page" : undefined}
                             >
-                                <Icon className="w-5 h-5" strokeWidth={1.5} />
+                                <Icon className={`transition-transform duration-300 ${isActive ? "w-5.5 h-5.5 scale-110" : "w-5 h-5 opacity-60"}`} strokeWidth={isActive ? 2.5 : 2} />
 
                                 {isActive && (
-                                    <div className="absolute -bottom-1.5 w-1 h-1 bg-slate-900 dark:bg-white rounded-full" />
+                                    <div className="absolute -bottom-1 w-1 h-1 bg-indigo-600 dark:bg-indigo-400 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
                                 )}
                             </Link>
                         )

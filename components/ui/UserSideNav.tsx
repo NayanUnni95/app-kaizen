@@ -16,11 +16,13 @@ import {
     Command,
     Search,
     Plus,
-    Terminal
+    Terminal,
+    Globe
 } from "lucide-react"
 
 const NAV_ITEMS = [
     { label: "Dashboard", href: "/team", icon: LayoutDashboard, tag: "Live" },
+    { label: "Discover", href: "/team/discover", icon: Globe },
     { label: "Overview", href: "/team/general", icon: Layers },
     { label: "Milestones", href: "/team/checkpoints", icon: ListChecks, badge: "3" },
     { label: "Schedule", href: "/team/schedule", icon: History },
@@ -32,32 +34,31 @@ export function UserSideNav() {
 
     return (
         <aside
-            className="hidden lg:flex flex-col gap-10 w-52 flex-shrink-0 pt-12 pl-0 pr-6 border-r border-black/5 dark:border-white/5 bg-transparent"
+            className="hidden lg:flex flex-col gap-8 w-56 flex-shrink-0 pt-10 pl-0 pr-8 border-r border-black/5 dark:border-white/5 bg-transparent"
             aria-label="Main navigation"
         >
             {/* Workspace Header - Human SaaS Pattern */}
-            <div className="flex flex-col gap-4 mb-8">
-                <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 hover:bg-black/[0.08] dark:hover:bg-white/[0.08] cursor-pointer transition-all group">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+            <div className="flex flex-col gap-4 mb-6">
+                <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 hover:bg-black/[0.05] dark:hover:bg-white/[0.05] cursor-pointer transition-all duration-300 group shadow-sm shadow-black/5">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
                         <Terminal className="w-4.5 h-4.5" strokeWidth={2} />
                     </div>
                     <div className="flex flex-col min-w-0">
-                        <span className="text-[12px] font-bold text-slate-900 dark:text-white leading-none">Kaizen ‘26</span>
-                        <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1">Hackathon</span>
+                        <span className="text-[12px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">Kaizen ‘26</span>
+                        <span className="text-[9px] font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest mt-1">Hackathon</span>
                     </div>
-                    <ChevronRight className="w-3 h-3 ml-auto text-slate-500 dark:text-slate-600 group-hover:text-slate-900 dark:group-hover:text-white rotate-90" />
+                    <ChevronRight className="w-3 h-3 ml-auto text-slate-400 dark:text-slate-600 group-hover:text-slate-900 dark:group-hover:text-white rotate-90 transition-colors" />
                 </div>
 
                 <div className="flex items-center justify-between px-3">
-                    <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Navigation</p>
-                    <button className="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
-                        <Search className="w-3 h-3" strokeWidth={2.5} />
+                    <p className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em]">Menu</p>
+                    <button className="p-1 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                        <Search className="w-3.5 h-3.5" strokeWidth={2} />
                     </button>
                 </div>
             </div>
 
-            <nav className="flex flex-col gap-1">
-
+            <nav className="flex flex-col gap-1 px-1">
                 {NAV_ITEMS.map((item) => {
                     const isActive = item.href === "/team"
                         ? pathname === "/team"
@@ -69,74 +70,68 @@ export function UserSideNav() {
                             key={item.href}
                             href={item.href}
                             className={`
-                                group relative flex items-center justify-between gap-4 px-3 py-2.5 rounded-lg transition-all duration-300
+                                group relative flex items-center justify-between gap-4 px-3 py-2 rounded-lg transition-all duration-500
                                 ${isActive
-                                    ? "bg-black/5 dark:bg-white/5 text-slate-900 dark:text-white"
-                                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                                    ? "bg-indigo-600/5 dark:bg-indigo-500/[0.08] text-indigo-600 dark:text-indigo-400"
+                                    : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-black/[0.02] dark:hover:bg-white/[0.03]"
                                 }
                             `}
                             aria-current={isActive ? "page" : undefined}
                         >
-                            {/* Active Marker - Vertical SaaS pattern */}
+                            {/* Active Glint & Marker */}
                             {isActive && (
-                                <div className="absolute left-[-12px] top-2 bottom-2 w-[3px] bg-indigo-500 rounded-r-full" />
+                                <>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/[0.05] to-transparent opacity-50 rounded-lg" />
+                                    <div className="absolute left-0 w-[2px] h-3 bg-indigo-600 dark:bg-indigo-500 rounded-r-full shadow-[0_0_10px_rgba(99,102,241,0.4)]" />
+                                </>
                             )}
 
-                            <div className="flex items-center gap-3">
-                                <div className={`
-                                    relative w-4.5 h-4.5 flex items-center justify-center transition-all duration-300
-                                    ${isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400"}
-                                `}>
-                                    <Icon
-                                        className="w-full h-full"
-                                        strokeWidth={1.5}
-                                    />
-                                </div>
-
-                                <span className={`text-[13px] tracking-tight ${isActive ? "font-semibold" : "font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"}`}>
+                            <div className="flex items-center gap-3.5 relative z-10">
+                                <Icon
+                                    className={`w-[17px] h-[17px] transition-all duration-300 ${isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400/80 group-hover:text-indigo-600 dark:group-hover:text-indigo-400"}`}
+                                    strokeWidth={isActive ? 2.5 : 2}
+                                />
+                                <span className={`text-[13px] tracking-tight leading-none ${isActive ? "font-black" : "font-bold text-slate-500/90 dark:text-slate-500/90"}`}>
                                     {item.label}
                                 </span>
                             </div>
 
                             {/* Supplementary Metadata */}
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 relative z-10">
                                 {item.tag && (
-                                    <div className={`px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${isActive ? "bg-indigo-600 text-white" : "bg-black/5 dark:bg-white/5 text-slate-500 border border-black/5 dark:border-white/5"}`}>
+                                    <div className={`px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${isActive ? "bg-indigo-600/10 text-indigo-600" : "bg-black/[0.04] dark:bg-white/[0.04] text-slate-500"}`}>
                                         {item.tag}
                                     </div>
                                 )}
                                 {item.badge && !isActive && (
-                                    <div className="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[9px] font-extrabold border-2 border-white dark:border-[#0B0E14]">
+                                    <div className="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[8px] font-black shadow-lg shadow-indigo-600/20">
                                         {item.badge}
                                     </div>
                                 )}
-                                <ChevronRight className={`w-3 h-3 transition-all duration-500 ${isActive ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
-                            </div>
-
-                            {/* Command Hint - Linear Pattern */}
-                            {isActive && (
-                                <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 text-[9px] font-bold text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Command className="w-2 h-2" />
-                                    <span>G</span>
+                                <div className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5 text-[8.5px] font-black text-slate-400 dark:text-slate-600 transition-all duration-300 ${isActive ? "opacity-30 group-hover:opacity-100" : "opacity-0 group-hover:opacity-60"}`}>
+                                    <Command className="w-2 h-2" strokeWidth={3} />
+                                    <span>{item.label[0]}</span>
                                 </div>
-                            )}
+                            </div>
                         </Link>
                     )
                 })}
             </nav>
 
-            {/* Official Branding Block — Refined */}
-            <div className="mt-auto pb-8 pt-8 border-t border-black/5 dark:border-white/5">
-                <div className="flex flex-col gap-1 px-1">
-                    <span className="font-heading font-semibold text-xl text-slate-900 dark:text-white tracking-widest uppercase leading-none">
+            {/* Official Branding Block — Ultra Minimal */}
+            <div className="mt-auto pb-10 pt-8 border-t border-black/5 dark:border-white/5">
+                <div className="flex flex-col gap-1.5 px-3">
+                    <span className="font-heading font-black text-2xl text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
                         KAIZEN
                     </span>
-                    <span className="text-[9px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.2em]">
-                        part of SATHWA 26
-                    </span>
-                    <span className="text-[9px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1.5 leading-relaxed">
-                        College of Engineering,<br />Muttathara
-                    </span>
+                    <div className="flex flex-col gap-0.5 opacity-60">
+                        <span className="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.2em] leading-none">
+                            System Node 4.0
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 leading-tight">
+                            Tech Competition Framework
+                        </span>
+                    </div>
                 </div>
             </div>
         </aside>

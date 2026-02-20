@@ -29,8 +29,8 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
             const res = await fetch("/api/hackathon/team/problem-statements")
             if (!res.ok) throw new Error("Failed")
             const data = await res.json()
-            setStatements(data)
-            setIsReleased(data.length > 0)
+            setStatements(data.statements || [])
+            setIsReleased(data.isReleased === true)
         } catch {
             // Silently fail – team might not have event
         } finally {
@@ -49,14 +49,14 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
     // Not released or no visible statements — show Coming Soon
     if (!isReleased || statements.length === 0) {
         return (
-            <div className="kz-card-rich p-10 relative overflow-hidden group bg-white/[0.02] border-white/5">
+            <div className="kz-card-rich p-6 lg:p-7 relative overflow-hidden group bg-white/[0.02] border-white/5">
                 <div className="flex flex-col sm:flex-row items-center gap-10 h-full">
-                    <div className="w-16 h-16 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-indigo-500/30 transition-all duration-500">
-                        <Activity className="w-8 h-8 text-slate-600 group-hover:text-indigo-400 transition-colors" strokeWidth={1} />
+                    <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-indigo-500/30 transition-all duration-500">
+                        <Activity className="w-5 h-5 text-slate-600 group-hover:text-indigo-400 transition-colors" strokeWidth={1} />
                     </div>
                     <div className="flex-1 space-y-4 text-center sm:text-left">
                         <div className="flex flex-col sm:flex-row items-center gap-4">
-                            <h3 className="font-heading font-black text-3xl text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
+                            <h3 className="font-heading font-black text-xl text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
                                 Problem Statement
                             </h3>
                             <span className="px-2 py-0.5 rounded-md text-[9px] font-mono-tech font-black bg-white/5 text-slate-500 border border-white/5 uppercase tracking-[0.2em]">
