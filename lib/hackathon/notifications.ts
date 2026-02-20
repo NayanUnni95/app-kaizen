@@ -39,3 +39,15 @@ export async function markAsRead(id: string) {
         }
     })
 }
+export async function updateNotification(id: string, data: any) {
+    return await prisma.notification.update({
+        where: { id },
+        data
+    })
+}
+
+export async function deleteNotification(id: string) {
+    return await prisma.notification.delete({
+        where: { id }
+    })
+}

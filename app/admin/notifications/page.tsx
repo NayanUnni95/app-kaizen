@@ -9,6 +9,7 @@ export default function AdminNotificationsPage() {
     const [notifications, setNotifications] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isCreating, setIsCreating] = useState(false)
+    const [editingId, setEditingId] = useState<string | null>(null)
 
     // Form state
     const [title, setTitle] = useState("")
@@ -48,10 +49,12 @@ export default function AdminNotificationsPage() {
         if (!targetEvent) return toast.error("Select an event")
 
         try {
+            const isEditing = !!editingId
             const res = await fetch("/api/hackathon/admin/notifications", {
-                method: "POST",
+                method: isEditing ? "PATCH" : "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    id: editingId,
                     title,
                     body,
                     type,
@@ -59,14 +62,42 @@ export default function AdminNotificationsPage() {
                     eventId: targetEvent
                 })
             })
-            if (!res.ok) throw new Error("Broadcast failed")
-            toast.success("Notification broadcasted successfully!")
+            if (!res.ok) throw new Error(isEditing ? "Update failed" : "Broadcast failed")
+            toast.success(isEditing ? "Notification updated!" : "Notification broadcasted successfully!")
+
+            // Reset form
             setTitle("")
             setBody("")
+            setEditingId(null)
             setIsCreating(false)
             fetchNotifications()
         } catch (error) {
-            toast.error("Failed to send notification")
+            toast.error("Failed to process notification")
+        }
+    }
+
+    const handleEdit = (n: any) => {
+        setEditingId(n.id)
+        setTitle(n.title)
+        setBody(n.body || "")
+        setType(n.type)
+        setCategory(n.category || "NOTIFICATION")
+        setTargetEvent(n.eventId)
+        setIsCreating(true)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this notification?")) return
+        try {
+            const res = await fetch(`/api/hackathon/admin/notifications?id=${id}`, {
+                method: "DELETE"
+            })
+            if (!res.ok) throw new Error("Delete failed")
+            toast.success("Notification deleted")
+            fetchNotifications()
+        } catch (error) {
+            toast.error("Failed to delete notification")
         }
     }
 
@@ -116,7 +147,12 @@ export default function AdminNotificationsPage() {
                 </div>
                 {!isCreating && (
                     <button
-                        onClick={() => setIsCreating(true)}
+                        onClick={() => {
+                            setEditingId(null)
+                            setTitle("")
+                            setBody("")
+                            setIsCreating(true)
+                        }}
                         className="flex items-center justify-center gap-2 px-8 h-12 bg-white text-black rounded-xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-all"
                     >
                         <Plus className="w-4 h-4" />
@@ -190,17 +226,22 @@ export default function AdminNotificationsPage() {
                         <div className="flex items-center gap-4 justify-end pt-4">
                             <button
                                 type="button"
-                                onClick={() => setIsCreating(false)}
+                                onClick={() => {
+                                    setIsCreating(false)
+                                    setEditingId(null)
+                                    setTitle("")
+                                    setBody("")
+                                }}
                                 className="px-6 h-12 text-zinc-500 font-bold hover:text-white transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="flex items-center gap-2 px-8 h-12 bg-blue-600 text-white rounded-xl font-black uppercase tracking-tighter hover:bg-blue-500 transition-all shadow-xl shadow-blue-500/20"
+                                className={`flex items-center gap-2 px-8 h-12 ${editingId ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20' : 'bg-blue-600 hover:bg-blue-500 shadow-blue-500/20'} text-white rounded-xl font-black uppercase tracking-tighter transition-all shadow-xl`}
                             >
                                 <Send className="w-4 h-4" />
-                                Post Announcement
+                                {editingId ? "Update Alert" : "Post Announcement"}
                             </button>
                         </div>
                     </form>
@@ -213,9 +254,20 @@ export default function AdminNotificationsPage() {
                 isLoading={isLoading}
                 searchPlaceholder="Search history..."
                 actions={(n) => (
-                    <button className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
-                        <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => handleEdit(n)}
+                            className="p-2 hover:bg-white/5 rounded-lg transition-colors group text-zinc-500 hover:text-white text-xs font-bold uppercase tracking-widest"
+                        >
+                            Edit
+                        </button>
+                        <button
+                            onClick={() => handleDelete(n.id)}
+                            className="p-2 hover:bg-red-500/10 rounded-lg transition-colors group text-zinc-500 hover:text-red-400 text-xs font-bold uppercase tracking-widest"
+                        >
+                            Delete
+                        </button>
+                    </div>
                 )}
             />
         </div>
