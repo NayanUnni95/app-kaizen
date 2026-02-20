@@ -8,15 +8,17 @@ interface CreateCheckpointModalProps {
     isOpen: boolean
     onClose: () => void
     onSuccess: () => void
+    checkpoint?: any // Added for editing
 }
 
-export function CreateCheckpointModal({ isOpen, onClose, onSuccess }: CreateCheckpointModalProps) {
+export function CreateCheckpointModal({ isOpen, onClose, onSuccess, checkpoint }: CreateCheckpointModalProps) {
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [order, setOrder] = useState(1)
     const [dueAt, setDueAt] = useState("")
     const [eventId, setEventId] = useState("")
     const [isRequired, setIsRequired] = useState(true)
+    const [isVisible, setIsVisible] = useState(false)
     const [events, setEvents] = useState<any[]>([])
     const [isLoadingEvents, setIsLoadingEvents] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -24,8 +26,25 @@ export function CreateCheckpointModal({ isOpen, onClose, onSuccess }: CreateChec
     useEffect(() => {
         if (isOpen) {
             fetchEvents()
+            if (checkpoint) {
+                setTitle(checkpoint.title || "")
+                setDescription(checkpoint.description || "")
+                setOrder(checkpoint.order || 1)
+                setDueAt(checkpoint.dueAt ? new Date(checkpoint.dueAt).toISOString().slice(0, 16) : "")
+                setEventId(checkpoint.eventId || "")
+                setIsRequired(checkpoint.isRequired ?? true)
+                setIsVisible(checkpoint.isVisible ?? false)
+            } else {
+                setTitle("")
+                setDescription("")
+                setOrder(1)
+                setDueAt("")
+                setEventId(events[0]?.id || "")
+                setIsRequired(true)
+                setIsVisible(false)
+            }
         }
-    }, [isOpen])
+    }, [isOpen, checkpoint])
 
     const fetchEvents = async () => {
         setIsLoadingEvents(true)
@@ -34,7 +53,7 @@ export function CreateCheckpointModal({ isOpen, onClose, onSuccess }: CreateChec
             if (!res.ok) throw new Error("Failed to fetch events")
             const data = await res.json()
             setEvents(data)
-            if (data.length > 0) setEventId(data[0].id)
+            if (data.length > 0 && !eventId) setEventId(data[0].id)
         } catch (error) {
             toast.error("Could not load events")
         } finally {
@@ -53,33 +72,38 @@ export function CreateCheckpointModal({ isOpen, onClose, onSuccess }: CreateChec
 
         setIsSubmitting(true)
         try {
+            const isEditing = !!checkpoint?.id
             const res = await fetch("/api/hackathon/admin/checkpoints", {
-                method: "POST",
+                method: isEditing ? "PATCH" : "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    id: checkpoint?.id,
                     title,
                     description,
                     order: Number(order),
                     dueAt: dueAt ? new Date(dueAt).toISOString() : null,
                     eventId,
-                    isRequired
+                    isRequired,
+                    isVisible
                 })
             })
 
             if (!res.ok) {
                 const err = await res.json()
-                throw new Error(err.error || "Failed to create checkpoint")
+                throw new Error(err.error || `Failed to ${isEditing ? 'update' : 'create'} checkpoint`)
             }
 
-            toast.success("Checkpoint created successfully!")
+            toast.success(`Checkpoint ${isEditing ? 'updated' : 'created'} successfully!`)
             onSuccess()
             onClose()
-            // Reset form
-            setTitle("")
-            setDescription("")
-            setOrder(order + 1)
-            setDueAt("")
-            setIsRequired(true)
+            // Reset form if not editing
+            if (!isEditing) {
+                setTitle("")
+                setDescription("")
+                setOrder(order + 1)
+                setDueAt("")
+                setIsRequired(true)
+            }
         } catch (error: any) {
             toast.error(error.message)
         } finally {
@@ -99,7 +123,7 @@ export function CreateCheckpointModal({ isOpen, onClose, onSuccess }: CreateChec
 
                 <div className="mb-8">
                     <p className="text-[10px] font-black uppercase tracking-widest text-green-500 mb-2">Milestone Definition</p>
-                    <h3 className="text-2xl font-black text-white">Add Checkpoint</h3>
+                    <h3 className="text-2xl font-black text-white">{checkpoint ? "Edit Checkpoint" : "Add Checkpoint"}</h3>
                 </div>
 
                 <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -175,15 +199,27 @@ export function CreateCheckpointModal({ isOpen, onClose, onSuccess }: CreateChec
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 px-1">
-                        <input
-                            type="checkbox"
-                            id="isRequired"
-                            checked={isRequired}
-                            onChange={(e) => setIsRequired(e.target.checked)}
-                            className="w-4 h-4 rounded border-white/10 bg-zinc-900 text-green-500 focus:ring-green-500/50"
-                        />
-                        <label htmlFor="isRequired" className="text-xs font-bold text-zinc-400 cursor-pointer">Mandatory Milestone</label>
+                    <div className="flex items-center gap-6 px-1">
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="isRequired"
+                                checked={isRequired}
+                                onChange={(e) => setIsRequired(e.target.checked)}
+                                className="w-4 h-4 rounded border-white/10 bg-zinc-900 text-green-500 focus:ring-green-500/50"
+                            />
+                            <label htmlFor="isRequired" className="text-xs font-bold text-zinc-400 cursor-pointer">Mandatory</label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="isVisible"
+                                checked={isVisible}
+                                onChange={(e) => setIsVisible(e.target.checked)}
+                                className="w-4 h-4 rounded border-white/10 bg-zinc-900 text-blue-500 focus:ring-blue-500/50"
+                            />
+                            <label htmlFor="isVisible" className="text-xs font-bold text-zinc-400 cursor-pointer">Visible to Teams</label>
+                        </div>
                     </div>
 
                     <button
@@ -191,7 +227,7 @@ export function CreateCheckpointModal({ isOpen, onClose, onSuccess }: CreateChec
                         disabled={isSubmitting || isLoadingEvents}
                         className="w-full flex items-center justify-center gap-2 h-14 bg-white text-black rounded-2xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-all shadow-xl shadow-white/5 active:scale-[0.98] disabled:opacity-50"
                     >
-                        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : "Publish Milestone"}
+                        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : (checkpoint ? "Save Changes" : "Publish Milestone")}
                     </button>
                 </form>
             </div>

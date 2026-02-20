@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { DataTable } from "@/components/hackathon/DataTable"
-import { Plus, MoreHorizontal, CheckSquare, Clock, AlertCircle } from "lucide-react"
+import { Plus, MoreHorizontal, CheckSquare, Clock, AlertCircle, Eye, EyeOff } from "lucide-react"
 import { toast } from "sonner"
 import { CreateCheckpointModal } from "@/components/hackathon/CreateCheckpointModal"
 
@@ -11,6 +11,7 @@ export default function CheckpointsPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedCheckpoint, setSelectedCheckpoint] = useState<any>(null)
 
     useEffect(() => {
         fetchCheckpoints()
@@ -30,10 +31,48 @@ export default function CheckpointsPage() {
         }
     }
 
+    const handleEdit = (cp: any) => {
+        setSelectedCheckpoint(cp)
+        setIsModalOpen(true)
+    }
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this milestone?")) return
+
+        try {
+            const res = await fetch(`/api/hackathon/admin/checkpoints?id=${id}`, {
+                method: "DELETE"
+            })
+            if (!res.ok) throw new Error("Failed to delete")
+            toast.success("Milestone deleted")
+            fetchCheckpoints()
+        } catch (error) {
+            toast.error("Could not delete milestone")
+        }
+    }
+
     const filteredCheckpoints = checkpoints.filter((cp: any) =>
         cp.title.toLowerCase().includes(search.toLowerCase()) ||
         cp.event?.name.toLowerCase().includes(search.toLowerCase())
     )
+
+    const toggleVisibility = async (cp: any) => {
+        try {
+            const res = await fetch("/api/hackathon/admin/checkpoints", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: cp.id,
+                    isVisible: !cp.isVisible
+                })
+            })
+            if (!res.ok) throw new Error("Failed to update visibility")
+            toast.success(`Milestone is now ${!cp.isVisible ? 'visible' : 'hidden'}`)
+            fetchCheckpoints()
+        } catch (error) {
+            toast.error("Could not update visibility")
+        }
+    }
 
     const columns = [
         {
@@ -66,7 +105,7 @@ export default function CheckpointsPage() {
                     {cp.isRequired ? 'Mandatory' : 'Optional'}
                 </span>
             )
-        }
+        },
     ]
 
     return (
@@ -77,7 +116,10 @@ export default function CheckpointsPage() {
                     <p className="text-zinc-500 font-medium italic">Defining the critical path for participant success.</p>
                 </div>
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        setSelectedCheckpoint(null)
+                        setIsModalOpen(true)
+                    }}
                     className="flex items-center justify-center gap-2 px-8 h-12 bg-white text-black rounded-xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-all"
                 >
                     <Plus className="w-4 h-4" />
@@ -93,16 +135,38 @@ export default function CheckpointsPage() {
                 searchValue={search}
                 onSearchChange={setSearch}
                 actions={(cp) => (
-                    <button className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
-                        <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => toggleVisibility(cp)}
+                            className={`p-2 rounded-lg transition-colors group ${cp.isVisible ? 'text-blue-400 hover:bg-blue-500/10' : 'text-zinc-500 hover:bg-white/5'}`}
+                            title={cp.isVisible ? "Hide from Teams" : "Show to Teams"}
+                        >
+                            {cp.isVisible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                        </button>
+                        <button
+                            onClick={() => handleEdit(cp)}
+                            className="p-2 hover:bg-white/5 rounded-lg transition-colors group text-zinc-500 hover:text-white text-xs font-bold uppercase tracking-widest"
+                        >
+                            Edit
+                        </button>
+                        <button
+                            onClick={() => handleDelete(cp.id)}
+                            className="p-2 hover:bg-red-500/10 rounded-lg transition-colors group text-zinc-500 hover:text-red-400 text-xs font-bold uppercase tracking-widest"
+                        >
+                            Delete
+                        </button>
+                    </div>
                 )}
             />
 
             <CreateCheckpointModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={() => {
+                    setIsModalOpen(false)
+                    setSelectedCheckpoint(null)
+                }}
                 onSuccess={fetchCheckpoints}
+                checkpoint={selectedCheckpoint}
             />
         </div>
     )

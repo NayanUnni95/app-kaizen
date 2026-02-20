@@ -26,7 +26,7 @@ export async function GET(
             }
         })
 
-        if (!checkpoint) {
+        if (!checkpoint || (!checkpoint.isVisible)) {
             return NextResponse.json({ error: "Checkpoint not found" }, { status: 404 })
         }
 

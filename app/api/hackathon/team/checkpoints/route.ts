@@ -17,7 +17,10 @@ export async function GET(req: NextRequest) {
     try {
         // Fetch all checkpoints for the event
         const checkpoints = await prisma.checkpoint.findMany({
-            where: { eventId },
+            where: {
+                eventId,
+                isVisible: true
+            },
             orderBy: { order: 'asc' }
         })
 

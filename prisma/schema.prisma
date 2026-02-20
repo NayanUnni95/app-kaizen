@@ -303,6 +303,7 @@ model Checkpoint {
   order        Int       @default(0)
   dueAt        DateTime?
   isRequired   Boolean   @default(true)
+  isVisible    Boolean   @default(false)
   requirements Json?     @db.JsonB
 
   // Audit
