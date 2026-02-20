@@ -22,7 +22,8 @@ import {
     MessageSquare,
     CheckCircle2,
     AlertCircle,
-    RotateCcw
+    RotateCcw,
+    Github
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -63,6 +64,7 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
     const [editMemberPhone, setEditMemberPhone] = useState("")
     const [editMemberEmail, setEditMemberEmail] = useState("")
     const [editMemberLinkedin, setEditMemberLinkedin] = useState("")
+    const [editMemberGithub, setEditMemberGithub] = useState("")
     const [isUpdatingMember, setIsUpdatingMember] = useState(false)
 
     // Checkpoints state
@@ -190,6 +192,7 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
                         phone: editMemberPhone,
                         email: editMemberEmail,
                         linkedin: editMemberLinkedin,
+                        github: editMemberGithub,
                     }
                 }),
             })
@@ -576,13 +579,23 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
                                                                 className="w-full h-10 bg-zinc-800 border border-white/5 rounded-xl px-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
                                                             />
                                                         </div>
-                                                        <div className="sm:col-span-2 space-y-1.5">
+                                                        <div className="space-y-1.5">
                                                             <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 ml-1">LinkedIn Profile</label>
                                                             <input
                                                                 type="text"
                                                                 value={editMemberLinkedin}
                                                                 onChange={(e) => setEditMemberLinkedin(e.target.value)}
                                                                 placeholder="https://linkedin.com/in/..."
+                                                                className="w-full h-10 bg-zinc-800 border border-white/5 rounded-xl px-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 ml-1">GitHub Profile</label>
+                                                            <input
+                                                                type="text"
+                                                                value={editMemberGithub}
+                                                                onChange={(e) => setEditMemberGithub(e.target.value)}
+                                                                placeholder="https://github.com/..."
                                                                 className="w-full h-10 bg-zinc-800 border border-white/5 rounded-xl px-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
                                                             />
                                                         </div>
@@ -680,6 +693,7 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
                                                         setEditMemberPhone(meta.phone || "")
                                                         setEditMemberEmail(meta.email || "")
                                                         setEditMemberLinkedin(meta.linkedin || "")
+                                                        setEditMemberGithub(meta.github || "")
                                                     }}
                                                     className="p-2 rounded-xl text-zinc-500 hover:text-blue-400 hover:bg-blue-500/10 transition-all"
                                                     title="Edit Member"
