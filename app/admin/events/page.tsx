@@ -11,6 +11,7 @@ export default function EventsPage() {
     const [events, setEvents] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
+    const [selectedStatus, setSelectedStatus] = useState<string>("all")
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [togglingRelease, setTogglingRelease] = useState<string | null>(null)
 
@@ -50,9 +51,25 @@ export default function EventsPage() {
         }
     }
 
-    const filteredEvents = events.filter(event =>
-        event.name.toLowerCase().includes(search.toLowerCase())
-    )
+    const filteredEvents = events
+        .filter(event => {
+            if (selectedStatus === "all") return true
+
+            const now = new Date()
+            const starts = event.startsAt ? new Date(event.startsAt) : null
+            const ends = event.endsAt ? new Date(event.endsAt) : null
+
+            let status = "UPCOMING"
+            if (starts && ends) {
+                if (now < starts) status = "UPCOMING"
+                else if (now > ends) status = "COMPLETED"
+                else status = "LIVE"
+            }
+            return status === selectedStatus
+        })
+        .filter(event =>
+            event.name.toLowerCase().includes(search.toLowerCase())
+        )
 
     const columns = [
         {
@@ -143,6 +160,18 @@ export default function EventsPage() {
                 searchPlaceholder="Search events..."
                 searchValue={search}
                 onSearchChange={setSearch}
+                filterSlot={
+                    <select
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                        className="h-12 bg-zinc-900 border border-white/5 rounded-2xl pl-4 pr-10 text-sm font-bold text-zinc-400 focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
+                    >
+                        <option value="all">All Status</option>
+                        <option value="LIVE">Live</option>
+                        <option value="UPCOMING">Upcoming</option>
+                        <option value="COMPLETED">Completed</option>
+                    </select>
+                }
                 actions={(event: any) => {
                     const isReleased = (event.settings as any)?.is_pb_statement_released ?? false
                     const isToggling = togglingRelease === event.id
@@ -152,8 +181,8 @@ export default function EventsPage() {
                                 onClick={() => handleTogglePBRelease(event.id, isReleased)}
                                 disabled={isToggling}
                                 className={`p-2 rounded-lg transition-all ${isReleased
-                                        ? 'hover:bg-red-500/10 text-emerald-400 hover:text-red-400'
-                                        : 'hover:bg-emerald-500/10 text-zinc-500 hover:text-emerald-400'
+                                    ? 'hover:bg-red-500/10 text-emerald-400 hover:text-red-400'
+                                    : 'hover:bg-emerald-500/10 text-zinc-500 hover:text-emerald-400'
                                     }`}
                                 title={isReleased ? 'Revoke PS Release' : 'Release PS to Teams'}
                             >

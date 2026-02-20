@@ -8,10 +8,14 @@ import { StatusBadge } from "@/components/hackathon/StatusBadge"
 
 export default function SubmissionsPage() {
     const [submissions, setSubmissions] = useState<any[]>([])
+    const [events, setEvents] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [selectedEventId, setSelectedEventId] = useState<string>("all")
+    const [search, setSearch] = useState("")
 
     useEffect(() => {
         fetchSubmissions()
+        fetchEvents()
     }, [])
 
     const fetchSubmissions = async () => {
@@ -25,6 +29,17 @@ export default function SubmissionsPage() {
             toast.error("Could not load submissions")
         } finally {
             setIsLoading(false)
+        }
+    }
+
+    const fetchEvents = async () => {
+        try {
+            const res = await fetch("/api/hackathon/admin/events")
+            if (!res.ok) throw new Error("Failed")
+            const data = await res.json()
+            setEvents(data)
+        } catch {
+            toast.error("Could not load events")
         }
     }
 
@@ -87,9 +102,30 @@ export default function SubmissionsPage() {
 
             <DataTable
                 columns={columns}
-                data={submissions}
+                data={submissions.filter(s => {
+                    const matchesEvent = selectedEventId === "all" ? true : s.eventId === selectedEventId
+                    const matchesSearch = s.team.name.toLowerCase().includes(search.toLowerCase()) ||
+                        s.checkpoint.title.toLowerCase().includes(search.toLowerCase())
+                    return matchesEvent && matchesSearch
+                })}
                 isLoading={isLoading}
                 searchPlaceholder="Search submissions..."
+                searchValue={search}
+                onSearchChange={setSearch}
+                filterSlot={
+                    <select
+                        value={selectedEventId}
+                        onChange={(e) => setSelectedEventId(e.target.value)}
+                        className="h-12 bg-zinc-900 border border-white/5 rounded-2xl pl-4 pr-10 text-sm font-bold text-zinc-400 focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
+                    >
+                        <option value="all">All Events</option>
+                        {events.map((e) => (
+                            <option key={e.id} value={e.id}>
+                                {e.name}
+                            </option>
+                        ))}
+                    </select>
+                }
                 actions={(sub: any) => (
                     <div className="flex items-center justify-end gap-2">
                         <button

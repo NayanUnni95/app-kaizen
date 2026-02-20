@@ -10,6 +10,7 @@ export default function AdminNotificationsPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [isCreating, setIsCreating] = useState(false)
     const [editingId, setEditingId] = useState<string | null>(null)
+    const [selectedFilterEventId, setSelectedFilterEventId] = useState<string>("all")
 
     // Form state
     const [title, setTitle] = useState("")
@@ -250,9 +251,23 @@ export default function AdminNotificationsPage() {
 
             <DataTable
                 columns={columns}
-                data={notifications}
+                data={notifications.filter(n => selectedFilterEventId === "all" ? true : n.eventId === selectedFilterEventId)}
                 isLoading={isLoading}
                 searchPlaceholder="Search history..."
+                filterSlot={
+                    <select
+                        value={selectedFilterEventId}
+                        onChange={(e) => setSelectedFilterEventId(e.target.value)}
+                        className="h-12 bg-zinc-900 border border-white/5 rounded-2xl pl-4 pr-10 text-sm font-bold text-zinc-400 focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
+                    >
+                        <option value="all">All Events</option>
+                        {events.map((e) => (
+                            <option key={e.id} value={e.id}>
+                                {e.name}
+                            </option>
+                        ))}
+                    </select>
+                }
                 actions={(n) => (
                     <div className="flex items-center gap-2">
                         <button

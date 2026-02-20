@@ -17,6 +17,7 @@ interface DataTableProps<T> {
     searchValue?: string
     actions?: (item: T) => ReactNode
     onRowClick?: (item: T) => void
+    filterSlot?: ReactNode
 }
 
 export function DataTable<T extends { id: string }>({
@@ -27,7 +28,8 @@ export function DataTable<T extends { id: string }>({
     onSearchChange,
     searchValue,
     actions,
-    onRowClick
+    onRowClick,
+    filterSlot
 }: DataTableProps<T>) {
     return (
         <div className="space-y-6">
@@ -43,10 +45,12 @@ export function DataTable<T extends { id: string }>({
                     />
                 </div>
                 <div className="flex items-center gap-3">
-                    <button className="flex items-center gap-2 px-4 h-12 bg-zinc-900 border border-white/5 rounded-2xl text-sm font-bold text-zinc-400 hover:text-white hover:border-white/10 transition-all">
-                        <Filter className="w-4 h-4" />
-                        Filter
-                    </button>
+                    {filterSlot || (
+                        <button className="flex items-center gap-2 px-4 h-12 bg-zinc-900 border border-white/5 rounded-2xl text-sm font-bold text-zinc-400 hover:text-white hover:border-white/10 transition-all">
+                            <Filter className="w-4 h-4" />
+                            Filter
+                        </button>
+                    )}
                 </div>
             </div>
 

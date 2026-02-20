@@ -8,13 +8,16 @@ import { CreateCheckpointModal } from "@/components/hackathon/CreateCheckpointMo
 
 export default function CheckpointsPage() {
     const [checkpoints, setCheckpoints] = useState<any[]>([])
+    const [events, setEvents] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
+    const [selectedEventId, setSelectedEventId] = useState<string>("all")
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedCheckpoint, setSelectedCheckpoint] = useState<any>(null)
 
     useEffect(() => {
         fetchCheckpoints()
+        fetchEvents()
     }, [])
 
     const fetchCheckpoints = async () => {
@@ -28,6 +31,17 @@ export default function CheckpointsPage() {
             toast.error("Could not load checkpoints")
         } finally {
             setIsLoading(false)
+        }
+    }
+
+    const fetchEvents = async () => {
+        try {
+            const res = await fetch("/api/hackathon/admin/events")
+            if (!res.ok) throw new Error("Failed")
+            const data = await res.json()
+            setEvents(data)
+        } catch {
+            toast.error("Could not load events")
         }
     }
 
@@ -51,10 +65,12 @@ export default function CheckpointsPage() {
         }
     }
 
-    const filteredCheckpoints = checkpoints.filter((cp: any) =>
-        cp.title.toLowerCase().includes(search.toLowerCase()) ||
-        cp.event?.name.toLowerCase().includes(search.toLowerCase())
-    )
+    const filteredCheckpoints = checkpoints
+        .filter((cp: any) => selectedEventId === "all" ? true : cp.eventId === selectedEventId)
+        .filter((cp: any) =>
+            cp.title.toLowerCase().includes(search.toLowerCase()) ||
+            cp.event?.name.toLowerCase().includes(search.toLowerCase())
+        )
 
     const toggleVisibility = async (cp: any) => {
         try {
@@ -134,6 +150,20 @@ export default function CheckpointsPage() {
                 searchPlaceholder="Search milestones..."
                 searchValue={search}
                 onSearchChange={setSearch}
+                filterSlot={
+                    <select
+                        value={selectedEventId}
+                        onChange={(e) => setSelectedEventId(e.target.value)}
+                        className="h-12 bg-zinc-900 border border-white/5 rounded-2xl pl-4 pr-10 text-sm font-bold text-zinc-400 focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
+                    >
+                        <option value="all">All Events</option>
+                        {events.map((e) => (
+                            <option key={e.id} value={e.id}>
+                                {e.name}
+                            </option>
+                        ))}
+                    </select>
+                }
                 actions={(cp) => (
                     <div className="flex items-center gap-2">
                         <button

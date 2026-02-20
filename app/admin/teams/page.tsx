@@ -9,8 +9,10 @@ import { TeamDetailModal } from "@/components/hackathon/TeamDetailModal"
 
 export default function TeamsPage() {
     const [teams, setTeams] = useState<any[]>([])
+    const [events, setEvents] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
+    const [selectedEventId, setSelectedEventId] = useState<string>("all")
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedTeam, setSelectedTeam] = useState<any>(null)
     const [openMenuId, setOpenMenuId] = useState<string | null>(null)
@@ -19,6 +21,7 @@ export default function TeamsPage() {
 
     useEffect(() => {
         fetchTeams()
+        fetchEvents()
     }, [])
 
     // Close action menu on outside click
@@ -56,6 +59,17 @@ export default function TeamsPage() {
         }
     }
 
+    const fetchEvents = async () => {
+        try {
+            const res = await fetch("/api/hackathon/admin/events")
+            if (!res.ok) throw new Error("Failed")
+            const data = await res.json()
+            setEvents(data)
+        } catch {
+            toast.error("Could not load events")
+        }
+    }
+
     const handleDeleteTeam = async (teamId: string) => {
         if (!confirm("Are you sure you want to delete this team? This action cannot be undone.")) return
         setDeletingId(teamId)
@@ -78,10 +92,12 @@ export default function TeamsPage() {
         setSelectedTeam(team)
     }
 
-    const filteredTeams = teams.filter(team =>
-        team.name.toLowerCase().includes(search.toLowerCase()) ||
-        team.username.toLowerCase().includes(search.toLowerCase())
-    )
+    const filteredTeams = teams
+        .filter(team => selectedEventId === "all" ? true : team.eventId === selectedEventId)
+        .filter(team =>
+            team.name.toLowerCase().includes(search.toLowerCase()) ||
+            team.username.toLowerCase().includes(search.toLowerCase())
+        )
 
     const columns = [
         {
@@ -179,6 +195,20 @@ export default function TeamsPage() {
                 searchValue={search}
                 onSearchChange={setSearch}
                 onRowClick={handleRowClick}
+                filterSlot={
+                    <select
+                        value={selectedEventId}
+                        onChange={(e) => setSelectedEventId(e.target.value)}
+                        className="h-12 bg-zinc-900 border border-white/5 rounded-2xl pl-4 pr-10 text-sm font-bold text-zinc-400 focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
+                    >
+                        <option value="all">All Events</option>
+                        {events.map((e) => (
+                            <option key={e.id} value={e.id}>
+                                {e.name}
+                            </option>
+                        ))}
+                    </select>
+                }
                 actions={(team: any) => {
                     const isMenuOpen = openMenuId === team.id
                     const isDeleting = deletingId === team.id
