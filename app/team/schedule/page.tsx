@@ -1,78 +1,145 @@
 import { prisma } from "@/lib/prisma"
 import { Calendar, Clock, MapPin, Zap } from "lucide-react"
+import { EmptyState } from "@/components/ui/EmptyState"
 
 export default async function TeamSchedulePage() {
     const events = await prisma.event.findMany({
         orderBy: { startsAt: 'asc' }
     })
 
+    const now = new Date()
+
     return (
-        <div className="space-y-10 pb-20">
-            <header className="flex flex-col gap-2">
-                <h1 className="text-3xl font-black tracking-tight">Timeline</h1>
-                <p className="text-zinc-500 font-medium italic">Chronology of the hackathon event cycle.</p>
+        <div className="space-y-6 pb-8">
+            {/* Header */}
+            <header className="kz-animate-fade-in">
+                <h1 className="font-heading font-bold text-2xl sm:text-3xl text-[#0F172A]">Schedule</h1>
+                <p className="text-[#64748B] text-sm mt-1">Hackathon timeline — all key events</p>
             </header>
 
-            <div className="relative space-y-12">
-                {/* Vertical Line */}
-                <div className="absolute left-4 top-4 bottom-4 w-px bg-zinc-800" />
+            {events.length === 0 ? (
+                <div className="kz-animate-slide-up">
+                    <EmptyState
+                        icon={Calendar}
+                        title="Schedule not published"
+                        description="The full hackathon schedule will appear here once finalized. Check back soon!"
+                    />
+                </div>
+            ) : (
+                /* Vertical timeline */
+                <div className="relative kz-animate-slide-up">
+                    {/* Left timeline line */}
+                    <div className="absolute left-[19px] top-5 bottom-5 w-0.5 bg-[#E6E9EE]" />
 
-                {events.map((event, idx) => {
-                    const starts = event.startsAt ? new Date(event.startsAt) : null
-                    const isUpcoming = starts && starts > new Date()
+                    <div className="space-y-4">
+                        {events.map((event, idx) => {
+                            const starts = event.startsAt ? new Date(event.startsAt) : null
+                            const ends = event.endsAt ? new Date(event.endsAt) : null
+                            const isNow = starts && ends
+                                ? (now >= starts && now <= ends)
+                                : (starts ? Math.abs(now.getTime() - starts.getTime()) < 3600000 : false)
+                            const isPast = starts ? starts < now : false
+                            const isNext = !isNow && !isPast
 
-                    return (
-                        <div key={event.id} className="relative pl-12 group animate-in fade-in slide-in-from-left-4 duration-500" style={{ animationDelay: `${idx * 100}ms` }}>
-                            {/* Dot */}
-                            <div className={`
-                                absolute left-3 top-2 w-2.5 h-2.5 rounded-full border-2 border-black z-10 
-                                ${isUpcoming ? 'bg-zinc-700' : 'bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]'}
-                            `} />
-
-                            <div className="bg-zinc-900 border border-white/5 rounded-3xl p-6 transition-all hover:bg-zinc-900 shadow-xl">
-                                <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 block ${isUpcoming ? 'text-zinc-600' : 'text-purple-500'}`}>
-                                    {isUpcoming ? 'Scheduled' : 'Live Now'}
-                                </span>
-                                <h3 className="text-xl font-black mb-4">{event.name}</h3>
-
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-3 text-zinc-400 text-sm">
-                                        <div className="p-2 bg-zinc-800 rounded-lg">
-                                            <Calendar className="w-4 h-4" />
+                            return (
+                                <div
+                                    key={event.id}
+                                    className="relative flex gap-5 items-start pl-1 kz-animate-slide-up"
+                                    style={{ animationDelay: `${idx * 0.07}s` }}
+                                >
+                                    {/* Timeline dot */}
+                                    <div className="flex-shrink-0 mt-4 relative z-10">
+                                        <div className={`
+                                            w-10 h-10 rounded-xl flex items-center justify-center border-2
+                                            ${isNow
+                                                ? "bg-[#2563EB] border-[#2563EB] shadow-lg shadow-[#2563EB]/30"
+                                                : isPast
+                                                    ? "bg-[#D1FAE5] border-[#A7F3D0]"
+                                                    : "bg-white border-[#E6E9EE]"
+                                            }
+                                        `}>
+                                            {isNow ? (
+                                                <Zap className="w-4 h-4 text-white" />
+                                            ) : isPast ? (
+                                                <Calendar className="w-4 h-4 text-[#16A34A]" />
+                                            ) : (
+                                                <Calendar className="w-4 h-4 text-[#94A3B8]" />
+                                            )}
                                         </div>
-                                        <span>{starts ? starts.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'Date TBA'}</span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-zinc-400 text-sm">
-                                        <div className="p-2 bg-zinc-800 rounded-lg">
-                                            <Clock className="w-4 h-4" />
+
+                                    {/* Card */}
+                                    <div className={`
+                                        flex-1 kz-card p-4 sm:p-5
+                                        ${isNow ? "border-[#BFDBFE] bg-[#EFF6FF]" : ""}
+                                        ${isPast ? "opacity-70" : ""}
+                                    `}>
+                                        {/* Status + time row */}
+                                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                                            {isNow && (
+                                                <span className="kz-badge bg-[#2563EB] text-white text-[10px]">
+                                                    🔴 Live Now
+                                                </span>
+                                            )}
+                                            {isPast && !isNow && (
+                                                <span className="kz-badge bg-[#D1FAE5] text-[#065F46] text-[10px]">
+                                                    Completed
+                                                </span>
+                                            )}
+                                            {isNext && (
+                                                <span className="kz-badge bg-[#F8FAFC] text-[#64748B] text-[10px] border border-[#E6E9EE]">
+                                                    Upcoming
+                                                </span>
+                                            )}
+                                            {starts && (
+                                                <span className="text-xs font-bold text-[#2563EB]">
+                                                    {starts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                            )}
                                         </div>
-                                        <span>{starts ? starts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'Time TBA'}</span>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-zinc-400 text-sm">
-                                        <div className="p-2 bg-zinc-800 rounded-lg">
-                                            <MapPin className="w-4 h-4" />
+
+                                        <h3 className="font-heading font-semibold text-base text-[#0F172A] mb-3">
+                                            {event.name}
+                                        </h3>
+
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                                                <Calendar className="w-3.5 h-3.5 flex-shrink-0 text-[#94A3B8]" />
+                                                <span>
+                                                    {starts
+                                                        ? starts.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+                                                        : "Date TBA"
+                                                    }
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                                                <Clock className="w-3.5 h-3.5 flex-shrink-0 text-[#94A3B8]" />
+                                                <span>
+                                                    {starts
+                                                        ? starts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+                                                        : "Time TBA"
+                                                    }
+                                                    {ends && ` — ${ends.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                                                <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-[#94A3B8]" />
+                                                <span>Main Hall / Virtual</span>
+                                            </div>
                                         </div>
-                                        <span>Main Auditorium / Virtual</span>
+
+                                        {event.description && (
+                                            <p className="mt-3 text-sm text-[#64748B] leading-relaxed border-l-2 border-[#BFDBFE] pl-3">
+                                                {event.description}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
-
-                                {event.description && (
-                                    <p className="mt-6 text-zinc-500 text-sm leading-relaxed italic border-l-2 border-white/5 pl-4">
-                                        {event.description}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    )
-                })}
-
-                {events.length === 0 && (
-                    <div className="text-center py-20 bg-zinc-900/30 border border-dashed border-white/5 rounded-3xl">
-                        <Zap className="w-8 h-8 text-zinc-800 mx-auto mb-4" />
-                        <p className="text-zinc-600 font-black italic uppercase tracking-widest">Event schedule is being finalized</p>
+                            )
+                        })}
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     )
 }
