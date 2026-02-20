@@ -1,34 +1,69 @@
+// components/SplashOverlay.tsx
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 export function SplashOverlay() {
-    const [visible, setVisible] = useState(true)
+    const [visible, setVisible] = useState(false)
     const [hiding, setHiding] = useState(false)
+    const [mounted, setMounted] = useState(false)
+    const didShowRef = useRef<boolean>(false)
+    const pathname = usePathname()
 
     const dismiss = useCallback(() => {
         setHiding(true)
         setTimeout(() => setVisible(false), 600)
+        try {
+            localStorage.setItem("kz_splash_seen_v3", "true")
+            sessionStorage.setItem("kz_splash_shown_this_session", "true")
+                ; (window as any).__kz_splash_shown = true
+        } catch (e) {
+            console.error("Storage error", e)
+        }
     }, [])
 
     useEffect(() => {
-        // Auto-hide after 5 seconds
-        const autoHide = setTimeout(dismiss, 5000)
+        setMounted(true)
 
-        // Esc key to dismiss
-        const handleKey = (e: KeyboardEvent) => {
-            if (e.key === "Escape") dismiss()
+        // Safety: don't run if already shown in this SPA session
+        if ((window as any).__kz_splash_shown) return
+
+        try {
+            const seen = localStorage.getItem("kz_splash_seen_v3")
+            const shownThisSession = sessionStorage.getItem("kz_splash_shown_this_session")
+            const globalFlag = (window as any).__kz_splash_shown
+
+            // Only show if not previously seen and not shown this session (and not flagged globally)
+            if (seen || shownThisSession || globalFlag) return
+
+            // Only show on the home path by default (adjust if you want it to show on other first-load pages)
+            const isHomePath = pathname === "/" || pathname === ""
+            if (!isHomePath) return
+
+            if (didShowRef.current) return
+            didShowRef.current = true
+
+            setVisible(true)
+
+            const autoHide = setTimeout(dismiss, 5000)
+
+            const handleKey = (e: KeyboardEvent) => {
+                if (e.key === "Escape") dismiss()
+            }
+            document.addEventListener("keydown", handleKey)
+
+            return () => {
+                clearTimeout(autoHide)
+                document.removeEventListener("keydown", handleKey)
+            }
+        } catch (e) {
+            console.error("SplashOverlay read error", e)
         }
-        document.addEventListener("keydown", handleKey)
+    }, [dismiss, pathname])
 
-        return () => {
-            clearTimeout(autoHide)
-            document.removeEventListener("keydown", handleKey)
-        }
-    }, [dismiss])
-
-    if (!visible) return null
+    if (!mounted || !visible) return null
 
     return (
         <div
@@ -36,12 +71,11 @@ export function SplashOverlay() {
             aria-modal="true"
             aria-label="Kaizen welcome splash"
             className={`
-                fixed inset-0 z-[9999] flex flex-col items-center justify-center
-                bg-[#0F172A] transition-opacity duration-700 ease-in-out
-                ${hiding ? "opacity-0 invisible" : "opacity-100 visible"}
-            `}
+        fixed inset-0 z-[9999] flex flex-col items-center justify-center
+        bg-[#0F172A] transition-opacity duration-700 ease-in-out
+        ${hiding ? "opacity-0 invisible" : "opacity-100 visible"}
+      `}
         >
-            {/* Background cinematic aura */}
             <div
                 className="absolute inset-0 pointer-events-none opacity-40"
                 style={{
@@ -49,19 +83,19 @@ export function SplashOverlay() {
                 }}
             />
 
-            {/* Animated grain overlay for texture */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('/assets/grain.svg')]" />
 
-            {/* Logo + Text Content */}
             <div className={`relative z-10 flex flex-col items-center gap-8 ${hiding ? 'scale-95 opacity-0' : 'scale-100 opacity-100'} transition-all duration-700 ease-out`}>
-                <div className="relative w-36 h-36 sm:w-44 sm:h-44 group">
-                    <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-3xl group-hover:bg-blue-500/30 transition-colors duration-1000" />
+                <div className="relative group">
+                    <div className="absolute inset-0 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-600/30 transition-all duration-1000" />
                     <Image
                         src="/assets/kaizen-asset.png"
-                        alt="Kaizen Logo"
-                        fill
-                        className="object-contain relative z-10 drop-shadow-[0_0_30px_rgba(37,99,235,0.4)]"
+                        alt="Kaizen"
+                        width={120}
+                        height={120}
+                        unoptimized
                         priority
+                        className="relative z-10 drop-shadow-2xl transition-transform duration-700 group-hover:scale-110"
                     />
                 </div>
 
@@ -78,7 +112,6 @@ export function SplashOverlay() {
                     </div>
                 </div>
 
-                {/* Refined loading indicator */}
                 <div className="flex items-center gap-2 mt-4">
                     {[0, 1, 2].map((i) => (
                         <div
@@ -94,23 +127,21 @@ export function SplashOverlay() {
                 </div>
             </div>
 
-            {/* Premium Skip CTA */}
             <button
                 onClick={dismiss}
                 className="
-                    absolute bottom-12 left-1/2 -translate-x-1/2
-                    px-6 py-2.5 text-[11px] font-bold text-blue-100/40 uppercase tracking-[0.2em]
-                    border border-white/10 rounded-full
-                    hover:bg-white/5 hover:text-white hover:border-white/20
-                    transition-all duration-300 kz-animate-fade-in
-                "
+          absolute bottom-12 left-1/2 -translate-x-1/2
+          px-6 py-2.5 text-[11px] font-bold text-blue-100/40 uppercase tracking-[0.2em]
+          border border-white/10 rounded-full
+          hover:bg-white/5 hover:text-white hover:border-white/20
+          transition-all duration-300 kz-animate-fade-in
+        "
                 style={{ animationDelay: "1s" }}
                 aria-label="Skip introduction"
             >
                 Skip Entrance
             </button>
 
-            {/* Keyboard hint */}
             <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[9px] text-white/20 font-medium uppercase tracking-widest">
                 Press ESC to dismiss
             </span>

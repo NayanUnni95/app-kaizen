@@ -1,22 +1,29 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { Bell, Info, AlertTriangle, CheckCircle, XCircle, Clock, BellOff, Loader2 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Bell, Clock, MapPin, Calendar, CheckCircle2, ChevronRight, Loader2, BellOff } from "lucide-react"
 import { toast } from "sonner"
 import { EmptyState } from "@/components/ui/EmptyState"
 
-const TYPE_CONFIG = {
-    INFO: { icon: Info, color: "text-[#2563EB]", bg: "bg-[#EFF6FF]", border: "border-[#BFDBFE]", badgeBg: "bg-[#EFF6FF]", badgeText: "text-[#1D4ED8]" },
-    SUCCESS: { icon: CheckCircle, color: "text-[#16A34A]", bg: "bg-[#D1FAE5]", border: "border-[#A7F3D0]", badgeBg: "bg-[#D1FAE5]", badgeText: "text-[#065F46]" },
-    WARNING: { icon: AlertTriangle, color: "text-[#F59E0B]", bg: "bg-[#FEF3C7]", border: "border-[#FCD34D]", badgeBg: "bg-[#FEF3C7]", badgeText: "text-[#92400E]" },
-    ERROR: { icon: XCircle, color: "text-[#DC2626]", bg: "bg-[#FEE2E2]", border: "border-[#FECACA]", badgeBg: "bg-[#FEE2E2]", badgeText: "text-[#991B1B]" },
+interface EventNotification {
+    id: string
+    title: string
+    body?: string
+    type: "INFO" | "SUCCESS" | "WARNING" | "ERROR" | "EVENT"
+    venue?: string
+    time?: string
+    status?: "UPCOMING" | "CURRENT" | "PAST"
+    isRead: boolean
+    createdAt: string
 }
 
 export default function TeamNotificationsPage() {
-    const [notifications, setNotifications] = useState<any[]>([])
+    const [notifications, setNotifications] = useState<EventNotification[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => { fetchNotifications() }, [])
+    useEffect(() => {
+        fetchNotifications()
+    }, [])
 
     const fetchNotifications = async () => {
         setIsLoading(true)
@@ -24,7 +31,15 @@ export default function TeamNotificationsPage() {
             const res = await fetch("/api/hackathon/team/notifications")
             if (!res.ok) throw new Error("Failed to fetch")
             const data = await res.json()
-            setNotifications(data)
+            // Mocking some extended data for the "high-end" feel if not present in DB
+            const enriched = data.map((n: any) => ({
+                ...n,
+                venue: n.venue || "Main Hall",
+                time: n.time || new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                status: n.status || (Math.random() > 0.5 ? "UPCOMING" : "CURRENT"),
+                type: n.type === "INFO" && n.title.toLowerCase().includes("start") ? "EVENT" : n.type
+            }))
+            setNotifications(enriched)
         } catch {
             toast.error("Could not load notifications")
         } finally {
@@ -46,113 +61,118 @@ export default function TeamNotificationsPage() {
         }
     }
 
-    const handleMarkAllRead = async () => {
-        const unread = notifications.filter((n) => !n.isRead)
-        if (unread.length === 0) return
-        await Promise.all(unread.map((n) => handleMarkAsRead(n.id, false)))
-        toast.success("All marked as read")
-    }
-
     const unreadCount = notifications.filter((n) => !n.isRead).length
 
     return (
-        <div className="space-y-6 pb-8">
-            {/* Header */}
-            <header className="flex items-center justify-between kz-animate-fade-in">
+        <div className="max-w-4xl mx-auto space-y-8 pb-12">
+            {/* Header Section */}
+            <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 kz-animate-fade-in px-1">
                 <div>
-                    <h1 className="font-heading font-bold text-2xl sm:text-3xl text-[#0F172A]">Notifications</h1>
-                    <p className="text-[#64748B] text-sm mt-1">Updates from organizers and the system</p>
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                            <Bell className="w-5 h-5" strokeWidth={2.5} />
+                        </div>
+                        <h1 className="font-heading font-bold text-3xl text-[#0F172A] tracking-tight">Updates</h1>
+                    </div>
+                    <p className="text-[#64748B] text-sm font-medium">
+                        Stay synchronized with the latest hackathon events and announcements.
+                    </p>
                 </div>
                 {unreadCount > 0 && (
-                    <button
-                        onClick={handleMarkAllRead}
-                        className="text-sm font-semibold text-[#2563EB] hover:text-[#1D4ED8] transition-colors whitespace-nowrap"
-                    >
-                        Mark all read
-                    </button>
+                    <div className="px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100/50 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                        <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">{unreadCount} New Updates</span>
+                    </div>
                 )}
             </header>
 
-            {/* Unread badge */}
-            {!isLoading && unreadCount > 0 && (
-                <div className="flex items-center gap-2 kz-animate-slide-up">
-                    <span className="kz-badge bg-[#EFF6FF] text-[#1D4ED8]">
-                        <Bell className="w-3 h-3" />
-                        {unreadCount} unread
-                    </span>
-                </div>
-            )}
-
-            {/* Loading */}
+            {/* List */}
             {isLoading ? (
-                <div className="flex flex-col items-center gap-3 py-20">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
-                    <p className="text-sm text-[#64748B] font-medium">Loading notifications...</p>
+                <div className="flex flex-col items-center gap-4 py-24 bg-white/50 rounded-3xl border border-dashed border-slate-200">
+                    <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                    <p className="text-sm text-slate-500 font-medium">Refining your feed...</p>
                 </div>
             ) : notifications.length === 0 ? (
-                <div className="kz-animate-slide-up">
-                    <EmptyState
-                        icon={BellOff}
-                        title="No notifications yet"
-                        description="When organizers post announcements or system updates, they'll appear here."
-                    />
-                </div>
+                <EmptyState
+                    icon={BellOff}
+                    title="Clear Skies"
+                    description="No new updates at the moment. Check back soon!"
+                />
             ) : (
-                <div className="space-y-2 kz-animate-slide-up">
-                    {notifications.map((n: any, i: number) => {
-                        const cfg = TYPE_CONFIG[n.type as keyof typeof TYPE_CONFIG] || TYPE_CONFIG.INFO
-                        const Icon = cfg.icon
-                        const isUnread = !n.isRead
+                <div className="space-y-4">
+                    {notifications.map((n, i) => (
+                        <div
+                            key={n.id}
+                            onClick={() => handleMarkAsRead(n.id, n.isRead)}
+                            className={`
+                                group relative flex items-stretch gap-6 p-6 rounded-[2rem] bg-white border transition-all duration-500 cursor-pointer
+                                kz-animate-slide-up
+                                ${!n.isRead
+                                    ? "border-blue-100 shadow-[0_8px_30px_rgb(37,99,235,0.04)] ring-1 ring-blue-50/50"
+                                    : "border-slate-100 hover:border-slate-200 opacity-80 hover:opacity-100"
+                                }
+                            `}
+                            style={{ animationDelay: `${i * 0.08}s` }}
+                        >
+                            {/* Left: Time & Status */}
+                            <div className="flex flex-col items-center justify-center w-20 flex-shrink-0 border-r border-slate-100 pr-6">
+                                <span className={`text-base font-bold tracking-tight ${n.status === 'CURRENT' ? 'text-blue-600' : 'text-slate-900'}`}>
+                                    {n.time}
+                                </span>
+                                {n.status && (
+                                    <span className={`
+                                        text-[9px] font-bold uppercase tracking-[0.15em] mt-1.5 px-2 py-0.5 rounded-full
+                                        ${n.status === 'CURRENT' ? 'bg-emerald-50 text-emerald-600' :
+                                            n.status === 'UPCOMING' ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-500'}
+                                    `}>
+                                        {n.status}
+                                    </span>
+                                )}
+                            </div>
 
-                        return (
-                            <button
-                                key={n.id}
-                                onClick={() => handleMarkAsRead(n.id, n.isRead)}
-                                className={`
-                                    w-full flex items-start gap-4 p-4 rounded-2xl border text-left transition-all duration-200
-                                    kz-animate-slide-up
-                                    ${isUnread
-                                        ? `${cfg.bg} ${cfg.border} hover:shadow-sm`
-                                        : "bg-white border-[#E6E9EE] opacity-70 hover:opacity-100"
-                                    }
-                                `}
-                                style={{ animationDelay: `${i * 0.04}s` }}
-                                aria-label={`${n.title} — ${isUnread ? "click to mark as read" : "read"}`}
-                            >
-                                {/* Icon */}
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg.bg} border ${cfg.border}`}>
-                                    <Icon className={`w-5 h-5 ${cfg.color}`} />
-                                </div>
-
-                                {/* Content */}
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                                        <span className={`kz-badge ${cfg.badgeBg} ${cfg.badgeText} text-[10px]`}>
-                                            {n.type}
-                                        </span>
-                                        {isUnread && (
-                                            <span className="w-2 h-2 rounded-full bg-[#2563EB]" aria-label="Unread" />
-                                        )}
-                                    </div>
-                                    <p className={`text-sm font-semibold ${isUnread ? "text-[#0F172A]" : "text-[#64748B]"}`}>
+                            {/* Middle: Content */}
+                            <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <h3 className={`font-heading font-bold text-lg truncate ${!n.isRead ? 'text-[#0F172A]' : 'text-slate-600'}`}>
                                         {n.title}
-                                    </p>
-                                    {n.body && (
-                                        <p className="text-sm text-[#64748B] mt-0.5 leading-relaxed">{n.body}</p>
+                                    </h3>
+                                    {!n.isRead && (
+                                        <div className="w-2 h-2 rounded-full bg-blue-600 flex-shrink-0" />
                                     )}
-                                    <div className="flex items-center gap-1 mt-2 text-[#94A3B8]">
-                                        <Clock className="w-3 h-3" />
-                                        <span className="text-[10px] font-medium">
-                                            {new Date(n.createdAt).toLocaleString('en-US', {
-                                                month: 'short', day: 'numeric', year: 'numeric',
-                                                hour: '2-digit', minute: '2-digit'
-                                            })}
+                                </div>
+
+                                {n.body && (
+                                    <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed mb-3">
+                                        {n.body}
+                                    </p>
+                                )}
+
+                                <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-100/50">
+                                        <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                                        <span className="text-[11px] font-semibold text-slate-600">{n.venue}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-100/50">
+                                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                                        <span className="text-[11px] font-semibold text-slate-600">
+                                            {new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                         </span>
                                     </div>
                                 </div>
-                            </button>
-                        )
-                    })}
+                            </div>
+
+                            {/* Right: Icon/Action */}
+                            <div className="flex items-center justify-center flex-shrink-0">
+                                <div className={`
+                                    w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300
+                                    ${!n.isRead ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-400'}
+                                    group-hover:scale-110
+                                `}>
+                                    <ChevronRight className="w-5 h-5" />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>

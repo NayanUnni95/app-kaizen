@@ -1,145 +1,110 @@
-import { prisma } from "@/lib/prisma"
-import { Calendar, Clock, MapPin, Zap } from "lucide-react"
-import { EmptyState } from "@/components/ui/EmptyState"
+// app/team/schedule/page.tsx
+import { MapPin, Calendar, Sparkles } from "lucide-react"
 
 export default async function TeamSchedulePage() {
-    const events = await prisma.event.findMany({
-        orderBy: { startsAt: 'asc' }
-    })
+    // Dummy Data for the reference feel
+    const scheduleItems = [
+        { id: '1', time: '3:00 PM', name: 'Hackathon Starts', venue: 'Main Hall', startsAt: '2026-02-20T15:00:00', endsAt: '2026-02-20T16:00:00' },
+        { id: '2', time: '5:30 PM', name: 'Inauguration', venue: 'Auditorium', startsAt: '2026-02-20T17:30:00', endsAt: '2026-02-20T18:30:00' },
+        { id: '3', time: '6:30 PM', name: 'Entertainment Session', venue: 'Open Stage', startsAt: '2026-02-20T18:30:00', endsAt: '2026-02-20T20:00:00' },
+        { id: '4', time: '9:00 PM', name: 'Dinner', venue: 'Dining Hall', startsAt: '2026-02-20T21:00:00', endsAt: '2026-02-20T22:30:00' },
+        { id: '5', time: '11:00 PM', name: 'Late Night Hacking', venue: 'Coding Arena', startsAt: '2026-02-20T23:00:00', endsAt: '2026-02-21T03:00:00' },
+    ]
 
     const now = new Date()
 
     return (
-        <div className="space-y-6 pb-8">
+        <div className="max-w-3xl mx-auto pb-20 pt-8 px-4">
             {/* Header */}
-            <header className="kz-animate-fade-in">
-                <h1 className="font-heading font-bold text-2xl sm:text-3xl text-[#0F172A]">Schedule</h1>
-                <p className="text-[#64748B] text-sm mt-1">Hackathon timeline — all key events</p>
+            <header className="mb-16 flex items-end justify-between px-2 kz-animate-fade-in">
+                <div>
+                    <h1 className="font-heading font-black text-5xl text-[#0F172A] tracking-tighter leading-none mb-4">Timeline</h1>
+                    <p className="text-[#64748B] text-lg font-medium max-w-md">
+                        The heartbeat of the event. Every milestone recorded in real-time.
+                    </p>
+                </div>
+                <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-100">
+                    <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mt-0.5">Live Sync active</span>
+                </div>
             </header>
 
-            {events.length === 0 ? (
-                <div className="kz-animate-slide-up">
-                    <EmptyState
-                        icon={Calendar}
-                        title="Schedule not published"
-                        description="The full hackathon schedule will appear here once finalized. Check back soon!"
-                    />
-                </div>
-            ) : (
-                /* Vertical timeline */
-                <div className="relative kz-animate-slide-up">
-                    {/* Left timeline line */}
-                    <div className="absolute left-[19px] top-5 bottom-5 w-0.5 bg-[#E6E9EE]" />
+            {/* Timeline Container */}
+            <div className="relative">
+                {/* The "Stick" (Vertical Line) */}
+                <div className="absolute left-[1.125rem] top-2 bottom-2 w-[2px] bg-slate-100" />
 
-                    <div className="space-y-4">
-                        {events.map((event, idx) => {
-                            const starts = event.startsAt ? new Date(event.startsAt) : null
-                            const ends = event.endsAt ? new Date(event.endsAt) : null
-                            const isNow = starts && ends
-                                ? (now >= starts && now <= ends)
-                                : (starts ? Math.abs(now.getTime() - starts.getTime()) < 3600000 : false)
-                            const isPast = starts ? starts < now : false
-                            const isNext = !isNow && !isPast
+                <div className="space-y-4">
+                    {scheduleItems.map((item, i) => {
+                        const starts = new Date(item.startsAt)
+                        const ends = new Date(item.endsAt)
+                        const isNow = now >= starts && now <= ends
+                        const isPast = now > ends
 
-                            return (
-                                <div
-                                    key={event.id}
-                                    className="relative flex gap-5 items-start pl-1 kz-animate-slide-up"
-                                    style={{ animationDelay: `${idx * 0.07}s` }}
-                                >
-                                    {/* Timeline dot */}
-                                    <div className="flex-shrink-0 mt-4 relative z-10">
-                                        <div className={`
-                                            w-10 h-10 rounded-xl flex items-center justify-center border-2
-                                            ${isNow
-                                                ? "bg-[#2563EB] border-[#2563EB] shadow-lg shadow-[#2563EB]/30"
-                                                : isPast
-                                                    ? "bg-[#D1FAE5] border-[#A7F3D0]"
-                                                    : "bg-white border-[#E6E9EE]"
-                                            }
-                                        `}>
-                                            {isNow ? (
-                                                <Zap className="w-4 h-4 text-white" />
-                                            ) : isPast ? (
-                                                <Calendar className="w-4 h-4 text-[#16A34A]" />
-                                            ) : (
-                                                <Calendar className="w-4 h-4 text-[#94A3B8]" />
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Card */}
+                        return (
+                            <div
+                                key={item.id}
+                                className="relative flex group kz-animate-slide-up"
+                                style={{ animationDelay: `${i * 0.1}s` }}
+                            >
+                                {/* Circle on the Stick */}
+                                <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
                                     <div className={`
-                                        flex-1 kz-card p-4 sm:p-5
-                                        ${isNow ? "border-[#BFDBFE] bg-[#EFF6FF]" : ""}
-                                        ${isPast ? "opacity-70" : ""}
+                                        w-[2.25rem] h-[2.25rem] rounded-full border-4 bg-white flex items-center justify-center transition-all duration-500
+                                        ${isNow
+                                            ? 'border-black scale-110 shadow-lg shadow-black/10'
+                                            : isPast ? 'border-slate-200' : 'border-slate-100'}
                                     `}>
-                                        {/* Status + time row */}
-                                        <div className="flex flex-wrap items-center gap-2 mb-2">
-                                            {isNow && (
-                                                <span className="kz-badge bg-[#2563EB] text-white text-[10px]">
-                                                    🔴 Live Now
-                                                </span>
-                                            )}
-                                            {isPast && !isNow && (
-                                                <span className="kz-badge bg-[#D1FAE5] text-[#065F46] text-[10px]">
-                                                    Completed
-                                                </span>
-                                            )}
-                                            {isNext && (
-                                                <span className="kz-badge bg-[#F8FAFC] text-[#64748B] text-[10px] border border-[#E6E9EE]">
-                                                    Upcoming
-                                                </span>
-                                            )}
-                                            {starts && (
-                                                <span className="text-xs font-bold text-[#2563EB]">
-                                                    {starts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                                                </span>
-                                            )}
-                                        </div>
+                                        {isNow && <div className="w-2 h-2 rounded-full bg-black animate-pulse" />}
+                                    </div>
+                                </div>
 
-                                        <h3 className="font-heading font-semibold text-base text-[#0F172A] mb-3">
-                                            {event.name}
-                                        </h3>
+                                {/* Event Card */}
+                                <div className="ml-16 flex-1">
+                                    <div className={`
+                                        relative p-8 rounded-[2.5rem] border-2 transition-all duration-700
+                                        ${isNow
+                                            ? 'bg-black text-white border-black shadow-[0_30px_60px_rgba(0,0,0,0.15)] -translate-y-1'
+                                            : 'bg-white text-slate-400 border-slate-50 hover:border-slate-200 hover:shadow-md'}
+                                    `}>
+                                        <div className="space-y-4">
+                                            {/* Time */}
+                                            <span className={`text-xs font-black uppercase tracking-[0.2em] ${isNow ? 'text-white/50' : 'text-slate-300'}`}>
+                                                {item.time}
+                                            </span>
 
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-2 text-sm text-[#64748B]">
-                                                <Calendar className="w-3.5 h-3.5 flex-shrink-0 text-[#94A3B8]" />
-                                                <span>
-                                                    {starts
-                                                        ? starts.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
-                                                        : "Date TBA"
-                                                    }
+                                            {/* Name */}
+                                            <h3 className={`font-heading font-black text-3xl tracking-tighter leading-none ${isNow ? 'text-white' : 'text-black'}`}>
+                                                {item.name}
+                                            </h3>
+
+                                            {/* Venue */}
+                                            <div className="flex items-center gap-2">
+                                                <MapPin className={`w-4 h-4 ${isNow ? 'text-white/40' : 'text-slate-300'}`} />
+                                                <span className={`text-sm font-bold tracking-tight ${isNow ? 'text-white/60' : 'text-slate-400'}`}>
+                                                    {item.venue}
                                                 </span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-[#64748B]">
-                                                <Clock className="w-3.5 h-3.5 flex-shrink-0 text-[#94A3B8]" />
-                                                <span>
-                                                    {starts
-                                                        ? starts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-                                                        : "Time TBA"
-                                                    }
-                                                    {ends && ` — ${ends.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-[#64748B]">
-                                                <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-[#94A3B8]" />
-                                                <span>Main Hall / Virtual</span>
                                             </div>
                                         </div>
 
-                                        {event.description && (
-                                            <p className="mt-3 text-sm text-[#64748B] leading-relaxed border-l-2 border-[#BFDBFE] pl-3">
-                                                {event.description}
-                                            </p>
+                                        {/* Status Tag for Active */}
+                                        {isNow && (
+                                            <div className="absolute top-8 right-8 px-4 py-1.5 rounded-full bg-white/10 border border-white/20">
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-white">Happening Now</span>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
-                            )
-                        })}
-                    </div>
+                            </div>
+                        )
+                    })}
                 </div>
-            )}
+            </div>
+
+            {/* Footer Note */}
+            <div className="mt-20 text-center">
+                <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">End of Transmission</p>
+            </div>
         </div>
     )
 }

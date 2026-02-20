@@ -29,6 +29,32 @@ export async function getTeamById(id: string) {
     })
 }
 
+export async function getTeamByEmail(email: string) {
+    return await prisma.team.findFirst({
+        where: { email },
+        include: {
+            members: true,
+            event: {
+                include: { checkpoints: true }
+            },
+            submissions: true,
+            progress: {
+                include: { checkpoint: true }
+            }
+        }
+    })
+}
+
+export async function getTeamBySession(user: any) {
+    if (user?.teamId) {
+        return await getTeamById(user.teamId)
+    }
+    if (user?.email) {
+        return await getTeamByEmail(user.email)
+    }
+    return null
+}
+
 export async function createTeam(data: {
     name: string
     username: string

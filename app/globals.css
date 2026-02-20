@@ -41,23 +41,28 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: var(--font-poppins), var(--font-inter), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 }
 
 body {
   background: var(--kz-bg);
   color: var(--kz-text);
-  font-family: var(--font-inter, var(--font-geist-sans)), system-ui, -apple-system, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  /* Slightly smaller base for elegance */
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Heading utility */
 .font-heading {
-  font-family: var(--font-poppins, var(--font-geist-sans)), system-ui, sans-serif;
+  font-family: var(--font-heading);
+  letter-spacing: -0.025em;
+  /* Tighter tracking for headings */
 }
 
 /* ============================================================
@@ -170,31 +175,49 @@ body {
 
 /* Premium UI Utilities */
 .kz-card-premium {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.6);
   border-radius: 20px;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.02),
+    0 10px 15px -3px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.01);
+  /* Subtle ring */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kz-card-premium:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.06),
+    0 8px 10px -6px rgba(0, 0, 0, 0.03),
+    0 0 0 1px rgba(0, 0, 0, 0.02);
+  border-color: rgba(226, 232, 240, 0.8);
 }
 
 .kz-icon-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 14px;
+  border-radius: 12px;
+  /* Slightly tighter radius */
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 1);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
-.kz-icon-container::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
-  pointer-events: none;
+/* Glass effect for active states */
+.kz-glass-active {
+  background: rgba(239, 246, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(191, 219, 254, 0.4);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
 }
 
 /* ============================================================
