@@ -29,8 +29,20 @@ export async function POST(req: NextRequest) {
             createdById: session?.user?.id || 'system'
         })
         return NextResponse.json(team)
-    } catch (error) {
+    } catch (error: any) {
         console.error("Create team error:", error)
+
+        // Handle Prisma unique constraint error
+        if (error.code === 'P2002') {
+            const targets = error.meta?.target || []
+            if (targets.includes('email')) {
+                return NextResponse.json({ error: "A team with this email already exists for this event" }, { status: 400 })
+            }
+            if (targets.includes('username')) {
+                return NextResponse.json({ error: "This username is already taken" }, { status: 400 })
+            }
+        }
+
         return NextResponse.json({ error: "Failed to create team" }, { status: 500 })
     }
 }
@@ -52,8 +64,19 @@ export async function PUT(req: NextRequest) {
             updatedById: session?.user?.id || "system",
         })
         return NextResponse.json(team)
-    } catch (error) {
+    } catch (error: any) {
         console.error("Update team error:", error)
+
+        if (error.code === 'P2002') {
+            const targets = error.meta?.target || []
+            if (targets.includes('email')) {
+                return NextResponse.json({ error: "A team with this email already exists for this event" }, { status: 400 })
+            }
+            if (targets.includes('username')) {
+                return NextResponse.json({ error: "This username is already taken" }, { status: 400 })
+            }
+        }
+
         return NextResponse.json({ error: "Failed to update team" }, { status: 500 })
     }
 }

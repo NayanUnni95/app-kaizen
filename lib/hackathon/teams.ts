@@ -72,7 +72,7 @@ export async function createTeam(data: {
             name: data.name,
             username: data.username,
             passwordHash,
-            email: data.email,
+            email: data.email || null,
             eventId: data.eventId,
             createdById: data.createdById,
             updatedById: data.createdById,
@@ -84,6 +84,10 @@ export async function updateTeam(id: string, data: any) {
     if (data.password) {
         data.passwordHash = await bcrypt.hash(data.password, 10)
         delete data.password
+    }
+
+    if (data.email === "") {
+        data.email = null
     }
 
     return await prisma.team.update({
