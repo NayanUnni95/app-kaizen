@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X, FileText, Type, Link2, Loader2, Calendar, Eye, EyeOff } from "lucide-react"
+import { X, FileText, Type, Link2, Loader2, Calendar, Eye, EyeOff, Github } from "lucide-react"
 import { toast } from "sonner"
 
 interface ProblemStatementModalProps {
@@ -15,6 +15,7 @@ export function ProblemStatementModal({ isOpen, onClose, onSuccess, editData }: 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [assetUrl, setAssetUrl] = useState("")
+    const [githubRepoUrl, setGithubRepoUrl] = useState("")
     const [eventId, setEventId] = useState("")
     const [isVisible, setIsVisible] = useState(false)
     const [events, setEvents] = useState<any[]>([])
@@ -30,12 +31,14 @@ export function ProblemStatementModal({ isOpen, onClose, onSuccess, editData }: 
                 setTitle(editData.title || "")
                 setDescription(editData.description || "")
                 setAssetUrl(editData.assetUrl || "")
+                setGithubRepoUrl(editData.meta?.github_repo_url || "")
                 setEventId(editData.eventId || "")
                 setIsVisible(editData.meta?.is_visible ?? false)
             } else {
                 setTitle("")
                 setDescription("")
                 setAssetUrl("")
+                setGithubRepoUrl("")
                 setIsVisible(false)
             }
         }
@@ -76,7 +79,11 @@ export function ProblemStatementModal({ isOpen, onClose, onSuccess, editData }: 
                         title,
                         description,
                         assetUrl: assetUrl || null,
-                        meta: { ...editData.meta, is_visible: isVisible },
+                        meta: {
+                            ...editData.meta,
+                            is_visible: isVisible,
+                            github_repo_url: githubRepoUrl || null,
+                        },
                     }),
                 })
                 if (!res.ok) {
@@ -94,6 +101,10 @@ export function ProblemStatementModal({ isOpen, onClose, onSuccess, editData }: 
                         description,
                         assetUrl: assetUrl || null,
                         is_visible: isVisible,
+                        meta: {
+                            is_visible: isVisible,
+                            github_repo_url: githubRepoUrl || null,
+                        }
                     }),
                 })
                 if (!res.ok) {
@@ -212,6 +223,23 @@ export function ProblemStatementModal({ isOpen, onClose, onSuccess, editData }: 
                         </div>
                     </div>
 
+                    {/* GitHub Repo URL */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500 ml-1">
+                            GitHub Repository URL (Optional)
+                        </label>
+                        <div className="relative">
+                            <Github className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                            <input
+                                type="url"
+                                value={githubRepoUrl}
+                                onChange={(e) => setGithubRepoUrl(e.target.value)}
+                                placeholder="https://github.com/organization/repo"
+                                className="w-full h-14 bg-zinc-900 border border-white/5 rounded-2xl pl-12 pr-4 text-sm focus:outline-none focus:border-amber-500/50 transition-colors"
+                            />
+                        </div>
+                    </div>
+
                     {/* Visibility Toggle */}
                     <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500 ml-1">
@@ -221,8 +249,8 @@ export function ProblemStatementModal({ isOpen, onClose, onSuccess, editData }: 
                             type="button"
                             onClick={() => setIsVisible(!isVisible)}
                             className={`w-full h-14 rounded-2xl border flex items-center justify-between px-5 transition-all ${isVisible
-                                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                                    : "bg-zinc-900 border-white/5 text-zinc-500"
+                                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                                : "bg-zinc-900 border-white/5 text-zinc-500"
                                 }`}
                         >
                             <div className="flex items-center gap-3">

@@ -24,10 +24,20 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json()
+        const { is_visible, meta, ...rest } = body
+
+        const userId = session?.user?.id
+        if (!userId || userId === "system") {
+            return NextResponse.json({ error: "Valid User ID is required" }, { status: 401 })
+        }
+
         const statement = await psService.createProblemStatement({
-            ...body,
-            meta: { is_visible: body.is_visible ?? false },
-            createdById: session?.user?.id || "system",
+            ...rest,
+            meta: {
+                ...(meta || {}),
+                is_visible: Boolean(is_visible ?? meta?.is_visible ?? false)
+            },
+            createdById: userId,
         })
         return NextResponse.json(statement)
     } catch (error) {
@@ -42,15 +52,26 @@ export async function PUT(req: NextRequest) {
 
     try {
         const body = await req.json()
-        const { id, ...updateData } = body
+        const { id, is_visible, meta, ...updateData } = body
 
         if (!id) {
             return NextResponse.json({ error: "Problem statement ID is required" }, { status: 400 })
         }
 
+        const userId = session?.user?.id
+        if (!userId || userId === "system") {
+            return NextResponse.json({ error: "Valid User ID is required" }, { status: 401 })
+        }
+
+        console.log("[DEBUG] PUT userId:", userId, "| full session.user:", JSON.stringify(session?.user))
+
         const statement = await psService.updateProblemStatement(id, {
             ...updateData,
-            updatedById: session?.user?.id || "system",
+            meta: (meta || is_visible !== undefined) ? {
+                ...(meta || {}),
+                ...(is_visible !== undefined ? { is_visible: Boolean(is_visible) } : {})
+            } : undefined,
+            updatedById: userId,
         })
         return NextResponse.json(statement)
     } catch (error) {
@@ -71,10 +92,15 @@ export async function PATCH(req: NextRequest) {
             return NextResponse.json({ error: "Problem statement ID is required" }, { status: 400 })
         }
 
+        const userId = session?.user?.id
+        if (!userId || userId === "system") {
+            return NextResponse.json({ error: "Valid User ID is required" }, { status: 401 })
+        }
+
         const statement = await psService.toggleProblemStatementVisibility(
             id,
             is_visible,
-            session?.user?.id || "system"
+            userId
         )
         return NextResponse.json(statement)
     } catch (error) {

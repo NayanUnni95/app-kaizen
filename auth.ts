@@ -73,7 +73,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 token.role = (user as any).role
                 token.teamId = (user as any).teamId || null
                 token.eventId = (user as any).eventId || null
-            } else if (token.sub && !token.role) {
+            } else if (!token.id && token.sub) {
+                // Ensure token.id is always set (fallback to token.sub for OAuth users)
+                token.id = token.sub
+            }
+            if (token.sub && !token.role) {
                 const dbUser = await prisma.user.findUnique({
                     where: { id: token.sub },
                     select: { role: true, id: true }
@@ -86,7 +90,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
         async session({ session, token }) {
             if (token && session.user) {
-                session.user.id = token.id as string;
+                session.user.id = (token.id as string) || token.sub || "";
                 (session.user as any).role = token.role;
                 (session.user as any).teamId = token.teamId;
                 (session.user as any).eventId = token.eventId;

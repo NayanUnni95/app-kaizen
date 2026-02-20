@@ -11,6 +11,7 @@ import {
     Sparkles,
     Loader2,
     X,
+    Github,
 } from "lucide-react"
 
 export function ProblemStatementSection({ startsAt }: { startsAt?: string | null }) {
@@ -189,7 +190,7 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
 
                             {/* Asset link */}
                             {selectedStmt.assetUrl && (
-                                <div className="mb-10">
+                                <div className="mb-6">
                                     <h4 className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase tracking-widest mb-4">
                                         Asset
                                     </h4>
@@ -211,6 +212,34 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
                                             </p>
                                         </div>
                                         <ChevronRight className="w-4 h-4 text-indigo-400 group-hover:translate-x-1 transition-transform flex-shrink-0" />
+                                    </a>
+                                </div>
+                            )}
+
+                            {/* GitHub Repo link */}
+                            {selectedStmt.meta?.github_repo_url && (
+                                <div className="mb-10">
+                                    <h4 className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase tracking-widest mb-4">
+                                        Source Code Repository
+                                    </h4>
+                                    <a
+                                        href={selectedStmt.meta.github_repo_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-5 p-6 kz-card-rich border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all group"
+                                    >
+                                        <div className="kz-icon-rich w-12 h-12 border-white/10 bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] shrink-0">
+                                            <Github className="w-5 h-5" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-black text-white uppercase tracking-tight">
+                                                GITHUB_REPOSITORY
+                                            </p>
+                                            <p className="text-[10px] font-mono-tech text-emerald-400 truncate opacity-70">
+                                                {selectedStmt.meta.github_repo_url}
+                                            </p>
+                                        </div>
+                                        <ChevronRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform flex-shrink-0" />
                                     </a>
                                 </div>
                             )}
