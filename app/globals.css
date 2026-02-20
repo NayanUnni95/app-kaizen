@@ -1,223 +1,192 @@
 @import "tailwindcss";
 
 /* ============================================================
-   KAIZEN DESIGN SYSTEM — User View
-   Color Palette: Option A (Modern Tech, white background)
+   KAIZEN DESIGN SYSTEM — Premium Dark Mode
+   Color Palette: Midnight Slate / Obsidian
    ============================================================ */
 
 :root {
-  /* Core */
-  --kz-bg: #FFFFFF;
-  --kz-text: #0F172A;
-  --kz-muted: #64748B;
-  --kz-border: #E6E9EE;
-  --kz-surface: #F8FAFC;
-  --kz-surface-2: #F1F5F9;
+  /* Core - Deep & Sophisticated */
+  --kz-bg: #0B0E14;
+  /* Pure Obsidian */
+  --kz-text: #F8FAFC;
+  --kz-muted: #94A3B8;
+  --kz-border: rgba(255, 255, 255, 0.08);
+  --kz-border-rich: rgba(255, 255, 255, 0.15);
+  --kz-surface: #111827;
+  --kz-surface-2: #1F2937;
 
-  /* Accent */
-  --kz-primary: #2563EB;
-  --kz-primary-10: #EFF6FF;
-  --kz-secondary: #06B6D4;
-  --kz-secondary-10: #ECFEFF;
+  /* Accent - High-Tech Indigo */
+  --kz-primary: #FFFFFF;
+  --kz-brand: #6366F1;
+  /* Electric Indigo */
+  --kz-brand-dim: rgba(99, 102, 241, 0.1);
+  --kz-brand-rich: #4F46E5;
 
   /* Semantic */
-  --kz-success: #16A34A;
+  --kz-success: #10B981;
   --kz-warning: #F59E0B;
-  --kz-danger: #DC2626;
+  --kz-danger: #EF4444;
 
-  /* Spacing scale (8px base) */
-  --kz-space-1: 4px;
-  --kz-space-2: 8px;
-  --kz-space-3: 16px;
-  --kz-space-4: 24px;
-  --kz-space-5: 32px;
-  --kz-space-6: 48px;
+  /* Spacing */
+  --kz-radius-sm: 8px;
+  --kz-radius-md: 12px;
+  --kz-radius-lg: 20px;
+  --kz-radius-xl: 32px;
 
-  /* Legacy (for existing components) */
-  --background: #FFFFFF;
-  --foreground: #0F172A;
+  /* Gloss and Depth */
+  --kz-glass-bg: rgba(17, 24, 39, 0.7);
+  --kz-glass-border: rgba(255, 255, 255, 0.1);
+
+  /* Legacy Compatibility */
+  --background: #0B0E14;
+  --foreground: #F8FAFC;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-heading: var(--font-poppins), var(--font-inter), sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Outfit", "Inter", sans-serif;
+  --font-mono: "Geist Mono", monospace;
 }
 
 body {
   background: var(--kz-bg);
   color: var(--kz-text);
   font-family: var(--font-sans);
-  font-size: 15px;
-  /* Slightly smaller base for elegance */
+  font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  letter-spacing: -0.012em;
 }
 
-/* Heading utility */
+/* Heading Typography */
 .font-heading {
   font-family: var(--font-heading);
-  letter-spacing: -0.025em;
-  /* Tighter tracking for headings */
+  letter-spacing: -0.04em;
+  font-weight: 800;
 }
 
-/* ============================================================
-   KAIZEN USER VIEW — Specific overrides
-   ============================================================ */
-
-/* Team layout uses white BG, override any dark classes */
-.kz-user-layout {
-  background: var(--kz-bg);
-  color: var(--kz-text);
-  min-height: 100dvh;
+/* SaaS Rich Card — High-End Glassmorphism */
+.kz-card-rich {
+  background: var(--kz-glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--kz-glass-border);
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: var(--kz-radius-lg);
+  overflow: hidden;
 }
 
-/* Countdown flip digits */
-.kz-timer-digit {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.05em;
+/* Inner Glow Effect */
+.kz-card-rich::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-/* Subtle card shadow */
-.kz-card {
-  background: #FFFFFF;
-  border: 1px solid var(--kz-border);
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
-  transition: box-shadow 0.2s, transform 0.2s;
+/* Secondary internal border */
+.kz-card-rich::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--kz-radius-lg);
+  pointer-events: none;
+  z-index: 1;
 }
 
-.kz-card:hover {
-  box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.08);
+.kz-card-rich:hover {
+  border-color: var(--kz-brand);
+  transform: translateY(-4px);
+  background: rgba(17, 24, 39, 0.85);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
 }
 
-/* Primary button */
-.kz-btn-primary {
-  background: var(--kz-primary);
-  color: #FFFFFF;
-  border-radius: 12px;
-  font-weight: 700;
-  padding: 10px 20px;
-  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgb(37 99 235 / 0.3);
-}
-
-.kz-btn-primary:hover {
-  background: #1D4ED8;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgb(37 99 235 / 0.35);
-}
-
-.kz-btn-primary:active {
-  transform: scale(0.98);
-}
-
-/* Ghost button */
-.kz-btn-ghost {
-  background: transparent;
-  color: var(--kz-primary);
-  border: 1px solid var(--kz-border);
-  border-radius: 12px;
-  font-weight: 600;
-  padding: 10px 20px;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.kz-btn-ghost:hover {
-  background: var(--kz-primary-10);
-  border-color: var(--kz-primary);
-}
-
-/* Badge */
-.kz-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-/* Scrollbar (light theme) */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-button {
-  display: none;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #CBD5E1;
-  border-radius: 99px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #94A3B8;
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #CBD5E1 transparent;
-}
-
-/* Premium UI Utilities */
-.kz-card-premium {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(226, 232, 240, 0.6);
-  border-radius: 20px;
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.02),
-    0 10px 15px -3px rgba(0, 0, 0, 0.04),
-    0 0 0 1px rgba(0, 0, 0, 0.01);
-  /* Subtle ring */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.kz-card-premium:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 10px 25px -5px rgba(0, 0, 0, 0.06),
-    0 8px 10px -6px rgba(0, 0, 0, 0.03),
-    0 0 0 1px rgba(0, 0, 0, 0.02);
-  border-color: rgba(226, 232, 240, 0.8);
-}
-
-.kz-icon-container {
+/* Rich Icon Wrapper */
+.kz-icon-rich {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  /* Slightly tighter radius */
+  border-radius: var(--kz-radius-md);
+  background: var(--kz-surface-2);
+  border: 1px solid var(--kz-border);
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(226, 232, 240, 0.6);
-  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 0.3s ease;
 }
 
-/* Glass effect for active states */
-.kz-glass-active {
-  background: rgba(239, 246, 255, 0.6);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(191, 219, 254, 0.4);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+/* Status Chips */
+.kz-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid var(--kz-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--kz-muted);
+}
+
+/* Glass Surface (Navbar/Sidebar) */
+.kz-glass-surface {
+  background: rgba(11, 14, 20, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--kz-border);
+}
+
+/* Premium Buttons */
+.kz-btn-rich {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--kz-radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.kz-btn-rich-primary {
+  background: var(--kz-brand);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.kz-btn-rich-primary:hover {
+  background: var(--kz-brand-rich);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+}
+
+.kz-btn-rich-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: #FFFFFF;
+  border: 1px solid var(--kz-border);
+}
+
+.kz-btn-rich-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--kz-border-rich);
+}
+
+/* Mesh Background Utility — Dark Phase */
+.kz-mesh-bg {
+  background-color: #0B0E14;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0, transparent 40%),
+    radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.08) 0, transparent 40%);
 }
 
 /* ============================================================
@@ -226,7 +195,7 @@ body {
 @keyframes kz-fade-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
 
   to {
@@ -238,7 +207,7 @@ body {
 @keyframes kz-slide-up {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px);
   }
 
   to {
@@ -247,51 +216,19 @@ body {
   }
 }
 
-@keyframes kz-scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes kz-pulse-dot {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.4);
-    opacity: 0.7;
-  }
-}
-
 .kz-animate-fade-in {
-  animation: kz-fade-in 0.4s ease both;
+  animation: kz-fade-in 0.5s ease-out both;
 }
 
 .kz-animate-slide-up {
-  animation: kz-slide-up 0.35s ease both;
-}
-
-.kz-animate-scale-in {
-  animation: kz-scale-in 0.3s ease both;
+  animation: kz-slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-
-  .kz-animate-fade-in,
-  .kz-animate-slide-up,
-  .kz-animate-scale-in,
   * {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -72,14 +72,14 @@ export function SplashOverlay() {
             aria-label="Kaizen welcome splash"
             className={`
         fixed inset-0 z-[9999] flex flex-col items-center justify-center
-        bg-[#0F172A] transition-opacity duration-700 ease-in-out
+        bg-[#0B0E14] transition-opacity duration-700 ease-in-out
         ${hiding ? "opacity-0 invisible" : "opacity-100 visible"}
       `}
         >
             <div
                 className="absolute inset-0 pointer-events-none opacity-40"
                 style={{
-                    background: "radial-gradient(circle at 50% 50%, #1E3A8A 0%, transparent 70%)",
+                    background: "radial-gradient(circle at 50% 50%, #312E81 0%, transparent 70%)",
                 }}
             />
 
@@ -87,7 +87,7 @@ export function SplashOverlay() {
 
             <div className={`relative z-10 flex flex-col items-center gap-8 ${hiding ? 'scale-95 opacity-0' : 'scale-100 opacity-100'} transition-all duration-700 ease-out`}>
                 <div className="relative group">
-                    <div className="absolute inset-0 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-600/30 transition-all duration-1000" />
+                    <div className="absolute inset-0 bg-indigo-600/20 rounded-full blur-[80px] group-hover:bg-indigo-600/30 transition-all duration-1000" />
                     <Image
                         src="/assets/kaizen-asset.png"
                         alt="Kaizen"
@@ -104,11 +104,11 @@ export function SplashOverlay() {
                         KAIZEN
                     </h1>
                     <div className="flex items-center justify-center gap-3">
-                        <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-blue-500/50" />
-                        <p className="text-blue-100/60 text-xs sm:text-sm font-semibold uppercase tracking-[0.3em]">
+                        <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-indigo-500/50" />
+                        <p className="text-indigo-100/60 text-xs sm:text-sm font-semibold uppercase tracking-[0.3em]">
                             Hackathon Management Platform
                         </p>
-                        <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-blue-500/50" />
+                        <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-indigo-500/50" />
                     </div>
                 </div>
 
@@ -116,7 +116,7 @@ export function SplashOverlay() {
                     {[0, 1, 2].map((i) => (
                         <div
                             key={i}
-                            className="w-1.5 h-1.5 rounded-full bg-blue-400"
+                            className="w-1.5 h-1.5 rounded-full bg-indigo-400"
                             style={{
                                 animation: "kz-pulse-dot 1.5s ease-in-out infinite",
                                 animationDelay: `${i * 0.3}s`,
@@ -131,7 +131,7 @@ export function SplashOverlay() {
                 onClick={dismiss}
                 className="
           absolute bottom-12 left-1/2 -translate-x-1/2
-          px-6 py-2.5 text-[11px] font-bold text-blue-100/40 uppercase tracking-[0.2em]
+          px-6 py-2.5 text-[11px] font-bold text-indigo-100/40 uppercase tracking-[0.2em]
           border border-white/10 rounded-full
           hover:bg-white/5 hover:text-white hover:border-white/20
           transition-all duration-300 kz-animate-fade-in

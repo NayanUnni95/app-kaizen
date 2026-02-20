@@ -68,8 +68,8 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
 
     if (isLoading) return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-            <Loader2 className="w-12 h-12 animate-spin text-black" />
-            <p className="text-black font-black uppercase tracking-[0.2em] text-[10px]">Accessing Secure Node</p>
+            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Accessing Record</p>
         </div>
     )
 
@@ -80,39 +80,39 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
     const isSubmitted = status === 'SUBMITTED'
 
     return (
-        <div className="max-w-4xl mx-auto space-y-12 pb-32 pt-4 px-4 overflow-hidden">
+        <div className="max-w-4xl mx-auto space-y-10 pb-32 pt-4 px-4 overflow-hidden">
             {/* Nav */}
             <Link
                 href="/team/checkpoints"
-                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-black transition-colors mb-4"
+                className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors mb-2"
             >
-                <ArrowLeft className="w-3 h-3" /> Back to Map
+                <ArrowLeft className="w-3 h-3" /> Back to Milestones
             </Link>
 
             {/* Header */}
-            <div className="kz-animate-fade-in relative">
-                <div className="flex items-center gap-4 mb-6">
-                    <div className="px-5 py-2 rounded-full bg-black text-[10px] font-black text-white uppercase tracking-[0.2em]">
-                        Checkpoint {checkpoint.order}
+            <div className="kz-animate-fade-in relative space-y-4">
+                <div className="flex items-center gap-3">
+                    <div className="px-3 py-1 rounded-full bg-slate-900 text-[9px] font-bold text-white uppercase tracking-wider">
+                        Stage 0{checkpoint.order}
                     </div>
                     {isApproved ? (
-                        <div className="px-5 py-2 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-[0.2em] border border-emerald-100">
+                        <div className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-bold uppercase tracking-wider border border-emerald-100">
                             Verified
                         </div>
                     ) : isSubmitted ? (
-                        <div className="px-5 py-2 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-[0.2em] border border-blue-100">
-                            Under Review
+                        <div className="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[9px] font-bold uppercase tracking-wider border border-blue-100">
+                            Review in progress
                         </div>
                     ) : (
-                        <div className="px-5 py-2 rounded-full bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border border-slate-100">
-                            Active
+                        <div className="px-3 py-1 rounded-full bg-slate-50 text-slate-400 text-[9px] font-bold uppercase tracking-wider border border-slate-100">
+                            Operational
                         </div>
                     )}
                 </div>
-                <h1 className="font-heading font-black text-5xl text-black tracking-tighter leading-none mb-6">
+                <h1 className="font-heading font-bold text-4xl text-slate-900 tracking-tight leading-none">
                     {checkpoint.title}
                 </h1>
-                <p className="text-[#64748B] text-xl font-medium leading-relaxed max-w-2xl">
+                <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-2xl">
                     {checkpoint.description}
                 </p>
             </div>
@@ -121,100 +121,102 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
             {!isSubmitted && !isApproved && (
                 <form
                     onSubmit={handleAddItem}
-                    className="flex items-center gap-4 p-4 rounded-[2.5rem] bg-white border-2 border-slate-100 shadow-sm hover:border-black transition-all group kz-animate-slide-up"
+                    className="flex items-center gap-4 p-3 pr-3 rounded-2xl bg-white border border-slate-100 shadow-sm hover:border-blue-500 transition-all group kz-animate-slide-up"
                     style={{ animationDelay: '0.1s' }}
                 >
-                    <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-focus-within:bg-black group-focus-within:text-white transition-colors">
-                        <Plus className="w-6 h-6" />
+                    <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-focus-within:bg-blue-600 group-focus-within:text-white transition-all duration-300">
+                        <Plus className="w-5 h-5" />
                     </div>
                     <input
                         type="text"
                         value={newItem}
                         onChange={(e) => setNewItem(e.target.value)}
-                        placeholder="Enter your progress..."
-                        className="flex-1 bg-transparent border-none focus:ring-0 text-lg font-medium text-black placeholder:text-slate-300"
+                        placeholder="Log your progress..."
+                        className="flex-1 bg-transparent border-none focus:ring-0 text-base font-medium text-slate-900 placeholder:text-slate-300"
                     />
                     <button
                         type="submit"
-                        className="px-8 h-12 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
+                        className="px-6 h-10 rounded-xl bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 transition-all"
                     >
-                        Enter
+                        Commit
                     </button>
                 </form>
             )}
 
-            {/* Requirements / Guidelines */}
-            <section className="space-y-6">
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2">
-                    <ListTodo className="w-4 h-4" /> Protocol Requirements
-                </h3>
-                <div className="grid grid-cols-1 gap-4">
-                    {checkpoint.requirements?.map((req: any, i: number) => (
-                        <div
-                            key={i}
-                            className="px-8 py-6 rounded-[2rem] bg-slate-50 border border-slate-100/50 flex items-start gap-4"
-                        >
-                            <div className="w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 text-[10px] font-black">{i + 1}</div>
-                            <p className="text-slate-600 font-medium leading-relaxed text-sm">{req.text || req}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* PROGRESS LIST */}
-            <section className="space-y-6 pb-20">
-                <div className="flex items-center justify-between">
-                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Execution Record</h3>
-                    {isSubmitted && (
-                        <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Encrypted & Transmitted</span>
-                    )}
-                </div>
-
-                <div className="space-y-4">
-                    {progressItems.length === 0 ? (
-                        <div className="py-20 text-center border-4 border-dashed border-slate-50 rounded-[3rem]">
-                            <p className="text-slate-300 font-bold uppercase tracking-widest text-xs">Awaiting Progress Entry</p>
-                        </div>
-                    ) : (
-                        progressItems.map((item, idx) => (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                {/* Requirements / Guidelines */}
+                <section className="space-y-6">
+                    <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <ListTodo className="w-4 h-4" /> Protocol
+                    </h3>
+                    <div className="space-y-3">
+                        {checkpoint.requirements?.map((req: any, i: number) => (
                             <div
-                                key={idx}
-                                className="group relative p-8 rounded-[2.5rem] bg-white border-2 border-slate-100 hover:border-black transition-all flex items-center justify-between"
+                                key={i}
+                                className="px-6 py-4 rounded-xl bg-slate-50/50 border border-slate-100/50 flex items-start gap-4"
                             >
-                                <div className="flex items-center gap-6">
-                                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-black font-black">
-                                        {idx + 1}
-                                    </div>
-                                    <p className="text-black font-black text-xl tracking-tight leading-tight">{item}</p>
-                                </div>
-                                {!isSubmitted && !isApproved && (
-                                    <button
-                                        onClick={() => handleRemoveItem(idx)}
-                                        className="w-10 h-10 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-rose-500 hover:text-white transition-all transform hover:rotate-90"
-                                    >
-                                        <X className="w-5 h-5" />
-                                    </button>
-                                )}
+                                <div className="w-5 h-5 rounded-md bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-slate-400">{i + 1}</div>
+                                <p className="text-slate-600 font-medium leading-relaxed text-sm">{req.text || req}</p>
                             </div>
-                        ))
-                    )}
-                </div>
-            </section>
+                        ))}
+                    </div>
+                </section>
+
+                {/* PROGRESS LIST */}
+                <section className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Execution Log</h3>
+                        {isSubmitted && (
+                            <span className="text-[9px] font-bold text-blue-500 uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded-md">Transmitted</span>
+                        )}
+                    </div>
+
+                    <div className="space-y-3">
+                        {progressItems.length === 0 ? (
+                            <div className="py-16 text-center border-2 border-dashed border-slate-50 rounded-2xl">
+                                <p className="text-slate-300 font-bold uppercase tracking-widest text-[10px]">Awaiting Log Entries</p>
+                            </div>
+                        ) : (
+                            progressItems.map((item, idx) => (
+                                <div
+                                    key={idx}
+                                    className="group relative p-5 rounded-2xl bg-white border border-slate-100 hover:border-blue-500 transition-all flex items-center justify-between"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-900 font-bold text-[11px]">
+                                            {idx + 1}
+                                        </div>
+                                        <p className="text-slate-900 font-bold text-sm tracking-tight">{item}</p>
+                                    </div>
+                                    {!isSubmitted && !isApproved && (
+                                        <button
+                                            onClick={() => handleRemoveItem(idx)}
+                                            className="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-rose-50 hover:text-rose-500 transition-all"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </section>
+            </div>
 
             {/* SUBMIT BUTTON - FLOATING AT BOTTOM */}
             {!isSubmitted && !isApproved && progressItems.length > 0 && (
-                <div className="fixed bottom-12 left-1/2 -translate-x-1/2 z-[50] w-full max-w-sm px-4 kz-animate-slide-up">
+                <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[50] w-full max-w-xs px-4 kz-animate-slide-up">
                     <button
                         onClick={handleSubmit}
                         disabled={isSubmitting}
-                        className="w-full h-20 rounded-[2.5rem] bg-black text-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-center gap-4 hover:scale-105 active:scale-95 transition-all"
+                        className="w-full h-16 rounded-2xl bg-slate-900 text-white shadow-xl shadow-slate-200 flex items-center justify-center gap-3 hover:bg-blue-600 hover:shadow-blue-200 hover:-translate-y-1 transition-all"
                     >
                         {isSubmitting ? (
-                            <Loader2 className="w-6 h-6 animate-spin" />
+                            <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
                             <>
-                                <Send className="w-6 h-6" />
-                                <span className="text-xs font-black uppercase tracking-[0.3em]">Submit Progress</span>
+                                <Send className="w-5 h-5" />
+                                <span className="text-[11px] font-bold uppercase tracking-widest">Transmit Record</span>
                             </>
                         )}
                     </button>

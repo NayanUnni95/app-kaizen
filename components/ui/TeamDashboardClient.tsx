@@ -12,9 +12,12 @@ import {
     CheckSquare,
     ChevronRight,
     Clock,
+    Layout,
     Lock,
     Users,
-    Zap
+    Zap,
+    Shield,
+    Terminal
 } from "lucide-react"
 
 export default function TeamDashboardClient({ team, allTeams, announcements }: any) {
@@ -40,124 +43,190 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
     const totalCheckpoints = 3
 
     return (
-        <div className="space-y-8 pb-12 pt-6">
+        <div className="space-y-16 pb-24 pt-6 kz-mesh-bg min-h-screen">
             <NotificationsModal
                 isOpen={notificationsOpen}
                 onClose={() => setNotificationsOpen(false)}
             />
 
-            {/* ─── Minimal Hero ─────────────────────────────────── */}
-            <section className="kz-animate-fade-in flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    <h1 className="font-heading text-3xl md:text-4xl font-bold text-[#0F172A] tracking-tight leading-tight">
-                        Good afternoon, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500">{team.name}</span>
+            {/* ─── Team Overview Hero ────────────────────────── */}
+            <section className="kz-animate-fade-in flex flex-col md:flex-row md:items-start justify-between gap-12 px-2">
+                <div className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <div className="px-3 py-1 rounded-lg bg-indigo-600 text-[10px] font-black text-white uppercase tracking-[0.2em] shadow-[0_0_10px_rgba(99,102,241,0.3)]">
+                            Team Dashboard
+                        </div>
+                        <div className="kz-status-chip bg-emerald-500/10 border-emerald-500/20 text-emerald-400 py-1">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                            Live Hub
+                        </div>
+                    </div>
+                    <h1 className="font-heading text-3xl md:text-4xl text-white tracking-tighter leading-[0.85] py-2">
+                        Welcome Back,<br />
+                        <span className="text-indigo-400 inline-block mt-5 text-5xl md:text-6xl">{team.name}</span>
                     </h1>
-                    <p className="text-[#64748B] text-sm md:text-base mt-2 max-w-xl leading-relaxed">
-                        Welcome to your command center. You're competing against {allTeams - 1} other teams.
-                    </p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                    <div className="px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100/50 flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse" />
-                        <span className="text-xs font-bold text-emerald-700 tracking-wide uppercase">System Active</span>
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── Hero Stats Grid ─────────────────────────────── */}
-            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-1">
-                <div className="col-span-1 md:col-span-2 kz-card-premium p-6 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                    <div className="relative z-10 flex flex-col h-full justify-between">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Clock className="w-4 h-4 text-blue-500" strokeWidth={2} />
-                            <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">Time Remaining</span>
-                        </div>
-                        <div className="font-mono text-3xl sm:text-4xl text-slate-800 tracking-tighter">
-                            <CountdownTimer startsAt={team.event.startsAt} endsAt={team.event.endsAt} />
-                        </div>
-                        <div className="mt-4 w-full h-1 bg-slate-100 rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-1000"
-                                style={{ width: `${progressPct}%` }}
-                            />
+                    <div className="flex items-center gap-6 pt-4 border-t border-white/5">
+                        {/* <div className="flex flex-col">
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Global Rank</span>
+                            <span className="text-lg font-heading text-white">Alpha Sector</span>
+                        </div> */}
+                        <div className="w-[1px] h-8 bg-white/5" />
+                        <div className="flex flex-col">
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Competition</span>
+                            <span className="text-lg font-heading text-white">{allTeams - 1} Units Active</span>
                         </div>
                     </div>
                 </div>
 
-                <Link href="/team/checkpoints" className="col-span-1 kz-card-premium p-5 flex flex-col justify-between group hover:border-blue-200/50 transition-all hover:scale-[1.02]">
-                    <div className="flex items-center justify-between">
-                        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
-                            <CheckSquare className="w-4 h-4" strokeWidth={2} />
+                <div className="hidden lg:block">
+                    <div className="kz-card-rich p-6 w-72 bg-white/[0.02] border-white/5">
+                        <div className="flex items-center justify-between mb-4 px-1">
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">System Status</span>
+                            <Activity className="w-4 h-4 text-indigo-400" />
                         </div>
-                        <span className="text-2xl font-heading font-bold text-slate-800">{completedCheckpoints}/{totalCheckpoints}</span>
-                    </div>
-                    <div>
-                        <p className="font-semibold text-slate-700 text-sm">Checkpoints</p>
-                        <p className="text-xs text-slate-400 mt-0.5">Track your progress</p>
-                    </div>
-                </Link>
-
-                <Link href="/team/profile" className="col-span-1 kz-card-premium p-5 flex flex-col justify-between group hover:border-blue-200/50 transition-all hover:scale-[1.02]">
-                    <div className="flex items-center justify-between">
-                        <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
-                            <Users className="w-4 h-4" strokeWidth={2} />
-                        </div>
-                        <div className="flex -space-x-2">
-                            {team.members.slice(0, 3).map((m: any, i: number) => (
-                                <div key={i} className="w-6 h-6 rounded-full bg-slate-200 border-2 border-white" title={m.name} />
+                        <div className="space-y-3">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="flex items-center justify-between">
+                                    <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden">
+                                        <div className="h-full bg-indigo-600 rounded-full w-4/5 animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
+                                    </div>
+                                    <span className="text-[10px] font-mono font-bold text-slate-600 uppercase">stable</span>
+                                </div>
                             ))}
                         </div>
                     </div>
+                </div>
+            </section>
+
+            {/* ─── Mission Critical KPIs ─────────────────────────── */}
+            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-2">
+                {/* Global Countdown Card */}
+                <div className="col-span-1 md:col-span-2 kz-card-rich p-10 flex flex-col justify-between group overflow-hidden border-white/5 bg-white/[0.02]">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full blur-[120px] -mr-32 -mt-32 -z-10 opacity-10 group-hover:opacity-20 transition-opacity duration-1000" />
                     <div>
-                        <p className="font-semibold text-slate-700 text-sm">Squad Status</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{team.members.length} members active</p>
+                        <div className="flex items-center gap-3 mb-10">
+                            <div className="kz-icon-rich w-10 h-10 border-white/5 text-indigo-400">
+                                <Clock className="w-5 h-5 relative z-10" />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[11px] font-black text-white uppercase tracking-widest">Event Timer</span>
+                                <span className="text-[10px] text-slate-500 font-bold">Time remaining for the event</span>
+                            </div>
+                        </div>
+                        <div className="font-heading text-5xl sm:text-7xl lg:text-8xl text-white tracking-tighter leading-none mb-4">
+                            <CountdownTimer startsAt={team.event.startsAt} endsAt={team.event.endsAt} />
+                        </div>
+                    </div>
+                    <div className="mt-12">
+                        <div className="flex items-center justify-between mb-3 px-1">
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
+                                <span className="text-[10px] font-black text-white uppercase tracking-widest">Overall Progress: {progressPct}%</span>
+                            </div>
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Status: Active</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <div
+                                className="h-full bg-indigo-600 rounded-full transition-all duration-1000 relative"
+                                style={{ width: `${progressPct}%` }}
+                            >
+                                <div className="absolute inset-0 bg-white/10 animate-pulse" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Milestone Progression */}
+                <Link href="/team/checkpoints" className="col-span-1 kz-card-rich p-8 flex flex-col justify-between group bg-white/[0.02] border-white/5 hover:scale-[1.02] transition-transform duration-500">
+                    <div className="flex items-center justify-between">
+                        <div className="kz-icon-rich w-14 h-14 border-white/5 text-slate-400 group-hover:text-indigo-400 group-hover:bg-indigo-500/10 transition-all duration-500">
+                            <CheckSquare className="w-6 h-6 relative z-10" strokeWidth={2.5} />
+                        </div>
+                        <div className="flex flex-col items-end">
+                            <span className="text-4xl font-heading text-white leading-none">{completedCheckpoints}<span className="text-white/10">/</span>{totalCheckpoints}</span>
+                            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mt-2 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-md">Validated</span>
+                        </div>
+                    </div>
+                    <div className="mt-8">
+                        <p className="font-black text-white text-sm uppercase tracking-widest">Milestones</p>
+                        <p className="text-[11px] text-slate-500 font-bold mt-1">Verification pipeline active</p>
+                    </div>
+                </Link>
+
+                {/* Squad Composition */}
+                <Link href="/team/profile" className="col-span-1 kz-card-rich p-8 flex flex-col justify-between group bg-white/[0.02] border-white/5 hover:scale-[1.02] transition-transform duration-500">
+                    <div className="flex items-center justify-between">
+                        <div className="kz-icon-rich w-14 h-14 border-white/5 text-slate-400 group-hover:text-indigo-400 group-hover:bg-indigo-500/10 transition-all duration-500">
+                            <Users className="w-6 h-6 relative z-10" strokeWidth={2.5} />
+                        </div>
+                        <div className="flex -space-x-3">
+                            {team.members.slice(0, 3).map((m: any, i: number) => (
+                                <div key={i} className="w-9 h-9 rounded-xl bg-slate-900 border-2 border-[#0B0E14] overflow-hidden relative group-hover:rotate-6 transition-transform">
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-transparent opacity-50" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="mt-8">
+                        <div className="flex items-center justify-between mb-1">
+                            <p className="font-black text-white text-sm uppercase tracking-widest">Team Profile</p>
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                        </div>
+                        <p className="text-[11px] text-slate-500 font-bold">{team.members.length} Members</p>
                     </div>
                 </Link>
             </section>
 
-            {/* ─── Main Content Grid ────────────────────────────── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left: Announcements */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="flex items-center justify-between px-1">
-                        <h2 className="font-heading font-semibold text-lg text-[#0F172A] flex items-center gap-2">
-                            <Bell className="w-5 h-5 text-blue-500" strokeWidth={2} />
-                            Announcements
-                        </h2>
+            {/* ─── Information Streams ─────────────────────────── */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 px-2">
+                {/* Primary Data Stream: Transmissions */}
+                <div className="lg:col-span-2 space-y-10">
+                    <div className="flex items-center justify-between border-b border-indigo-500/30 pb-4">
+                        <div className="flex flex-col">
+                            <h2 className="font-heading font-black text-2xl text-white tracking-tight">
+                                Latest Announcements
+                            </h2>
+                            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Official Event Updates</p>
+                        </div>
+                        <button className="kz-btn-rich kz-btn-rich-secondary text-[10px] py-1.5 px-4">Archive</button>
                     </div>
 
                     <div className="space-y-3">
                         {announcements.length === 0 ? (
                             <EmptyState
-                                icon={Bell}
-                                title="No updates yet"
-                                description="Stay tuned! Important announcements will appear here."
+                                icon={Terminal}
+                                title="No Frequency Detected"
+                                description="Secure channels are currently quiescent. Monitoring for next mission update."
                             />
                         ) : (
                             announcements.map((a: any) => (
                                 <button
                                     key={a.id}
                                     onClick={() => setNotificationsOpen(true)}
-                                    className="w-full text-left block p-5 rounded-2xl bg-white border border-slate-100 hover:border-blue-100 hover:shadow-md transition-all duration-300 group"
+                                    className="w-full text-left flex items-start gap-8 p-8 kz-card-rich bg-white/[0.02] border-white/5 hover:border-indigo-500/30 transition-all duration-500 group"
                                 >
-                                    <div className="flex items-start gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
-                                            <Bell className="w-5 h-5" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center justify-between mb-1">
-                                                <h3 className="font-semibold text-sm text-slate-900 truncate group-hover:text-blue-600 transition-colors">
+                                    <div className="kz-icon-rich w-12 h-12 border-white/5 text-slate-500 group-hover:text-indigo-400 transition-colors shrink-0">
+                                        <Bell className="w-5 h-5 relative z-10" />
+                                    </div>
+                                    <div className="flex-1 min-w-0 pt-1">
+                                        <div className="flex items-center justify-between gap-4 mb-2">
+                                            <div className="flex items-center gap-3">
+                                                <h3 className="font-heading font-black text-lg text-white tracking-tight">
                                                     {a.title}
                                                 </h3>
-                                                <span className="text-[10px] font-medium text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">
-                                                    {new Date(a.createdAt).toLocaleDateString()}
-                                                </span>
+                                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
                                             </div>
-                                            {a.body && (
-                                                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{a.body}</p>
-                                            )}
+                                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap bg-white/5 px-2 py-1 rounded-md border border-white/5">
+                                                {new Date(a.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                            </span>
+                                        </div>
+                                        {a.body && (
+                                            <p className="text-sm text-slate-400 leading-relaxed font-semibold opacity-80 group-hover:opacity-100 transition-opacity">
+                                                {a.body}
+                                            </p>
+                                        )}
+                                        <div className="flex items-center gap-4 mt-6">
+                                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest group-hover:translate-x-1 transition-transform inline-flex items-center gap-2">Read Transmission <ChevronRight className="w-3 h-3" /></span>
                                         </div>
                                     </div>
                                 </button>
@@ -166,34 +235,57 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                     </div>
                 </div>
 
-                {/* Right: Quick Actions */}
-                <div className="space-y-6">
-                    <div className="flex items-center justify-between px-1">
-                        <h2 className="font-heading font-semibold text-lg text-[#0F172A]">Quick Actions</h2>
+                {/* Direct Command Links */}
+                <div className="space-y-10">
+                    <div className="border-b border-indigo-500/30 pb-4">
+                        <h2 className="font-heading font-black text-2xl text-white tracking-tight">Quick Links</h2>
+                        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Fast Navigation</p>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-3">
-                        <Link href="/team/checkpoints" className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-100 transition-all hover:scale-[1.02] group">
-                            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                                <CheckSquare className="w-5 h-5" />
+                    <div className="flex flex-col gap-4">
+                        {[
+                            { href: "/team/checkpoints", icon: CheckSquare, label: "Milestones", desc: "Your Progress", color: "indigo" },
+                            { href: "/team/schedule", icon: Calendar, label: "Schedule", desc: "Event Timeline", color: "slate" },
+                            { href: "/team/general", icon: Layout, label: "Overview", desc: "General Info", color: "indigo" },
+                        ].map((item, i) => (
+                            <Link key={i} href={item.href} className="group relative">
+                                <div className="kz-card-rich p-6 flex items-center gap-5 bg-white/[0.02] border-white/5 hover:border-indigo-500/30 hover:scale-[1.02] transition-all duration-500 active:scale-95">
+                                    <div className="kz-icon-rich w-12 h-12 bg-white/5 text-slate-400 border-white/5 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-400 transition-all duration-500 shrink-0">
+                                        <item.icon className="w-5 h-5 relative z-10" />
+                                    </div>
+                                    <div className="flex flex-col min-w-0">
+                                        <span className="font-heading font-black text-lg text-white leading-none group-hover:text-indigo-400 transition-colors uppercase tracking-tight">{item.label}</span>
+                                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1.5">{item.desc}</span>
+                                    </div>
+                                    <ChevronRight className="w-5 h-5 text-slate-700 ml-auto group-hover:text-white group-hover:translate-x-1 transition-all" />
+                                </div>
+                            </Link>
+                        ))}
+
+                        <button
+                            onClick={() => setNotificationsOpen(true)}
+                            className="group relative text-left"
+                        >
+                            <div className="kz-card-rich p-6 flex items-center gap-5 bg-indigo-600/10 hover:bg-indigo-600/20 hover:scale-[1.02] transition-all duration-500 active:scale-95 border-indigo-500/20">
+                                <div className="kz-icon-rich w-12 h-12 bg-indigo-600 text-white border-indigo-400 shrink-0 shadow-[0_0_15px_rgba(99,102,241,0.4)]">
+                                    <Bell className="w-5 h-5 relative z-10 animate-bounce" style={{ animationDuration: '3s' }} />
+                                </div>
+                                <div className="flex flex-col min-w-0">
+                                    <span className="font-heading font-black text-lg text-white leading-none uppercase tracking-tight">Notifications</span>
+                                    <span className="text-[10px] text-indigo-400/80 font-bold uppercase tracking-widest mt-1.5">Latest Updates</span>
+                                </div>
+                                <ChevronRight className="w-5 h-5 text-indigo-400/30 ml-auto group-hover:text-white group-hover:translate-x-1 transition-all" />
                             </div>
-                            <span className="font-semibold text-sm text-slate-700">Checkpoints</span>
-                            <ChevronRight className="w-4 h-4 text-slate-300 ml-auto group-hover:translate-x-1" />
-                        </Link>
-                        <Link href="/team/schedule" className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-100 transition-all hover:scale-[1.02] group">
-                            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all">
-                                <Calendar className="w-5 h-5" />
-                            </div>
-                            <span className="font-semibold text-sm text-slate-700">Schedule</span>
-                            <ChevronRight className="w-4 h-4 text-slate-300 ml-auto group-hover:translate-x-1" />
-                        </Link>
-                        <button onClick={() => setNotificationsOpen(true)} className="w-full flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-100 transition-all hover:scale-[1.02] group">
-                            <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-all">
-                                <Bell className="w-5 h-5" />
-                            </div>
-                            <span className="font-semibold text-sm text-slate-700">Notifications</span>
-                            <ChevronRight className="w-4 h-4 text-slate-300 ml-auto group-hover:translate-x-1" />
                         </button>
+                    </div>
+
+                    {/* Section Info Badge */}
+                    <div className="kz-card-rich p-6 border-dashed border-2 border-white/5 flex items-center gap-4 bg-white/[0.01]">
+                        <Shield className="w-8 h-8 text-slate-600" />
+                        <div className="flex flex-col">
+                            <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Active Session</span>
+                            <p className="text-[11px] text-slate-500 font-bold leading-tight">Your connection is secure and verified for this event session.</p>
+                        </div>
                     </div>
                 </div>
             </div>

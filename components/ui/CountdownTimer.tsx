@@ -67,13 +67,12 @@ export function CountdownTimer({ startsAt, endsAt }: CountdownTimerProps) {
     if (!end) return <div>Timer not set</div>
 
     return (
-        <div>
+        <span className="font-mono tabular-nums">
             {ended
-                ? "Ended"
+                ? "00d 00h 00m 00s"
                 : `${pad(timeLeft.d)}d ${pad(timeLeft.h)}h ${pad(
                     timeLeft.m
                 )}m ${pad(timeLeft.s)}s`}
-            <div>{Math.round(progress)}%</div>
-        </div>
+        </span>
     )
 }
