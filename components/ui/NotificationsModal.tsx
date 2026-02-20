@@ -26,8 +26,13 @@ export function NotificationsModal({ isOpen, onClose, teamId, eventId }: Notific
         try {
             const res = await fetch("/api/hackathon/team/notifications")
             if (!res.ok) throw new Error("Failed")
-            const data = await res.json()
-            setMessages(data)
+            const { announcements, notifications } = await res.json()
+
+            // Combine and sort by date for the modal feed
+            const combined = [...announcements, ...notifications].sort((a, b) =>
+                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            )
+            setMessages(combined)
         } catch {
             toast.error("Could not load notifications")
         } finally {
@@ -82,11 +87,24 @@ export function NotificationsModal({ isOpen, onClose, teamId, eventId }: Notific
                             >
                                 <div className="flex gap-4">
                                     <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0">
-                                        {m.type === 'ERROR' ? <Zap className="w-5 h-5 text-rose-500" /> : <Bell className="w-5 h-5 text-blue-500" />}
+                                        {m.category === 'ANNOUNCEMENT' ? (
+                                            <MessageSquare className="w-5 h-5 text-amber-500" />
+                                        ) : m.type === 'ERROR' ? (
+                                            <Zap className="w-5 h-5 text-rose-500" />
+                                        ) : (
+                                            <Bell className="w-5 h-5 text-blue-500" />
+                                        )}
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center justify-between mb-1">
-                                            <h3 className="font-bold text-slate-900 text-sm">{m.title}</h3>
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="font-bold text-slate-900 text-sm">{m.title}</h3>
+                                                {m.category === 'ANNOUNCEMENT' && (
+                                                    <span className="px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-600 text-[8px] font-black uppercase tracking-wider border border-amber-100/50">
+                                                        Announcement
+                                                    </span>
+                                                )}
+                                            </div>
                                             <span className="text-[10px] font-bold text-slate-400">{new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                         </div>
                                         <p className="text-xs text-slate-500 leading-relaxed">{m.body}</p>

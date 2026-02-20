@@ -16,7 +16,11 @@ export default async function TeamDashboardPage() {
 
     // Fetch announcements (using Notification model)
     const announcements = await prisma.notification.findMany({
-        where: { eventId: team.eventId, teamId: null }, // Global notifications
+        where: {
+            eventId: team.eventId,
+            teamId: null,
+            category: 'ANNOUNCEMENT'
+        } as any, // Global announcements
         orderBy: { createdAt: 'desc' },
         take: 5
     })

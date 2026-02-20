@@ -26,6 +26,11 @@ enum NotificationType {
   ERROR
 }
 
+enum NotificationCategory {
+  NOTIFICATION
+  ANNOUNCEMENT
+}
+
 enum SubmissionStatus {
   DRAFT
   SUBMITTED
@@ -245,6 +250,7 @@ model Notification {
   eventId   String           @db.Uuid
   teamId    String?          @db.Uuid
   userId    String?          @db.Uuid
+  category  NotificationCategory @default(NOTIFICATION)
   type      NotificationType @default(INFO)
   title     String
   body      String?          @db.Text

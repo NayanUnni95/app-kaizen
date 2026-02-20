@@ -50,6 +50,17 @@ export default function TeamCheckpointsPage() {
         const real = checkpoints.find(c => c.order === mock.order)
         return real || mock
     })
+    if (!isLoading && checkpoints.length === 0) {
+        return (
+            <div className="max-w-6xl mx-auto py-20 px-4">
+                <EmptyState
+                    icon={AlertCircle}
+                    title="No Checkpoints Found"
+                    description="Your event organizer hasn't set up any milestones for your team yet."
+                />
+            </div>
+        )
+    }
 
     return (
         <div className="max-w-7xl mx-auto space-y-12 pb-24 pt-8 px-4 sm:px-6 kz-mesh-bg min-h-screen">
@@ -79,6 +90,7 @@ export default function TeamCheckpointsPage() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                     {displayCheckpoints.map((cp, i) => {
+
                         const status = (cp as any).teamProgress?.status || 'PENDING'
                         const hasAccess = !!(cp as any).teamProgress
                         const isLocked = !hasAccess

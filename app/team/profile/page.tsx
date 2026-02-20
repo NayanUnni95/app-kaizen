@@ -184,6 +184,16 @@ export default async function TeamProfilePage() {
                                                     <Linkedin className="w-3.5 h-3.5" /> LinkedIn
                                                 </a>
                                             )}
+                                            {meta?.github && (
+                                                <a
+                                                    href={meta.github.startsWith('http') ? meta.github : `https://github.com/${meta.github}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-1 text-[11px] text-[#0F172A] hover:underline"
+                                                >
+                                                    <Github className="w-3 h-3" /> GitHub
+                                                </a>
+                                            )}
                                         </div>
                                     </div>
                                 )

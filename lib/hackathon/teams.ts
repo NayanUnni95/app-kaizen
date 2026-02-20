@@ -8,7 +8,8 @@ export async function getAllTeams(eventId?: string) {
         include: {
             _count: { select: { members: true } },
             members: true,
-            event: { select: { id: true, name: true } }
+            progress: true,
+            event: { select: { id: true, name: true, _count: { select: { checkpoints: true } } } }
         },
         orderBy: { createdAt: "desc" }
     })

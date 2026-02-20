@@ -17,6 +17,13 @@ import {
     Clock,
     Users,
     ChevronRight,
+    CheckSquare,
+    ClipboardCheck,
+    MessageSquare,
+    CheckCircle2,
+    AlertCircle,
+    RotateCcw,
+    Github
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -57,7 +64,13 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
     const [editMemberPhone, setEditMemberPhone] = useState("")
     const [editMemberEmail, setEditMemberEmail] = useState("")
     const [editMemberLinkedin, setEditMemberLinkedin] = useState("")
+    const [editMemberGithub, setEditMemberGithub] = useState("")
     const [isUpdatingMember, setIsUpdatingMember] = useState(false)
+
+    // Checkpoints state
+    const [checkpoints, setCheckpoints] = useState<any[]>([])
+    const [isLoadingCheckpoints, setIsLoadingCheckpoints] = useState(false)
+    const [updatingCheckpointId, setUpdatingCheckpointId] = useState<string | null>(null)
 
     useEffect(() => {
         if (isOpen && team) {
@@ -70,6 +83,7 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
             setNewMemberName("")
             setNewMemberRole("MEMBER")
             fetchMembers()
+            fetchCheckpoints()
         }
     }, [isOpen, team])
 
@@ -178,6 +192,7 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
                         phone: editMemberPhone,
                         email: editMemberEmail,
                         linkedin: editMemberLinkedin,
+                        github: editMemberGithub,
                     }
                 }),
             })
@@ -209,6 +224,45 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
             onSuccess()
         } catch {
             toast.error("Failed to update status")
+        }
+    }
+
+    const fetchCheckpoints = async () => {
+        if (!team?.id) return
+        setIsLoadingCheckpoints(true)
+        try {
+            const res = await fetch(`/api/hackathon/admin/teams/checkpoints?teamId=${team.id}`)
+            if (!res.ok) throw new Error("Failed")
+            const data = await res.json()
+            setCheckpoints(data)
+        } catch {
+            toast.error("Failed to load checkpoints")
+        } finally {
+            setIsLoadingCheckpoints(false)
+        }
+    }
+
+    const handleUpdateCheckpoint = async (checkpointId: string, status: string, notes?: string) => {
+        setUpdatingCheckpointId(checkpointId)
+        try {
+            const res = await fetch("/api/hackathon/admin/teams/checkpoints", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    teamId: team.id,
+                    checkpointId,
+                    status,
+                    reviewerNotes: notes
+                }),
+            })
+            if (!res.ok) throw new Error("Failed")
+            toast.success(`Milestone ${status.toLowerCase()}!`)
+            fetchCheckpoints()
+            onSuccess()
+        } catch {
+            toast.error("Failed to update milestone")
+        } finally {
+            setUpdatingCheckpointId(null)
         }
     }
 
@@ -525,13 +579,23 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
                                                                 className="w-full h-10 bg-zinc-800 border border-white/5 rounded-xl px-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
                                                             />
                                                         </div>
-                                                        <div className="sm:col-span-2 space-y-1.5">
+                                                        <div className="space-y-1.5">
                                                             <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 ml-1">LinkedIn Profile</label>
                                                             <input
                                                                 type="text"
                                                                 value={editMemberLinkedin}
                                                                 onChange={(e) => setEditMemberLinkedin(e.target.value)}
                                                                 placeholder="https://linkedin.com/in/..."
+                                                                className="w-full h-10 bg-zinc-800 border border-white/5 rounded-xl px-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 ml-1">GitHub Profile</label>
+                                                            <input
+                                                                type="text"
+                                                                value={editMemberGithub}
+                                                                onChange={(e) => setEditMemberGithub(e.target.value)}
+                                                                placeholder="https://github.com/..."
                                                                 className="w-full h-10 bg-zinc-800 border border-white/5 rounded-xl px-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
                                                             />
                                                         </div>
@@ -629,6 +693,7 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
                                                         setEditMemberPhone(meta.phone || "")
                                                         setEditMemberEmail(meta.email || "")
                                                         setEditMemberLinkedin(meta.linkedin || "")
+                                                        setEditMemberGithub(meta.github || "")
                                                     }}
                                                     className="p-2 rounded-xl text-zinc-500 hover:text-blue-400 hover:bg-blue-500/10 transition-all"
                                                     title="Edit Member"
@@ -648,6 +713,150 @@ export function TeamDetailModal({ isOpen, onClose, onSuccess, team }: TeamDetail
                                                         <Trash2 className="w-3.5 h-3.5" />
                                                     )}
                                                 </button>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
+                    </section>
+
+                    {/* ─── Checkpoints Section ───── */}
+                    <section className="mt-8 pt-8 border-t border-white/5 pb-10">
+                        <div className="flex items-center justify-between mb-6">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                                <ClipboardCheck className="w-4 h-4" />
+                                Milestone Tracker
+                                <span className="ml-1 px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 text-[9px]">
+                                    {checkpoints.length}
+                                </span>
+                            </h4>
+                        </div>
+
+                        {isLoadingCheckpoints ? (
+                            <div className="flex items-center justify-center py-10">
+                                <Loader2 className="w-5 h-5 animate-spin text-purple-400" />
+                            </div>
+                        ) : checkpoints.length === 0 ? (
+                            <div className="bg-zinc-900/30 border border-white/5 rounded-2xl p-8 text-center">
+                                <div className="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-3">
+                                    <CheckSquare className="w-6 h-6 text-zinc-600" />
+                                </div>
+                                <p className="text-sm text-zinc-500 font-bold">No milestones defined</p>
+                                <p className="text-xs text-zinc-600 mt-1">Milestones must be defined in the Event settings</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {checkpoints.map((cp: any) => {
+                                    const progress = cp.teamProgress
+                                    const status = progress?.status || 'PENDING'
+                                    const isUpdating = updatingCheckpointId === cp.id
+
+                                    return (
+                                        <div
+                                            key={cp.id}
+                                            className="bg-zinc-900/40 border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-all"
+                                        >
+                                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-3 mb-2">
+                                                        <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-white/5 flex items-center justify-center text-[10px] font-black text-white">
+                                                            {cp.order}
+                                                        </div>
+                                                        <h5 className="font-bold text-white truncate">{cp.title}</h5>
+                                                    </div>
+                                                    <p className="text-xs text-zinc-500 leading-relaxed max-w-md">
+                                                        {cp.description || "No description provided for this milestone."}
+                                                    </p>
+
+                                                    {/* Submission Data display if any */}
+                                                    {progress?.submissionData?.items && Array.isArray(progress.submissionData.items) && (
+                                                        <div className="mt-4 p-4 rounded-xl bg-zinc-950 border border-white/5">
+                                                            <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mb-2 flex items-center gap-1.5">
+                                                                <MessageSquare className="w-3 h-3" /> Team Submission
+                                                            </p>
+                                                            <ul className="space-y-1.5">
+                                                                {progress.submissionData.items.map((item: any, idx: number) => (
+                                                                    <li key={idx} className="text-xs text-zinc-400 flex gap-2">
+                                                                        <span className="text-zinc-600">•</span>
+                                                                        {typeof item === 'string' ? item : (item.text || JSON.stringify(item))}
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="flex flex-col gap-3 w-full md:w-auto md:min-w-[180px]">
+                                                    <div className="flex items-center justify-between md:justify-end gap-2">
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-400' :
+                                                            status === 'SUBMITTED' ? 'bg-blue-500/10 text-blue-400' :
+                                                                status === 'REJECTED' ? 'bg-red-500/10 text-red-400' :
+                                                                    'bg-zinc-800 text-zinc-500'
+                                                            }`}>
+                                                            {status}
+                                                        </span>
+                                                        {isUpdating && <Loader2 className="w-3 h-3 animate-spin text-zinc-500" />}
+                                                    </div>
+
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <button
+                                                            onClick={() => handleUpdateCheckpoint(cp.id, 'APPROVED', progress?.reviewerNotes)}
+                                                            disabled={isUpdating || status === 'APPROVED'}
+                                                            className="flex items-center justify-center gap-1.5 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 text-[9px] font-black uppercase tracking-widest hover:bg-emerald-500/20 disabled:opacity-50 transition-all"
+                                                        >
+                                                            <CheckCircle2 className="w-3 h-3" />
+                                                            Approve
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleUpdateCheckpoint(cp.id, 'REJECTED', progress?.reviewerNotes)}
+                                                            disabled={isUpdating || status === 'REJECTED'}
+                                                            className="flex items-center justify-center gap-1.5 h-9 rounded-xl bg-red-500/10 text-red-400 text-[9px] font-black uppercase tracking-widest hover:bg-red-500/20 disabled:opacity-50 transition-all"
+                                                        >
+                                                            <AlertCircle className="w-3 h-3" />
+                                                            Reject
+                                                        </button>
+                                                    </div>
+
+                                                    <button
+                                                        onClick={() => handleUpdateCheckpoint(cp.id, 'PENDING', progress?.reviewerNotes)}
+                                                        disabled={isUpdating || status === 'PENDING'}
+                                                        className="w-full h-9 rounded-xl bg-zinc-800 text-zinc-400 text-[9px] font-black uppercase tracking-widest hover:bg-zinc-700 disabled:opacity-50 transition-all flex items-center justify-center gap-1.5"
+                                                    >
+                                                        <RotateCcw className="w-3 h-3" />
+                                                        Reset
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {/* Reviewer Notes Field */}
+                                            <div className="mt-6 pt-4 border-t border-white/5">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 ml-1">
+                                                        Reviewer Notes
+                                                    </label>
+                                                </div>
+                                                <textarea
+                                                    value={progress?.reviewerNotes || ""}
+                                                    onChange={(e) => {
+                                                        const newCheckpoints = [...checkpoints]
+                                                        const idx = newCheckpoints.findIndex(c => c.id === cp.id)
+                                                        if (idx !== -1) {
+                                                            if (!newCheckpoints[idx].teamProgress) {
+                                                                newCheckpoints[idx].teamProgress = { status: 'PENDING' }
+                                                            }
+                                                            newCheckpoints[idx].teamProgress.reviewerNotes = e.target.value
+                                                            setCheckpoints(newCheckpoints)
+                                                        }
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        if (e.target.value !== (cp.teamProgress?.reviewerNotes || "")) {
+                                                            handleUpdateCheckpoint(cp.id, status, e.target.value)
+                                                        }
+                                                    }}
+                                                    placeholder="Add feedback for the team..."
+                                                    className="w-full h-16 bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-xs text-zinc-300 focus:outline-none focus:border-purple-500/50 transition-colors resize-none"
+                                                />
                                             </div>
                                         </div>
                                     )
