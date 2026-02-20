@@ -49,7 +49,7 @@ export default async function TeamProfilePage() {
                         </div>
                     </div>
                 </div>
-                <div className="kz-status-chip bg-emerald-500/10 border-emerald-500/20 text-emerald-400 py-2 px-4">
+                <div className="kz-status-chip bg-indigo-500/5 border-indigo-500/10 text-indigo-600 dark:text-indigo-400 py-2 px-4">
                     <Activity className="w-3.5 h-3.5" />
                     <span className="text-[10px] font-mono-tech font-bold uppercase tracking-widest">NETWORK_UPLINK: ENCRYPTED</span>
                 </div>
@@ -60,7 +60,7 @@ export default async function TeamProfilePage() {
                 <div className="flex flex-col md:flex-row md:items-center gap-10 relative z-10">
                     {/* Large high-end team avatar */}
                     <div className="relative shrink-0">
-                        <div className="w-28 h-28 rounded-2xl flex items-center justify-center text-4xl font-heading font-bold text-slate-900 dark:text-white border border-black/5 dark:border-white/10 bg-slate-100 dark:bg-slate-900 overflow-hidden">
+                        <div className="w-28 h-28 rounded-2xl flex items-center justify-center text-4xl font-heading font-bold text-slate-900 dark:text-white border border-black/5 dark:border-white/10 bg-black/[0.04] dark:bg-white/[0.04] overflow-hidden">
                             {team.name.slice(0, 2).toUpperCase()}
                         </div>
                         <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl bg-white dark:bg-[#0B0E14] border border-black/5 dark:border-white/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 ring-4 ring-white dark:ring-[#0B0E14]">
@@ -109,7 +109,7 @@ export default async function TeamProfilePage() {
                 <section className="space-y-8 kz-animate-slide-up px-2" style={{ animationDelay: "200ms" }}>
                     <div className="flex items-center justify-between border-b border-indigo-500/30 pb-4">
                         <div className="flex flex-col">
-                            <h2 className="font-heading font-black text-2xl text-white tracking-tight uppercase">Operational Personnel</h2>
+                            <h2 className="font-heading font-black text-2xl text-slate-900 dark:text-white tracking-tight uppercase">Operational Personnel</h2>
                             <p className="text-[11px] font-mono-tech font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">SQUAD_REGISTRY_VERIFIED</p>
                         </div>
                         <span className="text-[10px] font-mono-tech font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-md uppercase tracking-widest">{team.members.length} UNITS_ACTIVE</span>
@@ -137,7 +137,7 @@ export default async function TeamProfilePage() {
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <p className="font-heading font-black text-lg text-slate-900 dark:text-white tracking-tight truncate">{member.name}</p>
                                                     {isLeader && (
-                                                        <div className="px-1.5 py-0.5 rounded-md bg-indigo-600 text-white text-[8px] font-black uppercase tracking-widest">
+                                                        <div className="px-1.5 py-0.5 rounded-md bg-indigo-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm">
                                                             Leader
                                                         </div>
                                                     )}

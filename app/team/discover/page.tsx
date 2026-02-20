@@ -24,7 +24,7 @@ export default async function DiscoverTeamsPage() {
                 <h1 className="font-heading font-black text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tighter leading-none mb-4 uppercase">
                     UNIT DIRECTORY
                 </h1>
-                <p className="font-sans text-slate-500 dark:text-slate-500 text-[12px] font-bold uppercase tracking-[0.1em] max-w-2xl leading-relaxed opacity-60">
+                <p className="font-sans text-slate-600 dark:text-slate-400 text-[12px] font-bold uppercase tracking-[0.1em] max-w-2xl leading-relaxed">
                     A secure listing of all active personnel units participating in the Kaizen Tech Sprint.
                 </p>
                 <div className="h-px w-full bg-black/5 dark:bg-white/5 mt-8" />
@@ -62,9 +62,9 @@ export default async function DiscoverTeamsPage() {
                                     {team.name}
                                 </h3>
                                 <div className="flex flex-wrap items-center gap-4 text-slate-500">
-                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/[0.03] dark:bg-white/[0.06] border border-black/5 dark:border-white/5">
-                                        <Users className="w-4 h-4" strokeWidth={3} />
-                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-500">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/[0.04] dark:bg-indigo-500/[0.08] border border-indigo-500/10 dark:border-indigo-500/20 shadow-sm">
+                                        <Users className="w-4 h-4 text-indigo-500" strokeWidth={3} />
+                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
                                             {team.members?.length ?? 0} Personnel
                                         </span>
                                     </div>
@@ -80,10 +80,10 @@ export default async function DiscoverTeamsPage() {
                                         <div key={member.id} className="flex items-center justify-between gap-4 group/member">
                                             <div className="flex items-center gap-3 sm:gap-6 min-w-0 flex-1">
                                                 <div className={`
-                                                    w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all duration-500 shrink-0 border
+                                                    w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all duration-500 shrink-0 border shadow-sm
                                                     ${member.role === "LEADER"
-                                                        ? "bg-indigo-600 border-indigo-500 text-white shadow-[0_10px_25px_-5px_rgba(99,102,241,0.4)]"
-                                                        : "bg-black/[0.02] dark:bg-white/[0.04] border-black/5 dark:border-white/10 text-slate-400 dark:text-slate-500 group-hover/member:border-indigo-500/40 shadow-inner"}
+                                                        ? "bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400"
+                                                        : "bg-black/[0.03] dark:bg-white/[0.05] border-black/5 dark:border-white/10 text-slate-500 dark:text-slate-400 group-hover/member:border-indigo-500/40 shadow-inner"}
                                                 `}>
                                                     {member.role === "LEADER"
                                                         ? <Crown className="w-3.5 h-3.5 sm:w-4 h-4" />

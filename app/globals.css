@@ -10,35 +10,38 @@
   /* ============================================================ 
      KAIZEN DESIGN SYSTEM — Porcelain Premium (Light)
      ============================================================ */
-  --kz-bg: #FFFFFF;
-  --kz-surface: #F9FAFB;
-  --kz-surface-2: #F3F4F6;
-  --kz-surface-secondary: #F3F4F6;
+  --kz-bg: #F8FAFC;
+  --kz-surface: #FFFFFF;
+  --kz-surface-2: #F1F5F9;
+  --kz-surface-secondary: #E2E8F0;
 
   --kz-text: #0F172A;
-  --kz-muted: #64748B;
+  --kz-text-secondary: #475569;
+  --kz-text-muted: #94A3B8;
+
   --kz-border: rgba(0, 0, 0, 0.05);
-  --kz-border-rich: rgba(0, 0, 0, 0.08);
+  --kz-border-rich: rgba(0, 0, 0, 0.1);
   --kz-border-light: rgba(255, 255, 255, 0.8);
 
   --kz-primary: #0F172A;
-  --kz-brand: #6366F1;
-  --kz-brand-dim: rgba(99, 102, 241, 0.04);
-  --kz-brand-rich: #4F46E5;
+  --kz-brand: #3B82F6;
+  --kz-brand-dim: rgba(59, 130, 246, 0.04);
+  --kz-brand-rich: #2563EB;
 
   --kz-success: #10B981;
   --kz-warning: #F59E0B;
   --kz-danger: #EF4444;
+  --kz-info: #3B82F6;
 
-  --kz-radius-sm: 6px;
-  --kz-radius-md: 10px;
-  --kz-radius-lg: 16px;
-  --kz-radius-xl: 24px;
+  --kz-radius-sm: 8px;
+  --kz-radius-md: 12px;
+  --kz-radius-lg: 20px;
+  --kz-radius-xl: 32px;
 
   --kz-glass-bg: rgba(255, 255, 255, 0.7);
   --kz-glass-border: rgba(0, 0, 0, 0.05);
 
-  --background: #FFFFFF;
+  --background: #F8FAFC;
   --foreground: #0F172A;
 
   /* Premium Micro-details */
@@ -47,35 +50,34 @@
 }
 
 .dark {
-  /* ============================================================
-     KAIZEN DESIGN SYSTEM — Midnight Elite (Dark)
-     ============================================================ */
-  --kz-bg: #010101;
-  /* Deepest Obsidian */
-  --kz-surface: #040405;
-  /* Midnight Surface */
-  --kz-surface-2: #080809;
-  /* Shadow Surface */
-  --kz-surface-secondary: #020202;
+  /* Sovereign Graphite (Dark) */
+  --kz-bg: #08080A;
+  --kz-surface: #111218;
+  --kz-surface-2: #191B24;
+  --kz-surface-secondary: #0A0B0E;
 
   --kz-text: #F8FAFC;
-  --kz-muted: #64748B;
+  --kz-text-secondary: #94A3B8;
+  --kz-text-muted: #64748B;
+
   --kz-border: rgba(255, 255, 255, 0.04);
-  --kz-border-rich: rgba(255, 255, 255, 0.06);
-  --kz-border-light: rgba(255, 255, 255, 0.02);
+  --kz-border-rich: rgba(255, 255, 255, 0.08);
+  --kz-border-light: rgba(255, 255, 255, 0.01);
 
   --kz-primary: #FFFFFF;
-  --kz-brand: #6366F1;
-  /* Sleek Electric Indigo */
-  --kz-brand-dim: rgba(99, 102, 241, 0.1);
-  --kz-brand-rich: #818CF8;
-  --kz-accent: #A855F7;
-  /* Deep Violet Accent */
+  --kz-brand: #3B82F6;
+  --kz-brand-dim: rgba(59, 130, 246, 0.1);
+  --kz-brand-rich: #60A5FA;
+  --kz-accent: #10B981;
+  --kz-success: #10B981;
+  --kz-warning: #FBBF24;
+  --kz-danger: #F43F5E;
+  --kz-info: #3B82F6;
 
-  --kz-glass-bg: rgba(3, 3, 3, 0.85);
-  --kz-glass-border: rgba(255, 255, 255, 0.04);
+  --kz-glass-bg: rgba(10, 11, 16, 0.9);
+  --kz-glass-border: rgba(255, 255, 255, 0.05);
 
-  --background: #030303;
+  --background: #08080A;
   --foreground: #F8FAFC;
 
   /* Premium Micro-details */
@@ -90,11 +92,11 @@
   /* Overriding hardcoded slate usage to follow theme variables */
   --color-slate-950: var(--kz-text);
   --color-slate-900: var(--kz-text);
-  --color-slate-800: var(--kz-text);
-  --color-slate-700: var(--kz-text);
-  --color-slate-600: var(--kz-muted);
-  --color-slate-500: var(--kz-muted);
-  --color-slate-400: var(--kz-muted);
+  --color-slate-800: var(--kz-text-secondary);
+  --color-slate-700: var(--kz-text-secondary);
+  --color-slate-600: var(--kz-text-muted);
+  --color-slate-500: var(--kz-text-muted);
+  --color-slate-400: var(--kz-text-muted);
 
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: "Outfit", "Inter", sans-serif;
@@ -130,7 +132,7 @@ body {
   background: var(--kz-surface);
   border: 1px solid var(--kz-border);
   position: relative;
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: var(--kz-radius-lg);
   overflow: hidden;
   box-shadow:
@@ -138,13 +140,24 @@ body {
     var(--kz-hairline);
 }
 
+.kz-card-rich::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
 
 .kz-card-rich:hover {
   border-color: var(--kz-border-rich);
   transform: translateY(-2px);
-  box-shadow:
-    var(--kz-highlight),
-    var(--kz-hairline);
+  background: var(--kz-surface-2);
+}
+
+.kz-card-rich:hover::after {
+  opacity: 1;
 }
 
 

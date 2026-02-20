@@ -23,29 +23,29 @@ export default async function GeneralPage() {
             {/* Header */}
             <header className="kz-animate-fade-in px-2">
                 <h1 className="font-heading font-black text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tighter leading-none mb-3 uppercase">GENERAL OVERVIEW</h1>
-                <p className="font-mono-tech text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+                <p className="font-mono-tech text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] opacity-80">
                     Executive overview, global stats, and event intelligence.
                 </p>
             </header>
 
             {/* Stats Grid */}
             <section className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2">
-                <div className="kz-card-rich p-6 flex items-center gap-5 bg-white/[0.02] border-white/5">
-                    <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 border border-white/5">
-                        <Layout className="w-5 h-5" strokeWidth={1.5} />
+                <div className="kz-card-rich p-6 flex items-center gap-5 bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 shadow-sm">
+                    <div className="w-12 h-12 rounded-lg bg-indigo-500/10 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 border border-indigo-500/10 dark:border-indigo-500/20">
+                        <Layout className="w-5 h-5" strokeWidth={2} />
                     </div>
                     <div>
-                        <p className="text-[9px] lg:text-[15px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-1">TOTAL TEAMS</p>
-                        <h3 className="text-xl font-mono-tech font-bold text-slate-900 dark:text-white tracking-tight">{totalTeams}</h3>
+                        <p className="text-[10px] font-mono-tech font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest mb-1">TOTAL TEAMS</p>
+                        <h3 className="text-xl font-mono-tech font-black text-slate-900 dark:text-white tracking-tight">{totalTeams}</h3>
                     </div>
                 </div>
-                <div className="kz-card-rich p-6 flex items-center gap-5 bg-white/[0.02] border-white/5">
-                    <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 border border-white/5">
-                        <Users className="w-5 h-5" strokeWidth={1.5} />
+                <div className="kz-card-rich p-6 flex items-center gap-5 bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 shadow-sm">
+                    <div className="w-12 h-12 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 border border-emerald-500/10 dark:border-emerald-500/20">
+                        <Users className="w-5 h-5" strokeWidth={2} />
                     </div>
                     <div>
-                        <p className="text-[9px] lg:text-[15px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-1">TOTAL STUDENTS</p>
-                        <h3 className="text-xl font-mono-tech font-bold text-slate-900 dark:text-white tracking-tight">{totalMembers}</h3>
+                        <p className="text-[10px] font-mono-tech font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest mb-1">TOTAL STUDENTS</p>
+                        <h3 className="text-xl font-mono-tech font-black text-slate-900 dark:text-white tracking-tight">{totalMembers}</h3>
                     </div>
                 </div>
             </section>
@@ -55,7 +55,7 @@ export default async function GeneralPage() {
                 <section className="md:col-span-2 space-y-8">
                     <div className="space-y-4">
                         <h2 className="font-semibold text-lg text-slate-900 dark:text-white flex items-center gap-2 uppercase tracking-tight">
-                            <Info className="w-4 h-4 text-indigo-500 dark:text-indigo-400" strokeWidth={1.5} />
+                            {/* <Info className="w-4 h-4 text-indigo-500 dark:text-indigo-400" strokeWidth={1.5} /> */}
                             Mission Protocol
                         </h2>
                         <div className="kz-card-rich p-6 text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-medium bg-black/5 dark:bg-white/[0.02] border-black/5 dark:border-white/5">
@@ -69,7 +69,7 @@ export default async function GeneralPage() {
 
                     <div className="space-y-4">
                         <h2 className="font-bold text-xl text-slate-900 dark:text-white flex items-center gap-2 uppercase tracking-tight">
-                            <ShieldCheck className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+                            {/* <ShieldCheck className="w-5 h-5 text-indigo-500 dark:text-indigo-400" /> */}
                             Knowledge Base
                         </h2>
                         <div className="space-y-3">
@@ -93,9 +93,9 @@ export default async function GeneralPage() {
                                     a: "Yes. This is a 24-hour hackathon. Rest areas for boys and girls will be available during the event."
                                 }
                             ].map((faq, i) => (
-                                <div key={i} className="bg-black/5 dark:bg-white/[0.02] rounded-[1.5rem] border border-black/5 dark:border-white/5 p-6 border-l-4 border-l-indigo-500/40">
-                                    <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-2">{faq.q}</h4>
-                                    <p className="text-xs text-slate-600 dark:text-slate-400 font-bold">{faq.a}</p>
+                                <div key={i} className="bg-black/[0.02] dark:bg-white/[0.02] rounded-xl border border-black/5 dark:border-white/10 p-6 border-l-4 border-l-indigo-500/60 shadow-sm hover:translate-x-1 transition-all">
+                                    <h4 className="font-black text-slate-900 dark:text-white text-sm mb-2 uppercase tracking-tight">{faq.q}</h4>
+                                    <p className="text-[11px] text-slate-600 dark:text-slate-400 text-sm lg:text-base font-bold leading-relaxed">{faq.a}</p>
                                 </div>
                             ))}
                         </div>

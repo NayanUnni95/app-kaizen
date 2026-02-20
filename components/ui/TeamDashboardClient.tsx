@@ -68,7 +68,7 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                     </div>
                     <h1 className="font-heading text-2xl md:text-3xl text-slate-900 dark:text-white tracking-tighter leading-[0.9] py-2 uppercase">
                         Welcome Back,<br />
-                        <span className="text-zinc-600 dark:text-zinc-400 inline-block mt-2 text-4xl md:text-5xl font-black drop-shadow-sm">{team.name}</span>
+                        <span className="text-indigo-600 dark:text-indigo-400 inline-block mt-2 text-4xl md:text-5xl font-black drop-shadow-sm">{team.name}</span>
                     </h1>
                     <div className="flex items-center gap-8 pt-8 border-t border-black/5 dark:border-white/5">
                         <div className="flex flex-col">
@@ -114,10 +114,10 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                                 <Clock className="w-5 h-5" strokeWidth={1.5} />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.3em] leading-none">Global Event Protocol</span>
+                                <span className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.3em] leading-none">Global Mission Protocol</span>
                                 <div className="flex items-center gap-2 mt-2">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
-                                    <span className="text-[9px] text-slate-500 dark:text-slate-500 font-black uppercase tracking-widest leading-none">Status: Operational</span>
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                                    <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest leading-none">Status: Synchronized</span>
                                 </div>
                             </div>
                         </div>
@@ -128,10 +128,10 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                     <div className="mt-auto relative z-10">
                         <div className="flex items-center justify-between mb-5 px-1">
                             <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                                <span className="text-[11px] font-mono-tech font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Transmission: {progressPct}%</span>
+                                <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.4)]" />
+                                <span className="text-[11px] font-mono-tech font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.2em]">Data_Transmission: {progressPct}%</span>
                             </div>
-                            <span className="text-[10px] font-mono-tech font-black text-slate-500 dark:text-slate-600 uppercase tracking-widest opacity-60">BITRATE_SYNCD</span>
+                            <span className="text-[10px] font-mono-tech font-black text-slate-500 dark:text-slate-500 uppercase tracking-widest opacity-80">STABLE_SIGNAL</span>
                         </div>
                         <div className="w-full h-1 bg-black/5 dark:bg-white/[0.05] rounded-full overflow-hidden border border-black/5 dark:border-white/5">
                             <div
@@ -185,15 +185,15 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
 
                         {/* DESKTOP DIRECTORY */}
                         <div className="hidden lg:block flex-1 mb-6">
-                            <p className="text-[9px] font-black text-slate-400 dark:text-zinc-600 uppercase tracking-[0.2em] mb-4">Personnel_Files</p>
+                            <p className="text-[9px] font-black text-slate-500 dark:text-slate-500 uppercase tracking-[0.2em] mb-4 opacity-80">Personnel_Files</p>
                             <div className="space-y-2">
                                 {team.members?.slice(0, 4).map((m: any) => (
-                                    <div key={m.id} className="flex items-center justify-between p-2 rounded-lg bg-black/[0.02] dark:bg-white/[0.02] border border-black/[0.03] dark:border-white/[0.05]">
+                                    <div key={m.id} className="flex items-center justify-between p-2 rounded-lg bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.03] dark:border-white/[0.05]">
                                         <div className="flex items-center gap-2.5 min-w-0">
-                                            <div className="w-6 h-6 rounded-md bg-zinc-800 flex items-center justify-center text-[9px] text-white font-black shrink-0">
+                                            <div className="w-6 h-6 rounded-md bg-zinc-800 dark:bg-zinc-700 flex items-center justify-center text-[9px] text-white font-black shrink-0">
                                                 {m.name.charAt(0)}
                                             </div>
-                                            <span className="text-[10px] font-black text-slate-700 dark:text-slate-400 truncate uppercase">{m.name}</span>
+                                            <span className="text-[10px] font-black text-slate-800 dark:text-slate-300 truncate uppercase">{m.name}</span>
                                         </div>
                                     </div>
                                 ))}
