@@ -76,18 +76,10 @@ export function SplashOverlay() {
         ${hiding ? "opacity-0 invisible" : "opacity-100 visible"}
       `}
         >
-            <div
-                className="absolute inset-0 pointer-events-none opacity-40"
-                style={{
-                    background: "radial-gradient(circle at 50% 50%, #312E81 0%, transparent 70%)",
-                }}
-            />
-
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('/assets/grain.svg')]" />
 
             <div className={`relative z-10 flex flex-col items-center gap-8 ${hiding ? 'scale-95 opacity-0' : 'scale-100 opacity-100'} transition-all duration-700 ease-out`}>
                 <div className="relative group">
-                    <div className="absolute inset-0 bg-indigo-600/20 rounded-full blur-[80px] group-hover:bg-indigo-600/30 transition-all duration-1000" />
                     <Image
                         src="/assets/kaizen-asset.png"
                         alt="Kaizen"
@@ -95,33 +87,24 @@ export function SplashOverlay() {
                         height={120}
                         unoptimized
                         priority
-                        className="relative z-10 drop-shadow-2xl transition-transform duration-700 group-hover:scale-110"
+                        className="relative z-10 transition-transform duration-700 group-hover:scale-105"
                     />
                 </div>
 
                 <div className="text-center space-y-2">
-                    <h1 className="font-heading text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                    <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-white tracking-tight">
                         KAIZEN
                     </h1>
-                    <div className="flex items-center justify-center gap-3">
-                        <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-indigo-500/50" />
-                        <p className="text-indigo-100/60 text-xs sm:text-sm font-semibold uppercase tracking-[0.3em]">
-                            Hackathon Management Platform
-                        </p>
-                        <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-indigo-500/50" />
-                    </div>
+                    <p className="text-slate-500 text-xs sm:text-sm font-medium uppercase tracking-widest">
+                        Hackathon Management Platform
+                    </p>
                 </div>
 
                 <div className="flex items-center gap-2 mt-4">
                     {[0, 1, 2].map((i) => (
                         <div
                             key={i}
-                            className="w-1.5 h-1.5 rounded-full bg-indigo-400"
-                            style={{
-                                animation: "kz-pulse-dot 1.5s ease-in-out infinite",
-                                animationDelay: `${i * 0.3}s`,
-                                opacity: 0.6,
-                            }}
+                            className="w-1 h-1 rounded-full bg-slate-700"
                         />
                     ))}
                 </div>

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import { NotificationType, NotificationCategory } from "@prisma/client"
+import { NotificationType } from "@prisma/client"
 
 export async function getAllNotifications(filters: { eventId?: string, teamId?: string, userId?: string }) {
     return await prisma.notification.findMany({
@@ -19,7 +19,6 @@ export async function createNotification(data: {
     eventId: string
     teamId?: string
     userId?: string
-    category?: NotificationCategory
     type: NotificationType
     title: string
     body?: string

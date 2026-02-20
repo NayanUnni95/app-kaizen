@@ -50,7 +50,7 @@ export function UserTopbar({ teamName, unreadCount = 0, endsAt, startsAt }: User
         <header
             className="fixed top-0 left-0 right-0 z-50 kz-glass-surface border-b border-white/5 transition-all duration-300"
         >
-            <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
+            <div className="max-w-[1600px] mx-auto px-8 lg:px-12 h-16 flex items-center justify-between gap-8">
                 {/* Left: Branding & Status */}
                 <div className="flex items-center gap-3 sm:gap-6 min-w-0 flex-1">
                     <Link href="/team" className="flex items-center gap-2 sm:gap-3 min-w-0 group">
@@ -71,10 +71,10 @@ export function UserTopbar({ teamName, unreadCount = 0, endsAt, startsAt }: User
                             </div>
                         </div>
                         <div className="flex flex-col min-w-0">
-                            <span className="font-heading font-black text-[14px] sm:text-[15px] text-white leading-none tracking-tight">
+                            <span className="font-heading font-semibold text-[14px] sm:text-[15px] text-white leading-none tracking-tight">
                                 KAIZEN<span className="text-indigo-400">.</span>
                             </span>
-                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-0.5 truncate">{teamName}</span>
+                            <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest mt-0.5 truncate">{teamName}</span>
                         </div>
                     </Link>
 
@@ -83,7 +83,7 @@ export function UserTopbar({ teamName, unreadCount = 0, endsAt, startsAt }: User
                     {/* System Meta - hidden on mobile/tablet */}
                     <div className="hidden 2xl:flex items-center gap-3">
                         <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-white/5 border border-white/5">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                             <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">System: <span className="text-emerald-400">Active</span></span>
                         </div>
                     </div>
@@ -91,11 +91,6 @@ export function UserTopbar({ teamName, unreadCount = 0, endsAt, startsAt }: User
 
                 {/* Right: Actions & Profile */}
                 <div className="flex items-center gap-2 sm:gap-4 ml-auto">
-                    {/* Search - only on wide screens */}
-                    <button className="hidden lg:flex items-center gap-3 px-3 py-1.5 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all group">
-                        <Search className="w-3.5 h-3.5 text-slate-500" />
-                        <span className="text-[11px] font-bold text-slate-500 tracking-tight">Search...</span>
-                    </button>
 
                     {/* Bell / Notifications */}
                     <button
@@ -134,19 +129,18 @@ export function UserTopbar({ teamName, unreadCount = 0, endsAt, startsAt }: User
                                 <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Authorized</span>
                             </div>
                             <ChevronDown
-                                className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-500 ${profileOpen ? "rotate-180 text-white" : "group-hover:text-white"}`}
-                                strokeWidth={3}
+                                className={`w-3.5 h-3.5 text-slate-600 transition-transform duration-500 ${profileOpen ? "rotate-180 text-white" : "group-hover:text-white"}`}
+                                strokeWidth={2}
                             />
                         </button>
 
                         {profileOpen && (
                             <div className="absolute top-14 right-0 w-64 kz-card-rich p-2 kz-animate-scale-in origin-top-right z-50 border-white/10">
-                                <div className="px-4 py-4 mb-2 bg-indigo-500/10 rounded-xl relative overflow-hidden group border border-indigo-500/20">
-                                    <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:bg-indigo-500/20 transition-colors" />
-                                    <p className="font-heading font-black text-sm text-white truncate relative z-10">{teamName}</p>
+                                <div className="px-4 py-4 mb-2 bg-white/5 rounded-lg relative overflow-hidden group border border-white/5">
+                                    <p className="font-heading font-semibold text-sm text-white truncate relative z-10">{teamName}</p>
                                     <div className="flex items-center gap-2 mt-1 relative z-10">
-                                        <Shield className="w-3 h-3 text-indigo-400" />
-                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Team Identity: SECURE</p>
+                                        <Shield className="w-3 h-3 text-slate-500" strokeWidth={1.5} />
+                                        <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Team Identity: SECURE</p>
                                     </div>
                                 </div>
                                 <div className="space-y-1">

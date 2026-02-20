@@ -1,32 +1,30 @@
-// app/team/page.tsx
 import { auth } from "@/auth"
 import { getTeamBySession } from "@/lib/hackathon/teams"
 import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import TeamDashboardClient from "@/components/ui/TeamDashboardClient"
+import { NotificationType } from "@prisma/client"
 
 export default async function TeamDashboardPage() {
     const session = await auth()
-    // If not signed in, send to explicit signin page
-    if (!session?.user) redirect("/hackathon-login")
+    if (!session?.user) redirect("/user")
 
     const team = await getTeamBySession(session.user)
-    // If signed in but no team, send to team-join/create flow
     if (!team) redirect("/team/join")
 
-    // Fetch announcements (using Notification model)
     const announcements = await prisma.notification.findMany({
         where: {
             eventId: team.eventId,
             teamId: null,
-            category: 'ANNOUNCEMENT'
-        } as any, // Global announcements
+            type: NotificationType.INFO,
+        },
         orderBy: { createdAt: 'desc' },
-        take: 5
+        take: 5,
     })
 
-    // Quick stats from event
-    const allTeams = await prisma.team.count({ where: { eventId: team.eventId } })
+    const allTeams = await prisma.team.count({
+        where: { eventId: team.eventId },
+    })
 
     return (
         <TeamDashboardClient

@@ -44,8 +44,8 @@ export default async function TeamLayout({
             />
 
             {/* Content area: side nav (desktop) + main + bottom nav (mobile) */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-24 lg:pb-10">
-                <div className="flex gap-6 lg:gap-8">
+            <div className="max-w-[1600px] mx-auto px-8 lg:px-12 pt-20 pb-24 lg:pb-10">
+                <div className="flex gap-12 lg:gap-16">
                     {/* Left side rail — desktop only */}
                     <UserSideNav />
 

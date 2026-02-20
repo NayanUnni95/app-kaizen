@@ -40,10 +40,8 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
 
     if (isLoading) {
         return (
-            <div className="md:col-span-2 kz-card-premium p-1 relative overflow-hidden">
-                <div className="p-5 flex items-center justify-center h-full min-h-[180px]">
-                    <Loader2 className="w-6 h-6 text-blue-400 animate-spin" />
-                </div>
+            <div className="md:col-span-2 kz-card-rich p-8 flex items-center justify-center min-h-[180px] bg-white/[0.01]">
+                <Loader2 className="w-6 h-6 text-indigo-500 animate-spin" />
             </div>
         )
     }
@@ -51,38 +49,37 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
     // Not released or no visible statements — show Coming Soon
     if (!isReleased || statements.length === 0) {
         return (
-            <div className="md:col-span-2 kz-card-premium p-1 relative overflow-hidden group">
-                <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(at_top_right,_#2563EB_0%,_transparent_50%)]" />
-                <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center gap-6 h-full">
-                    <div className="kz-icon-container w-20 h-20 bg-slate-50 flex-shrink-0">
-                        <Activity className="w-10 h-10 text-slate-400 group-hover:text-blue-600 transition-colors" />
+            <div className="md:col-span-2 kz-card-rich p-8 relative overflow-hidden group bg-white/[0.02] border-white/5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8 h-full">
+                    <div className="kz-icon-rich w-20 h-20 bg-white/5 flex-shrink-0 border-white/10 group-hover:border-indigo-500/30 transition-all">
+                        <Activity className="w-10 h-10 text-slate-600 group-hover:text-indigo-400 transition-colors" strokeWidth={1.5} />
                     </div>
-                    <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-2">
-                            <h3 className="font-heading font-bold text-xl text-[#0F172A]">
+                    <div className="flex-1 space-y-3">
+                        <div className="flex items-center gap-3">
+                            <h3 className="font-heading font-black text-2xl text-white tracking-tighter uppercase leading-none">
                                 Problem Statement
                             </h3>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 uppercase tracking-wider">
-                                Coming Soon
+                            <span className="px-2 py-0.5 rounded-md text-[9px] font-mono-tech font-bold bg-white/5 text-slate-500 border border-white/5 uppercase tracking-[0.2em]">
+                                ENCRYPTED
                             </span>
                         </div>
-                        <p className="text-sm text-[#64748B] leading-relaxed max-w-md">
+                        <p className="text-[13px] text-slate-500 leading-relaxed font-semibold max-w-md">
                             The problem statement for your track will be officially released at
                             the start of the hackathon. Prepare your tools!
                         </p>
                         <div className="pt-2 flex items-center gap-3">
                             <button
                                 disabled
-                                className="px-4 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold flex items-center gap-2 cursor-not-allowed border border-slate-200"
+                                className="px-4 py-2 rounded-xl bg-white/5 text-slate-700 text-[10px] font-mono-tech font-bold flex items-center gap-2 cursor-not-allowed border border-white/5"
                             >
-                                <Lock className="w-3.5 h-3.5" />
+                                <Lock className="w-3.5 h-3.5" strokeWidth={2} />
                                 Unlocking Soon
                             </button>
-                            <p className="text-[10px] font-medium text-slate-400">
+                            <p className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase tracking-widest">
                                 Release:{" "}
                                 {startsAt
-                                    ? new Date(startsAt).toLocaleDateString()
-                                    : "TBD"}
+                                    ? new Date(startsAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+                                    : "TBD_WINDOW"}
                             </p>
                         </div>
                     </div>
@@ -93,14 +90,16 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
 
     // Released — show clickable problem statement cards + modal
     return (
-        <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2 mb-1">
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                <h3 className="font-heading font-bold text-base text-[#0F172A]">
-                    Problem Statements
+        <div className="md:col-span-2 space-y-6">
+            <div className="flex items-center gap-3 mb-2 px-1">
+                <div className="w-5 h-5 rounded-full flex items-center justify-center bg-indigo-500 text-white text-[10px] font-bold shadow-[0_0_10px_rgba(99,102,241,0.3)]">
+                    <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
+                </div>
+                <h3 className="text-[12px] font-bold text-white tracking-widest uppercase">
+                    Problem Statement
                 </h3>
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-700 uppercase tracking-wider">
-                    Live
+                <span className="px-2 py-0.5 rounded-md text-[9px] font-mono-tech font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-[0.2em] animate-pulse">
+                    BROADCAST_LIVE
                 </span>
             </div>
 
@@ -109,26 +108,25 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
                     <button
                         key={stmt.id}
                         onClick={() => setSelectedStmt(stmt)}
-                        className="w-full text-left kz-card-premium p-1 relative overflow-hidden group cursor-pointer hover:shadow-md transition-all"
+                        className="w-full text-left kz-card-rich p-6 group cursor-pointer hover:bg-white/[0.04] transition-all duration-500 border-white/5 active:scale-[0.98]"
                     >
-                        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/30 to-transparent" />
-                        <div className="p-4 sm:p-5 flex items-center gap-4">
-                            <div className="kz-icon-container w-12 h-12 bg-amber-50 flex-shrink-0">
-                                <span className="text-lg font-bold text-amber-600">
+                        <div className="flex items-center gap-6">
+                            <div className="kz-icon-rich w-12 h-12 bg-white/5 border-white/10 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shrink-0">
+                                <span className="text-lg font-mono-tech font-bold">
                                     {String(index + 1).padStart(2, "0")}
                                 </span>
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h4 className="font-heading font-bold text-[#0F172A] group-hover:text-[#2563EB] transition-colors truncate">
+                                <h4 className="font-heading font-black text-white text-xl tracking-tighter group-hover:text-indigo-400 transition-colors truncate">
                                     {stmt.title}
                                 </h4>
                                 {stmt.description && (
-                                    <p className="text-xs text-[#64748B] mt-0.5 line-clamp-1">
-                                        {stmt.description}
+                                    <p className="text-[11px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mt-1.5 line-clamp-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                                        AUTH_{stmt.id.slice(0, 8).toUpperCase()}
                                     </p>
                                 )}
                             </div>
-                            <ChevronRight className="w-5 h-5 text-[#CBD5E1] group-hover:text-[#2563EB] group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+                            <ChevronRight className="w-5 h-5 text-slate-700 group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0" />
                         </div>
                     </button>
                 ))}
@@ -145,32 +143,31 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
 
                     {/* Modal */}
                     <div
-                        className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-200 max-h-[85vh] flex flex-col"
+                        className="relative w-full max-w-xl bg-[#080808] border border-white/10 rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-300 max-h-[85vh] flex flex-col"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Top accent */}
-                        <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500" />
+                        <div className="h-px w-full bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
 
                         {/* Close button */}
                         <button
                             onClick={() => setSelectedStmt(null)}
-                            className="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700 transition-colors z-10"
+                            className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-500 hover:text-white border border-white/10 transition-all z-10"
                         >
                             <X className="w-4 h-4" />
                         </button>
 
-                        {/* Modal content (scrollable) */}
-                        <div className="overflow-y-auto p-6 sm:p-8">
+                        <div className="overflow-y-auto p-10">
                             {/* Number badge + header */}
-                            <div className="flex items-start gap-4 mb-6">
-                                <div className="kz-icon-container w-14 h-14 bg-amber-50 flex-shrink-0 rounded-2xl flex items-center justify-center">
-                                    <Sparkles className="w-6 h-6 text-amber-500" />
+                            <div className="flex items-start gap-6 mb-10">
+                                <div className="kz-icon-rich w-16 h-16 border-white/10 shrink-0 bg-indigo-500/10 text-indigo-400">
+                                    <Sparkles className="w-7 h-7" strokeWidth={1.5} />
                                 </div>
-                                <div className="flex-1 min-w-0 pt-1">
-                                    <p className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1">
+                                <div className="flex flex-col pt-1">
+                                    <p className="text-[10px] font-mono-tech font-bold text-indigo-400 uppercase tracking-[0.2em] mb-2">
                                         Problem Statement
                                     </p>
-                                    <h2 className="font-heading font-bold text-xl sm:text-2xl text-[#0F172A] leading-tight">
+                                    <h2 className="font-heading font-black text-3xl text-white tracking-tighter leading-tight uppercase">
                                         {selectedStmt.title}
                                     </h2>
                                 </div>
@@ -178,12 +175,12 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
 
                             {/* Description */}
                             {selectedStmt.description && (
-                                <div className="mb-6">
-                                    <h4 className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-2">
+                                <div className="mb-10">
+                                    <h4 className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase tracking-widest mb-4">
                                         Description
                                     </h4>
-                                    <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-                                        <p className="text-sm text-[#334155] leading-relaxed whitespace-pre-wrap">
+                                    <div className="kz-card-rich p-6 border-white/5 bg-white/[0.02]">
+                                        <p className="text-[14px] text-slate-300 leading-relaxed font-medium whitespace-pre-wrap">
                                             {selectedStmt.description}
                                         </p>
                                     </div>
@@ -192,44 +189,38 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
 
                             {/* Asset link */}
                             {selectedStmt.assetUrl && (
-                                <div className="mb-6">
-                                    <h4 className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-2">
-                                        Reference Material
+                                <div className="mb-10">
+                                    <h4 className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase tracking-widest mb-4">
+                                        Asset
                                     </h4>
                                     <a
                                         href={selectedStmt.assetUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center gap-3 p-4 rounded-2xl border border-blue-100 bg-blue-50/50 hover:bg-blue-50 transition-colors group"
+                                        className="flex items-center gap-5 p-6 kz-card-rich border-indigo-500/20 bg-indigo-500/5 hover:bg-indigo-500/10 hover:border-indigo-500/40 transition-all group"
                                     >
-                                        <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                                            <ExternalLink className="w-5 h-5 text-blue-600" />
+                                        <div className="kz-icon-rich w-12 h-12 border-white/10 bg-indigo-600 text-white shadow-[0_0_15px_rgba(99,102,241,0.3)] shrink-0">
+                                            <ExternalLink className="w-5 h-5" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-semibold text-[#1D4ED8] group-hover:text-[#1E40AF] transition-colors">
-                                                View Reference Material
+                                            <p className="text-sm font-black text-white uppercase tracking-tight">
+                                                UPLINK_DATA_STREAM
                                             </p>
-                                            <p className="text-xs text-blue-400 truncate">
+                                            <p className="text-[10px] font-mono-tech text-indigo-400 truncate opacity-70">
                                                 {selectedStmt.assetUrl}
                                             </p>
                                         </div>
-                                        <ChevronRight className="w-4 h-4 text-blue-300 group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
+                                        <ChevronRight className="w-4 h-4 text-indigo-400 group-hover:translate-x-1 transition-transform flex-shrink-0" />
                                     </a>
                                 </div>
                             )}
 
                             {/* Timestamp */}
-                            <div className="flex items-center gap-2 text-[10px] text-[#94A3B8] font-medium pt-2 border-t border-slate-100">
+                            {/* Timestamp */}
+                            <div className="flex items-center gap-3 text-[10px] font-mono-tech font-bold text-slate-700 uppercase tracking-widest pt-8 border-t border-white/5">
                                 <Clock className="w-3 h-3" />
                                 <span>
-                                    Published{" "}
-                                    {new Date(selectedStmt.createdAt).toLocaleString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                        year: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
+                                    SYNCED_{new Date(selectedStmt.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                 </span>
                             </div>
                         </div>

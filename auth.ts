@@ -49,6 +49,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session: {
         strategy: "jwt", // Required for Credentials provider
     },
+    pages: {
+        signIn: "/user",
+    },
     trustHost: true,
     debug: false,
     logger: {

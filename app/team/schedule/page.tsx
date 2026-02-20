@@ -1,38 +1,48 @@
 import { MapPin, Calendar, Sparkles, Clock, Activity, Zap, ChevronRight, Terminal } from "lucide-react"
 
 export default async function TeamSchedulePage() {
-    // Dummy Data for the reference feel
+    // Real schedule (IST) — no venue fields included, end times only where provided
     const scheduleItems = [
-        { id: '1', time: '15:00', name: 'Hackathon Genesis', venue: 'Alpha Sector - Main Hall', startsAt: '2026-02-20T15:00:00', endsAt: '2026-02-20T16:00:00', tag: 'Kick-off' },
-        { id: '2', time: '17:30', name: 'Strategic Keynote: Future Systems', venue: 'Executive Auditorium', startsAt: '2026-02-20T17:30:00', endsAt: '2026-02-20T18:30:00', tag: 'Alpha' },
-        { id: '3', time: '18:30', name: 'Operational Sync & Pulse', venue: 'Open Bridge Stage', startsAt: '2026-02-20T18:30:00', endsAt: '2026-02-20T20:00:00', tag: 'Networking' },
-        { id: '4', time: '21:00', name: 'Logistics: Resource Refuel', venue: 'Dining Sector', startsAt: '2026-02-20T21:00:00', endsAt: '2026-02-20T22:30:00', tag: 'Energy' },
-        { id: '5', time: '23:00', name: 'Hacking Shift Alpha', venue: 'Core Computing Arena', startsAt: '2026-02-20T23:00:00', endsAt: '2026-02-21T03:00:00', tag: 'Live' },
+        // Day 1 — 21 Feb 2026
+        { id: '1', time: '10:00 AM', name: 'Inauguration Ceremony', startsAt: '2026-02-21T10:00:00+05:30', tag: 'Opening' },
+        { id: '2', time: '10:45 AM', name: 'Rules & Guidelines Briefing', startsAt: '2026-02-21T10:45:00+05:30', tag: 'Briefing' },
+        { id: '3', time: '11:00 AM', name: 'HACKATHON BEGINS', startsAt: '2026-02-21T11:00:00+05:30', tag: 'Live' },
+        { id: '4', time: '01:00 PM – 02:00 PM', name: 'Lunch Break', startsAt: '2026-02-21T13:00:00+05:30', endsAt: '2026-02-21T14:00:00+05:30', tag: 'Break' },
+        { id: '5', time: '04:30 PM', name: 'Evening Refreshment', startsAt: '2026-02-21T16:30:00+05:30', tag: 'Refresh' },
+        { id: '6', time: '06:00 PM', name: 'First Evaluation', startsAt: '2026-02-21T18:00:00+05:30', tag: 'Review' },
+        { id: '7', time: '08:30 PM – 09:30 PM', name: 'Dinner & Entertainment', startsAt: '2026-02-21T20:30:00+05:30', endsAt: '2026-02-21T21:30:00+05:30', tag: 'Fun' },
+        { id: '8', time: '09:30 PM onwards', name: 'Overnight Hack', startsAt: '2026-02-21T21:30:00+05:30', endsAt: '2026-02-22T09:00:00+05:30', tag: 'Overnight' },
+
+        // Day 2 — 22 Feb 2026
+        { id: '9', time: '09:00 AM', name: 'Breakfast & Tea', startsAt: '2026-02-22T09:00:00+05:30', tag: 'Refresh' },
+        { id: '10', time: '10:30 AM', name: 'HACKATHON ENDS', startsAt: '2026-02-22T10:30:00+05:30', tag: 'Finish' },
+        { id: '11', time: '10:30 AM – 02:00 PM', name: 'Project Presentations', startsAt: '2026-02-22T10:30:00+05:30', endsAt: '2026-02-22T14:00:00+05:30', tag: 'Demo' },
+        { id: '12', time: '02:00 PM', name: 'Event Conclusion', startsAt: '2026-02-22T14:00:00+05:30', tag: 'Closing' },
     ]
 
-    const now = new Date()
+    // IST-aligned "now"
+    const now = new Date(
+        new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    )
 
     return (
-        <div className="max-w-4xl mx-auto pb-32 pt-12 px-4 sm:px-6 kz-mesh-bg min-h-screen">
+        <div className="max-w-none mx-auto pb-32 pt-12 px-4 sm:px-6 kz-mesh-bg min-h-screen">
             {/* ─── Schedule Header ─────────────────────── */}
-            <header className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8 kz-animate-fade-in group">
+            <header className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8 kz-animate-fade-in group">
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white ring-8 ring-slate-50 group-hover:rotate-12 transition-transform duration-500">
-                            <Calendar className="w-5 h-5" />
+                        <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400">
+                            <Calendar className="w-4.5 h-4.5" strokeWidth={1.5} />
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="font-heading font-black text-4xl sm:text-5xl text-white tracking-tighter leading-none">Schedule</h1>
-                            <span className="text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-[0.25em] mt-2">Plan your day and stay on track</span>
+                            <h1 className="font-heading font-black text-3xl sm:text-4xl text-white tracking-tighter leading-none uppercase">Event Telemetry</h1>
+                            <span className="text-[10px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mt-2">SYS_CLOCK: REAL_TIME_STATUS_MONITOR</span>
                         </div>
                     </div>
-                    <p className="text-slate-500 text-lg font-semibold max-w-sm leading-tight">
-                        View the complete timeline of sessions and key event updates.
-                    </p>
                 </div>
-                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 group-hover:bg-indigo-500/20 transition-colors">
-                    <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-                    <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.15em]">Live Timeline</span>
+                <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/10 transition-colors">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                    <span className="text-[10px] font-mono-tech font-bold text-slate-400 uppercase tracking-widest">LIVE_CONNECTION</span>
                 </div>
             </header>
 
@@ -41,94 +51,103 @@ export default async function TeamSchedulePage() {
                 {/* The Telemetry "Stick" */}
                 <div className="absolute left-[1.125rem] md:left-[1.375rem] top-4 bottom-4 w-[2px] bg-white/5 rounded-full" />
 
-                <div className="space-y-12">
-                    {scheduleItems.map((item, i) => {
-                        const starts = new Date(item.startsAt)
-                        const ends = new Date(item.endsAt)
-                        const isNow = now >= starts && now <= ends
-                        const isPast = now > ends
+                <div className="space-y-24">
+                    {/* Day Grouping Logic */}
+                    {['2026-02-21', '2026-02-22'].map((day, dayIndex) => {
+                        const dayItems = scheduleItems.filter(item => item.startsAt.startsWith(day))
+                        const dayLabel = dayIndex === 0 ? "Day 1" : "Day 2"
+                        const dayDate = dayIndex === 0 ? "21 Feb" : "22 Feb"
 
                         return (
-                            <div
-                                key={item.id}
-                                className={`relative flex group kz-animate-slide-up ${isPast ? 'opacity-40 grayscale-[0.5]' : ''}`}
-                                style={{ animationDelay: `${i * 100}ms` }}
-                            >
-                                {/* Digital Marker */}
-                                <div className="absolute left-0 top-8 -translate-x-1/2 z-10 flex items-center justify-center">
-                                    <div className={`
-                                        w-6 h-6 rounded-full border-2 transition-all duration-700 flex items-center justify-center
-                                        ${isNow
-                                            ? 'bg-indigo-600 border-indigo-400 ring-8 ring-indigo-500/10 scale-125 shadow-[0_0_15px_rgba(99,102,241,0.5)]'
-                                            : isPast
-                                                ? 'bg-slate-800 border-slate-700 ring-4 ring-white/5'
-                                                : 'bg-slate-900 border-slate-800 ring-4 ring-white/5 group-hover:border-indigo-500/50'}
-                                    `}>
-                                        {isNow && <Zap className="w-2.5 h-2.5 text-white animate-pulse" />}
+                            <div key={day} className="space-y-12">
+                                {/* Day Header */}
+                                <div className="sticky top-20 z-20 flex items-center gap-4 bg-[#080808]/80 backdrop-blur-sm py-4 -mx-4 px-4">
+                                    <div className="px-3 py-1 rounded-md bg-white/5 border border-white/5 shadow-sm">
+                                        <span className="text-[10px] font-mono-tech font-bold text-white uppercase tracking-widest">{dayLabel}</span>
                                     </div>
+                                    <div className="h-[1px] flex-1 bg-white/5" />
+                                    <span className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase tracking-widest">{dayDate}_OP_WINDOW</span>
                                 </div>
 
-                                {/* Event Feed Card */}
-                                <div className="ml-14 md:ml-20 flex-1">
-                                    <div className={`
-                                        kz-card-rich p-5 sm:p-8 transition-all duration-700 group-hover:scale-[1.01]
-                                        ${isNow
-                                            ? 'bg-indigo-600/10 border-indigo-500/30 ring-1 ring-indigo-500/20'
-                                            : 'bg-white/5 border-white/5'}
-                                    `}>
-                                        <div className="flex flex-col gap-5 sm:gap-6">
-                                            <div className="flex items-start justify-between gap-4">
-                                                <div className="space-y-2">
-                                                    {/* Segment Time */}
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <Clock className={`w-3.5 h-3.5 ${isNow ? 'text-blue-400' : 'text-slate-400'}`} />
-                                                        <span className={`text-[11px] font-black uppercase tracking-[0.2em] ${isNow ? 'text-blue-400' : 'text-slate-400'}`}>
-                                                            {item.time} <span className="mx-1 opacity-50">-</span> {ends.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
-                                                        </span>
-                                                    </div>
+                                <div className="space-y-12">
+                                    {dayItems.map((item, i) => {
+                                        const starts = new Date(item.startsAt)
+                                        const ends = item.endsAt ? new Date(item.endsAt) : null
 
-                                                    {/* Phase Name */}
-                                                    <h3 className={`font-heading font-black text-xl sm:text-2xl md:text-3xl tracking-tighter leading-tight ${isNow ? 'text-white' : 'text-slate-100'}`}>
-                                                        {item.name}
-                                                    </h3>
+                                        const isNow = ends
+                                            ? now >= starts && now <= ends
+                                            : now >= starts
+
+                                        const isPast = ends
+                                            ? now > ends
+                                            : false
+
+                                        return (
+                                            <div
+                                                key={item.id}
+                                                className={`relative flex group kz-animate-slide-up ${isPast ? 'opacity-40 grayscale-[0.5]' : ''}`}
+                                                style={{ animationDelay: `${i * 100}ms` }}
+                                            >
+                                                {/* Digital Marker */}
+                                                <div className="absolute left-0 top-8 -translate-x-1/2 z-10 flex items-center justify-center">
+                                                    <div className={`
+                                                        w-5 h-5 rounded-full border-2 transition-all duration-700 flex items-center justify-center
+                                                        ${isNow
+                                                            ? 'bg-indigo-600 border-indigo-400 ring-4 ring-indigo-500/10 scale-110'
+                                                            : isPast
+                                                                ? 'bg-slate-800 border-slate-700'
+                                                                : 'bg-slate-900 border-slate-800 group-hover:border-indigo-500/50'}
+                                                    `}>
+                                                        {isNow && <Zap className="w-2 h-2 text-white animate-pulse" />}
+                                                    </div>
                                                 </div>
 
-                                                {/* Meta Tag */}
-                                                <div className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-widest ${isNow ? 'bg-indigo-600 text-white shadow-[0_0_10px_rgba(99,102,241,0.3)]' : 'bg-white/5 text-slate-400 border border-white/5'}`}>
-                                                    {item.tag}
+                                                {/* Event Feed Card */}
+                                                <div className="ml-14 md:ml-20 flex-1">
+                                                    <div className={`
+                                                        kz-card-rich p-5 sm:p-7 transition-all duration-700
+                                                        ${isNow
+                                                            ? 'bg-indigo-600/5 border-indigo-500/20'
+                                                            : 'bg-white/[0.02] border-white/5 hover:border-white/10'}
+                                                    `}>
+                                                        <div className="flex flex-col gap-4">
+                                                            <div className="flex items-start justify-between gap-4">
+                                                                <div className="space-y-2">
+                                                                    <div className="flex items-center gap-2 mb-1">
+                                                                        <Clock className={`w-3.5 h-3.5 ${isNow ? 'text-indigo-400' : 'text-slate-500'}`} strokeWidth={1.5} />
+                                                                        <span className={`text-[10px] font-mono-tech font-bold uppercase tracking-widest ${isNow ? 'text-indigo-400' : 'text-slate-500'}`}>
+                                                                            {item.time}
+                                                                            {ends ? (
+                                                                                <span className="mx-1 opacity-50"> {"->"} </span>
+                                                                            ) : null}
+                                                                            {ends ? ends.toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit', hour12: true }) : null}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <h3 className={`font-heading font-semibold text-lg sm:text-xl tracking-tight leading-tight ${isNow ? 'text-white' : 'text-slate-300'}`}>
+                                                                        {item.name}
+                                                                    </h3>
+                                                                </div>
+
+                                                                <div className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest border ${isNow ? 'bg-white text-black border-transparent' : 'bg-white/5 text-slate-500 border-white/5'}`}>
+                                                                    {item.tag}
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className={`w-1.5 h-1.5 rounded-full ${isNow ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : isPast ? 'bg-slate-700' : 'bg-indigo-500/40'}`} />
+                                                                    <span className={`text-[9px] font-mono-tech font-bold uppercase tracking-widest ${isNow ? 'text-emerald-400' : 'text-slate-500'}`}>
+                                                                        {isNow ? 'MISSION_LIVE' : isPast ? 'OP_CONCLUDED' : 'PENDING_DEPLOY'}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-
-                                            {/* Venue & Status */}
-                                            <div className="flex flex-col lg:flex-row flex-wrap items-start lg:items-center gap-4 sm:gap-6 pt-6 border-t border-white/5">
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isNow ? 'bg-indigo-600/20' : 'bg-white/5'}`}>
-                                                        <MapPin className={`w-4 h-4 ${isNow ? 'text-indigo-400' : 'text-slate-500'}`} />
-                                                    </div>
-                                                    <div className="flex flex-col min-w-0">
-                                                        <span className={`text-[9px] font-black uppercase tracking-widest ${isNow ? 'text-indigo-400/60' : 'text-slate-500'}`}>Venue</span>
-                                                        <span className={`text-[11px] font-bold tracking-tight truncate ${isNow ? 'text-white' : 'text-slate-300'}`}>
-                                                            {item.venue}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isNow ? 'bg-emerald-500/10' : 'bg-white/5'}`}>
-                                                        <Zap className={`w-4 h-4 ${isNow ? 'text-emerald-400' : 'text-slate-500'}`} />
-                                                    </div>
-                                                    <div className="flex flex-col min-w-0">
-                                                        <span className={`text-[9px] font-black uppercase tracking-widest ${isNow ? 'text-emerald-500/60' : 'text-slate-500'}`}>Status</span>
-                                                        <span className={`text-[11px] font-bold tracking-tight ${isNow ? 'text-emerald-400' : isPast ? 'text-slate-500' : 'text-indigo-400'}`}>
-                                                            {isNow ? 'Live' : isPast ? 'Past' : 'Upcoming'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Action Hints Removed */}
-                                        </div>
-                                    </div>
+                                        )
+                                    })}
                                 </div>
                             </div>
                         )

@@ -16,42 +16,41 @@ export function UserBottomNav() {
     const pathname = usePathname()
 
     return (
-        <nav
-            className="fixed bottom-0 left-0 right-0 z-50 lg:hidden kz-glass-surface border-t border-white/5 pb-safe"
-            aria-label="Mobile navigation"
-        >
-            <div className="flex items-center justify-around h-16 px-4">
-                {NAV_ITEMS.map((item) => {
-                    const isActive = item.href === "/team"
-                        ? pathname === "/team"
-                        : pathname.startsWith(item.href)
-                    const Icon = item.icon
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-md lg:hidden">
+            <nav
+                className="kz-float-dock rounded-full py-2 px-3"
+                aria-label="Mobile navigation"
+            >
+                <div className="flex items-center justify-between gap-1">
+                    {NAV_ITEMS.map((item) => {
+                        const isActive = item.href === "/team"
+                            ? pathname === "/team"
+                            : pathname.startsWith(item.href)
+                        const Icon = item.icon
 
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`
-                                relative flex flex-col items-center gap-1 min-w-[64px] transition-all
-                                ${isActive
-                                    ? "text-indigo-400"
-                                    : "text-slate-500"
-                                }
-                            `}
-                            aria-current={isActive ? "page" : undefined}
-                        >
-                            <div className="p-1 transition-transform group-active:scale-90">
-                                <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
-                            </div>
-                            <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`
+                                    relative flex flex-col items-center justify-center w-12 h-12 rounded-full transition-all duration-300
+                                    ${isActive
+                                        ? "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                                        : "text-slate-500 hover:text-white"
+                                    }
+                                `}
+                                aria-current={isActive ? "page" : undefined}
+                            >
+                                <Icon className="w-5 h-5" strokeWidth={1.5} />
 
-                            {isActive && (
-                                <div className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-0.5 bg-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
-                            )}
-                        </Link>
-                    )
-                })}
-            </div>
-        </nav>
+                                {isActive && (
+                                    <div className="absolute -bottom-1.5 w-1 h-1 bg-white rounded-full" />
+                                )}
+                            </Link>
+                        )
+                    })}
+                </div>
+            </nav>
+        </div>
     )
 }

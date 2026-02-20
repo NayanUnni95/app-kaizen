@@ -7,8 +7,8 @@ export default auth((req) => {
 
     const isApiAuthRoute = nextUrl.pathname.startsWith("/api/auth")
     const isApiHackathonRoute = nextUrl.pathname.startsWith("/api/hackathon")
-    const isPublicRoute = nextUrl.pathname === "/" || nextUrl.pathname === "/hackathon-login"
-    const isAuthRoute = nextUrl.pathname === "/hackathon-login"
+    const isPublicRoute = nextUrl.pathname === "/" || nextUrl.pathname === "/hackathon-login" || nextUrl.pathname === "/user"
+    const isAuthRoute = nextUrl.pathname === "/hackathon-login" || nextUrl.pathname === "/user"
 
     // 1. Allow API Auth routes always
     if (isApiAuthRoute) return NextResponse.next()
@@ -28,7 +28,7 @@ export default auth((req) => {
 
     // 3. Protected Routes
     if (!isLoggedIn && !isPublicRoute) {
-        return NextResponse.redirect(new URL("/hackathon-login", nextUrl))
+        return NextResponse.redirect(new URL("/user", nextUrl))
     }
 
     // 4. Role Guards

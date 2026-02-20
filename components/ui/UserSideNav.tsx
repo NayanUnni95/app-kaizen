@@ -12,7 +12,11 @@ import {
     Users,
     ChevronRight,
     Star,
-    LifeBuoy
+    LifeBuoy,
+    Command,
+    Search,
+    Plus,
+    Terminal
 } from "lucide-react"
 
 const NAV_ITEMS = [
@@ -28,18 +32,31 @@ export function UserSideNav() {
 
     return (
         <aside
-            className="hidden lg:flex flex-col gap-10 w-72 flex-shrink-0 pt-12 pl-6 pr-4 border-r border-white/5 bg-transparent"
+            className="hidden lg:flex flex-col gap-10 w-52 flex-shrink-0 pt-12 pl-0 pr-6 border-r border-white/5 bg-transparent"
             aria-label="Main navigation"
         >
-            {/* Nav Group */}
-            <nav className="flex flex-col gap-2">
-                <div className="flex items-center justify-between px-4 mb-6">
-                    <p className="text-[10px] font-extrabold text-slate-600 uppercase tracking-[0.25em]">System Hub</p>
-                    <div className="flex gap-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                        <div className="w-1.5 h-1.5 rounded-full bg-white/5" />
+            {/* Workspace Header - Human SaaS Pattern */}
+            <div className="flex flex-col gap-4 mb-8">
+                <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/[0.08] cursor-pointer transition-all group">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+                        <Terminal className="w-4.5 h-4.5" strokeWidth={2} />
                     </div>
+                    <div className="flex flex-col min-w-0">
+                        <span className="text-[12px] font-bold text-white leading-none">Kaizen ‘26</span>
+                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">Hackathon</span>
+                    </div>
+                    <ChevronRight className="w-3 h-3 ml-auto text-slate-600 group-hover:text-slate-400 rotate-90" />
                 </div>
+
+                <div className="flex items-center justify-between px-3">
+                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Navigation</p>
+                    <button className="text-slate-600 hover:text-white transition-colors">
+                        <Search className="w-3 h-3" strokeWidth={2.5} />
+                    </button>
+                </div>
+            </div>
+
+            <nav className="flex flex-col gap-1">
 
                 {NAV_ITEMS.map((item) => {
                     const isActive = item.href === "/team"
@@ -52,29 +69,31 @@ export function UserSideNav() {
                             key={item.href}
                             href={item.href}
                             className={`
-                                group relative flex items-center justify-between gap-4 px-4 py-3.5 rounded-2xl transition-all duration-500
+                                group relative flex items-center justify-between gap-4 px-3 py-2.5 rounded-lg transition-all duration-300
                                 ${isActive
-                                    ? "bg-indigo-600/10 text-white border-indigo-500/30 ring-1 ring-indigo-500/20"
-                                    : "text-slate-500 hover:text-white hover:bg-white/5 border border-transparent"
+                                    ? "bg-white/5 text-white"
+                                    : "text-slate-500 hover:text-white hover:bg-white/[0.02]"
                                 }
                             `}
                             aria-current={isActive ? "page" : undefined}
                         >
-                            <div className="flex items-center gap-4">
+                            {/* Active Marker - Vertical SaaS pattern */}
+                            {isActive && (
+                                <div className="absolute left-[-12px] top-2 bottom-2 w-[3px] bg-indigo-500 rounded-r-full" />
+                            )}
+
+                            <div className="flex items-center gap-3">
                                 <div className={`
-                                    relative w-5 h-5 flex items-center justify-center transition-all duration-500
+                                    relative w-4.5 h-4.5 flex items-center justify-center transition-all duration-300
                                     ${isActive ? "text-indigo-400" : "text-slate-600 group-hover:text-indigo-400"}
                                 `}>
                                     <Icon
                                         className="w-full h-full"
-                                        strokeWidth={isActive ? 2.5 : 2}
+                                        strokeWidth={1.5}
                                     />
-                                    {!isActive && (
-                                        <div className="absolute inset-0 bg-indigo-500/0 group-hover:bg-indigo-500/5 blur-xl rounded-full transition-all" />
-                                    )}
                                 </div>
 
-                                <span className={`text-[13px] tracking-tight ${isActive ? "font-bold" : "font-semibold"}`}>
+                                <span className={`text-[13px] tracking-tight ${isActive ? "font-semibold" : "font-medium"}`}>
                                     {item.label}
                                 </span>
                             </div>
@@ -94,40 +113,30 @@ export function UserSideNav() {
                                 <ChevronRight className={`w-3 h-3 transition-all duration-500 ${isActive ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"}`} />
                             </div>
 
-                            {/* Premium border highlight for active */}
+                            {/* Command Hint - Linear Pattern */}
                             {isActive && (
-                                <div className="absolute inset-[1px] border border-white/10 rounded-[15px] pointer-events-none" />
+                                <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white/5 border border-white/5 text-[9px] font-bold text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <Command className="w-2 h-2" />
+                                    <span>G</span>
+                                </div>
                             )}
                         </Link>
                     )
                 })}
             </nav>
 
-            {/* Premium Meta Block */}
-            <div className="mt-auto pb-12">
-                <div className="kz-card-rich p-5 group cursor-pointer overflow-hidden">
-                    <div className="relative z-10">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-                                <LifeBuoy className="w-4.5 h-4.5 group-hover:rotate-45 transition-transform duration-700" />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-[11px] font-black text-white uppercase tracking-widest">Support</span>
-                                <span className="text-[10px] text-slate-500 font-bold">Priority Line</span>
-                            </div>
-                        </div>
-                        <p className="text-[11px] text-slate-500 font-semibold leading-relaxed mb-4">
-                            Connect with event directors for technical clearance or squad adjustments.
-                        </p>
-                        <div className="flex items-center justify-between pt-1">
-                            <span className="text-[10px] font-extrabold text-indigo-400 uppercase tracking-widest group-hover:translate-x-1 transition-transform">Get Aid</span>
-                            <div className="flex -space-x-1">
-                                {[1, 2, 3].map(i => (
-                                    <div key={i} className="w-4 h-4 rounded-full border border-[#0B0E14] bg-slate-900" />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+            {/* Official Branding Block — Refined */}
+            <div className="mt-auto pb-8 pt-8 border-t border-white/5">
+                <div className="flex flex-col gap-1 px-1">
+                    <span className="font-heading font-semibold text-xl text-white tracking-widest uppercase leading-none">
+                        KAIZEN
+                    </span>
+                    <span className="text-[9px] font-bold text-indigo-400/60 uppercase tracking-[0.2em]">
+                        part of SATHWA 26
+                    </span>
+                    <span className="text-[9px] font-medium text-slate-600 uppercase tracking-widest mt-1.5 leading-relaxed">
+                        College of Engineering,<br />Muttathara
+                    </span>
                 </div>
             </div>
         </aside>

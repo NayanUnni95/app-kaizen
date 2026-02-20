@@ -5,6 +5,7 @@ import Link from "next/link"
 import { CountdownTimer } from "@/components/ui/CountdownTimer"
 import { EmptyState } from "@/components/ui/EmptyState"
 import { NotificationsModal } from "@/components/ui/NotificationsModal"
+import { ProblemStatementSection } from "@/components/hackathon/ProblemStatementSection"
 import {
     Activity,
     Bell,
@@ -17,7 +18,8 @@ import {
     Users,
     Zap,
     Shield,
-    Terminal
+    Terminal,
+    ListChecks
 } from "lucide-react"
 
 export default function TeamDashboardClient({ team, allTeams, announcements }: any) {
@@ -61,19 +63,17 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                             Live Hub
                         </div>
                     </div>
-                    <h1 className="font-heading text-3xl md:text-4xl text-white tracking-tighter leading-[0.85] py-2">
+                    <h1 className="font-heading text-3xl md:text-3xl text-white tracking-tight leading-tight py-2">
                         Welcome Back,<br />
-                        <span className="text-indigo-400 inline-block mt-5 text-5xl md:text-6xl">{team.name}</span>
+                        <span className="text-white inline-block mt-2 text-4xl md:text-5xl font-semibold">{team.name}</span>
                     </h1>
-                    <div className="flex items-center gap-6 pt-4 border-t border-white/5">
-                        {/* <div className="flex flex-col">
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Global Rank</span>
-                            <span className="text-lg font-heading text-white">Alpha Sector</span>
-                        </div> */}
-                        <div className="w-[1px] h-8 bg-white/5" />
+                    <div className="flex items-center gap-6 pt-4 border-t border-white/5 bg-white/[0.01] rounded-b-xl px-4 py-3">
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Competition</span>
-                            <span className="text-lg font-heading text-white">{allTeams - 1} Units Active</span>
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Competition</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xl font-mono-tech text-white leading-none">{allTeams - 1}</span>
+                                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Units Active</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,10 +87,10 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                         <div className="space-y-3">
                             {[1, 2, 3].map(i => (
                                 <div key={i} className="flex items-center justify-between">
-                                    <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden">
+                                    <div className="w-24 h-0.5 bg-white/5 rounded-full overflow-hidden">
                                         <div className="h-full bg-indigo-600 rounded-full w-4/5 animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
                                     </div>
-                                    <span className="text-[10px] font-mono font-bold text-slate-600 uppercase">stable</span>
+                                    <span className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase">stable_v{i}.0</span>
                                 </div>
                             ))}
                         </div>
@@ -101,80 +101,97 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
             {/* ─── Mission Critical KPIs ─────────────────────────── */}
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-2">
                 {/* Global Countdown Card */}
-                <div className="col-span-1 md:col-span-2 kz-card-rich p-10 flex flex-col justify-between group overflow-hidden border-white/5 bg-white/[0.02]">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full blur-[120px] -mr-32 -mt-32 -z-10 opacity-10 group-hover:opacity-20 transition-opacity duration-1000" />
+                <div className="col-span-1 md:col-span-2 lg:col-span-2 kz-card-rich p-8 flex flex-col justify-between group overflow-hidden border-white/5 bg-white/[0.02]">
                     <div>
-                        <div className="flex items-center gap-3 mb-10">
-                            <div className="kz-icon-rich w-10 h-10 border-white/5 text-indigo-400">
-                                <Clock className="w-5 h-5 relative z-10" />
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="kz-icon-rich w-9 h-9 bg-white/5 border-white/10 text-slate-400">
+                                <Clock className="w-4 h-4 relative z-10" strokeWidth={1.5} />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-[11px] font-black text-white uppercase tracking-widest">Event Timer</span>
-                                <span className="text-[10px] text-slate-500 font-bold">Time remaining for the event</span>
+                                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest leading-none">Event Timer</span>
+                                <span className="text-[9px] text-slate-500 font-medium mt-1">Status: Operational</span>
                             </div>
                         </div>
-                        <div className="font-heading text-5xl sm:text-7xl lg:text-8xl text-white tracking-tighter leading-none mb-4">
+                        <div className="font-mono-tech text-5xl sm:text-6xl lg:text-7xl text-white tracking-widest leading-none mb-4 font-bold">
                             <CountdownTimer startsAt={team.event.startsAt} endsAt={team.event.endsAt} />
                         </div>
                     </div>
-                    <div className="mt-12">
+                    <div className="mt-8">
                         <div className="flex items-center justify-between mb-3 px-1">
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
-                                <span className="text-[10px] font-black text-white uppercase tracking-widest">Overall Progress: {progressPct}%</span>
+                                <span className="text-[10px] font-mono-tech text-white uppercase tracking-widest">PROG: {progressPct}%</span>
                             </div>
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Status: Active</span>
+                            <span className="text-[9px] font-mono-tech text-slate-500 uppercase">SYSTEM_LOAD: 0.82</span>
                         </div>
-                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
                             <div
-                                className="h-full bg-indigo-600 rounded-full transition-all duration-1000 relative"
+                                className="h-full bg-white rounded-full transition-all duration-1000 relative"
                                 style={{ width: `${progressPct}%` }}
                             >
-                                <div className="absolute inset-0 bg-white/10 animate-pulse" />
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Milestone Progression */}
-                <Link href="/team/checkpoints" className="col-span-1 kz-card-rich p-8 flex flex-col justify-between group bg-white/[0.02] border-white/5 hover:scale-[1.02] transition-transform duration-500">
-                    <div className="flex items-center justify-between">
-                        <div className="kz-icon-rich w-14 h-14 border-white/5 text-slate-400 group-hover:text-indigo-400 group-hover:bg-indigo-500/10 transition-all duration-500">
-                            <CheckSquare className="w-6 h-6 relative z-10" strokeWidth={2.5} />
+                {/* Milestone Progression - Refined */}
+                <div className="col-span-1 flex flex-col gap-4">
+                    <div className="flex items-center gap-3 mb-2 px-1">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center bg-indigo-500 text-white text-[10px] font-bold shadow-[0_0_10px_rgba(99,102,241,0.3)]">
+                            <Activity className="w-2.5 h-2.5" strokeWidth={2.5} />
                         </div>
-                        <div className="flex flex-col items-end">
-                            <span className="text-4xl font-heading text-white leading-none">{completedCheckpoints}<span className="text-white/10">/</span>{totalCheckpoints}</span>
-                            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mt-2 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-md">Validated</span>
+                        <h2 className="text-[12px] font-bold text-white tracking-widest uppercase">Pipeline</h2>
+                    </div>
+
+                    <Link href="/team/checkpoints" className="kz-card-rich p-6 group transition-all duration-500 hover:bg-white/[0.04] border-white/5 block">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center text-indigo-400">
+                                    <ListChecks className="w-4 h-4" strokeWidth={1.5} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">Milestones</span>
+                                    <span className="text-sm font-semibold text-white mt-1">Stage {completedCheckpoints + 1}</span>
+                                </div>
+                            </div>
+                            <div className="w-8 h-8 rounded-full border border-white/5 flex items-center justify-center bg-white/[0.02]">
+                                <span className="text-[11px] font-mono-tech font-bold text-white">{completedCheckpoints}/{totalCheckpoints}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="mt-8">
-                        <p className="font-black text-white text-sm uppercase tracking-widest">Milestones</p>
-                        <p className="text-[11px] text-slate-500 font-bold mt-1">Verification pipeline active</p>
-                    </div>
-                </Link>
+                        <div className="space-y-3">
+                            <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div className="h-full bg-indigo-500 w-1/3 rounded-full" />
+                            </div>
+                            <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Verification Active</span>
+                        </div>
+                    </Link>
+                </div>
 
                 {/* Squad Composition */}
-                <Link href="/team/profile" className="col-span-1 kz-card-rich p-8 flex flex-col justify-between group bg-white/[0.02] border-white/5 hover:scale-[1.02] transition-transform duration-500">
-                    <div className="flex items-center justify-between">
-                        <div className="kz-icon-rich w-14 h-14 border-white/5 text-slate-400 group-hover:text-indigo-400 group-hover:bg-indigo-500/10 transition-all duration-500">
-                            <Users className="w-6 h-6 relative z-10" strokeWidth={2.5} />
+                <Link href="/team/profile" className="col-span-1 kz-card-rich p-6 flex flex-col group bg-white/[0.02] border-white/5 hover:bg-white/[0.04] transition-all duration-500 block">
+                    <div className="flex items-center justify-between mb-8">
+                        <div className="kz-icon-rich w-10 h-10 border-white/5 text-slate-500 group-hover:text-indigo-400 group-hover:bg-indigo-500/10 transition-all duration-500">
+                            <Users className="w-4.5 h-4.5 relative z-10" strokeWidth={1.5} />
                         </div>
-                        <div className="flex -space-x-3">
+                        <div className="flex -space-x-2">
                             {team.members.slice(0, 3).map((m: any, i: number) => (
-                                <div key={i} className="w-9 h-9 rounded-xl bg-slate-900 border-2 border-[#0B0E14] overflow-hidden relative group-hover:rotate-6 transition-transform">
+                                <div key={i} className="w-8 h-8 rounded-lg bg-slate-900 border border-[#0B0E14] overflow-hidden relative group-hover:translate-x-1 transition-transform">
                                     <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-transparent opacity-50" />
                                 </div>
                             ))}
                         </div>
                     </div>
-                    <div className="mt-8">
+                    <div className="mt-auto">
                         <div className="flex items-center justify-between mb-1">
-                            <p className="font-black text-white text-sm uppercase tracking-widest">Team Profile</p>
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                            <p className="font-bold text-white text-[10px] uppercase tracking-[0.2em]">IDENT_AUTH</p>
+                            <span className="text-[9px] font-mono-tech text-emerald-400 px-1.5 py-0.5 rounded bg-emerald-500/10 uppercase tracking-widest">SECURE</span>
                         </div>
-                        <p className="text-[11px] text-slate-500 font-bold">{team.members.length} Members</p>
+                        <p className="text-[9px] text-slate-500 font-mono-tech uppercase tracking-widest">{team.members.length} OPS_READY</p>
                     </div>
                 </Link>
+
+                {/* Problem Statement Integration */}
+                <ProblemStatementSection startsAt={team.event.startsAt} />
             </section>
 
             {/* ─── Information Streams ─────────────────────────── */}

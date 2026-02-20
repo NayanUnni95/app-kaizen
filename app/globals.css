@@ -6,21 +6,22 @@
    ============================================================ */
 
 :root {
-  /* Core - Deep & Sophisticated */
-  --kz-bg: #0B0E14;
-  /* Pure Obsidian */
-  --kz-text: #F8FAFC;
-  --kz-muted: #94A3B8;
-  --kz-border: rgba(255, 255, 255, 0.08);
-  --kz-border-rich: rgba(255, 255, 255, 0.15);
-  --kz-surface: #111827;
-  --kz-surface-2: #1F2937;
+  /* Core - Ultra-Deep Monochrome */
+  --kz-bg: #080808;
+  --kz-surface: #0D0D0D;
+  --kz-surface-2: #111111;
+  --kz-surface-secondary: #0A0A0A;
 
-  /* Accent - High-Tech Indigo */
+  --kz-text: #F8FAFC;
+  --kz-muted: #64748B;
+  --kz-border: rgba(255, 255, 255, 0.05);
+  /* Ultra-fine borders */
+  --kz-border-rich: rgba(255, 255, 255, 0.09);
+
+  /* Accent - Refined Indigo */
   --kz-primary: #FFFFFF;
   --kz-brand: #6366F1;
-  /* Electric Indigo */
-  --kz-brand-dim: rgba(99, 102, 241, 0.1);
+  --kz-brand-dim: rgba(99, 102, 241, 0.08);
   --kz-brand-rich: #4F46E5;
 
   /* Semantic */
@@ -29,17 +30,17 @@
   --kz-danger: #EF4444;
 
   /* Spacing */
-  --kz-radius-sm: 8px;
-  --kz-radius-md: 12px;
-  --kz-radius-lg: 20px;
-  --kz-radius-xl: 32px;
+  --kz-radius-sm: 6px;
+  --kz-radius-md: 10px;
+  --kz-radius-lg: 16px;
+  --kz-radius-xl: 24px;
 
-  /* Gloss and Depth */
-  --kz-glass-bg: rgba(17, 24, 39, 0.7);
-  --kz-glass-border: rgba(255, 255, 255, 0.1);
+  /* Depth */
+  --kz-glass-bg: rgba(13, 13, 13, 0.8);
+  --kz-glass-border: rgba(255, 255, 255, 0.04);
 
   /* Legacy Compatibility */
-  --background: #0B0E14;
+  --background: #080808;
   --foreground: #F8FAFC;
 }
 
@@ -48,63 +49,59 @@
   --color-foreground: var(--foreground);
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: "Outfit", "Inter", sans-serif;
-  --font-mono: "Geist Mono", monospace;
+  --font-mono: "Geist Mono", "JetBrains Mono", monospace;
 }
 
 body {
   background: var(--kz-bg);
   color: var(--kz-text);
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13.5px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.015em;
 }
 
-/* Heading Typography */
+/* Heading Typography — Linear/Vercel Standard */
 .font-heading {
   font-family: var(--font-heading);
-  letter-spacing: -0.04em;
-  font-weight: 800;
+  letter-spacing: -0.035em;
+  font-weight: 600;
 }
 
-/* SaaS Rich Card — High-End Glassmorphism */
+.font-mono-tech {
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+  font-feature-settings: "tnum" on, "onum" off, "lnum" on, "zero" on;
+}
+
+/* Elite SaaS Card — Monochrome Depth */
 .kz-card-rich {
-  background: var(--kz-glass-bg);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid var(--kz-glass-border);
+  background: var(--kz-surface-2);
+  border: 1px solid var(--kz-border);
   position: relative;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s cubic-bezier(0.1, 0.1, 0, 1);
   border-radius: var(--kz-radius-lg);
   overflow: hidden;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.02);
 }
 
-/* Inner Glow Effect */
 .kz-card-rich::before {
-  content: '';
+  content: "";
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-/* Secondary internal border */
-.kz-card-rich::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: var(--kz-radius-lg);
-  pointer-events: none;
-  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  z-index: 10;
 }
 
 .kz-card-rich:hover {
-  border-color: var(--kz-brand);
-  transform: translateY(-4px);
-  background: rgba(17, 24, 39, 0.85);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #151515;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.03);
 }
 
 /* Rich Icon Wrapper */
@@ -125,22 +122,20 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 10px;
-  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.03em;
   border: 1px solid var(--kz-border);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--kz-surface-2);
   color: var(--kz-muted);
 }
 
-/* Glass Surface (Navbar/Sidebar) */
+/* Surface (Navbar/Sidebar) */
 .kz-glass-surface {
-  background: rgba(11, 14, 20, 0.85);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: #0B0E14;
   border-bottom: 1px solid var(--kz-border);
 }
 
@@ -159,15 +154,13 @@ body {
 }
 
 .kz-btn-rich-primary {
-  background: var(--kz-brand);
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  background: #FFFFFF;
+  color: #000000;
 }
 
 .kz-btn-rich-primary:hover {
-  background: var(--kz-brand-rich);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+  background: #F1F5F9;
+  transform: translateY(-1px);
 }
 
 .kz-btn-rich-secondary {
@@ -181,12 +174,21 @@ body {
   border-color: var(--kz-border-rich);
 }
 
-/* Mesh Background Utility — Dark Phase */
+/* Global Noise Texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.04;
+  mix-blend-mode: soft-light;
+}
+
+/* Background Utility */
 .kz-mesh-bg {
-  background-color: #0B0E14;
-  background-image:
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0, transparent 40%),
-    radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.08) 0, transparent 40%);
+  background-color: var(--kz-bg);
 }
 
 /* ============================================================
