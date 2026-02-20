@@ -41,7 +41,7 @@ export async function getEventId() {
  */
 export async function protect(roles?: UserRole[]) {
     const session = await auth()
-    if (!session) redirect("/user")
+    if (!session) redirect("/hackathon-login")
 
     if (roles && roles.length > 0) {
         const userRole = (session.user as any).role as UserRole

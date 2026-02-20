@@ -74,17 +74,6 @@ export default function UserPortalPage() {
                     </div>
                 </div>
 
-                <div className="mt-8 flex flex-col items-center gap-4">
-                    <p className="text-slate-700 text-[10px] font-mono-tech font-bold uppercase tracking-[0.3em]">
-                        Requirement: Team Access?
-                    </p>
-                    <a
-                        href="/hackathon-login"
-                        className="inline-flex items-center gap-2 text-[10px] font-black text-indigo-400 hover:text-indigo-300 uppercase tracking-[0.2em] transition-all group"
-                    >
-                        Switch to Team Terminal <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                    </a>
-                </div>
             </div>
 
             <footer className="absolute bottom-12 left-0 right-0 text-center">

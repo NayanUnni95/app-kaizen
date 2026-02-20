@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@variant dark (&:is(.dark, .dark *));
 
 /* ============================================================
    KAIZEN DESIGN SYSTEM — Premium Dark Mode
@@ -6,7 +7,44 @@
    ============================================================ */
 
 :root {
-  /* Core - Ultra-Deep Monochrome */
+  /* ============================================================ 
+     KAIZEN DESIGN SYSTEM — Premium Light Mode (Default)
+     ============================================================ */
+  --kz-bg: #FFFFFF;
+  --kz-surface: #F8FAFC;
+  --kz-surface-2: #F1F5F9;
+  --kz-surface-secondary: #F1F5F9;
+
+  --kz-text: #020617;
+  --kz-muted: #64748B;
+  --kz-border: rgba(0, 0, 0, 0.05);
+  --kz-border-rich: rgba(0, 0, 0, 0.1);
+
+  --kz-primary: #020617;
+  --kz-brand: #4F46E5;
+  --kz-brand-dim: rgba(79, 70, 229, 0.05);
+  --kz-brand-rich: #4338CA;
+
+  --kz-success: #10B981;
+  --kz-warning: #F59E0B;
+  --kz-danger: #EF4444;
+
+  --kz-radius-sm: 8px;
+  --kz-radius-md: 12px;
+  --kz-radius-lg: 20px;
+  --kz-radius-xl: 28px;
+
+  --kz-glass-bg: rgba(255, 255, 255, 0.8);
+  --kz-glass-border: rgba(0, 0, 0, 0.06);
+
+  --background: #FFFFFF;
+  --foreground: #020617;
+}
+
+.dark {
+  /* ============================================================
+     KAIZEN DESIGN SYSTEM — Premium Dark Mode
+     ============================================================ */
   --kz-bg: #080808;
   --kz-surface: #0D0D0D;
   --kz-surface-2: #111111;
@@ -15,38 +53,33 @@
   --kz-text: #F8FAFC;
   --kz-muted: #64748B;
   --kz-border: rgba(255, 255, 255, 0.05);
-  /* Ultra-fine borders */
   --kz-border-rich: rgba(255, 255, 255, 0.09);
 
-  /* Accent - Refined Indigo */
   --kz-primary: #FFFFFF;
   --kz-brand: #6366F1;
   --kz-brand-dim: rgba(99, 102, 241, 0.08);
   --kz-brand-rich: #4F46E5;
 
-  /* Semantic */
-  --kz-success: #10B981;
-  --kz-warning: #F59E0B;
-  --kz-danger: #EF4444;
-
-  /* Spacing */
-  --kz-radius-sm: 6px;
-  --kz-radius-md: 10px;
-  --kz-radius-lg: 16px;
-  --kz-radius-xl: 24px;
-
-  /* Depth */
   --kz-glass-bg: rgba(13, 13, 13, 0.8);
   --kz-glass-border: rgba(255, 255, 255, 0.04);
 
-  /* Legacy Compatibility */
   --background: #080808;
   --foreground: #F8FAFC;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--kz-bg);
+  --color-foreground: var(--kz-text);
+
+  /* Overriding hardcoded slate usage to follow theme variables */
+  --color-slate-950: var(--kz-text);
+  --color-slate-900: var(--kz-text);
+  --color-slate-800: var(--kz-text);
+  --color-slate-700: var(--kz-text);
+  --color-slate-600: var(--kz-muted);
+  --color-slate-500: var(--kz-muted);
+  --color-slate-400: var(--kz-muted);
+
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-heading: "Outfit", "Inter", sans-serif;
   --font-mono: "Geist Mono", "JetBrains Mono", monospace;
@@ -83,6 +116,10 @@ body {
   transition: all 0.4s cubic-bezier(0.1, 0.1, 0, 1);
   border-radius: var(--kz-radius-lg);
   overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
+}
+
+.dark .kz-card-rich {
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.02);
 }
 
@@ -93,14 +130,19 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  background: linear-gradient(90deg, transparent, var(--kz-border-rich), transparent);
   z-index: 10;
 }
 
 .kz-card-rich:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: #151515;
+  border-color: var(--kz-border-rich);
+  background: var(--kz-surface);
   transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.04);
+}
+
+.dark .kz-card-rich:hover {
+  background: #151515;
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.03);
 }
 
@@ -135,8 +177,10 @@ body {
 
 /* Surface (Navbar/Sidebar) */
 .kz-glass-surface {
-  background: #0B0E14;
-  border-bottom: 1px solid var(--kz-border);
+  background: var(--kz-glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--kz-glass-border);
 }
 
 /* Premium Buttons */
@@ -154,23 +198,24 @@ body {
 }
 
 .kz-btn-rich-primary {
-  background: #FFFFFF;
-  color: #000000;
+  background: var(--kz-primary);
+  color: var(--kz-bg);
 }
 
 .kz-btn-rich-primary:hover {
-  background: #F1F5F9;
+  background: var(--kz-primary);
+  opacity: 0.9;
   transform: translateY(-1px);
 }
 
 .kz-btn-rich-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  color: #FFFFFF;
+  background: var(--kz-surface-2);
+  color: var(--kz-text);
   border: 1px solid var(--kz-border);
 }
 
 .kz-btn-rich-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--kz-surface);
   border-color: var(--kz-border-rich);
 }
 

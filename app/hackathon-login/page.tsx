@@ -92,17 +92,6 @@ export default function LoginPage() {
                             {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "AUTHENTICATE TERMINAL"}
                         </button>
 
-                        <div className="mt-8 flex flex-col items-center gap-4 pt-4">
-                            <p className="text-slate-700 text-[10px] font-mono-tech font-bold uppercase tracking-[0.3em]">
-                                General Membership?
-                            </p>
-                            <a
-                                href="/user"
-                                className="inline-flex items-center gap-2 text-[10px] font-black text-white/40 hover:text-white uppercase tracking-[0.2em] transition-all group"
-                            >
-                                Enter User Portal <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                            </a>
-                        </div>
                     </form>
                 </div>
             </div>

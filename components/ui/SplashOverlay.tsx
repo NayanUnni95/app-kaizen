@@ -72,7 +72,7 @@ export function SplashOverlay() {
             aria-label="Kaizen welcome splash"
             className={`
         fixed inset-0 z-[9999] flex flex-col items-center justify-center
-        bg-[#0B0E14] transition-opacity duration-700 ease-in-out
+        bg-white dark:bg-[#080808] transition-opacity duration-700 ease-in-out
         ${hiding ? "opacity-0 invisible" : "opacity-100 visible"}
       `}
         >
@@ -92,7 +92,7 @@ export function SplashOverlay() {
                 </div>
 
                 <div className="text-center space-y-2">
-                    <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-white tracking-tight">
+                    <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-slate-900 dark:text-white tracking-tight">
                         KAIZEN
                     </h1>
                     <p className="text-slate-500 text-xs sm:text-sm font-medium uppercase tracking-widest">
@@ -104,7 +104,7 @@ export function SplashOverlay() {
                     {[0, 1, 2].map((i) => (
                         <div
                             key={i}
-                            className="w-1 h-1 rounded-full bg-slate-700"
+                            className="w-1 h-1 rounded-full bg-slate-200 dark:bg-slate-700"
                         />
                     ))}
                 </div>
@@ -114,9 +114,9 @@ export function SplashOverlay() {
                 onClick={dismiss}
                 className="
           absolute bottom-12 left-1/2 -translate-x-1/2
-          px-6 py-2.5 text-[11px] font-bold text-indigo-100/40 uppercase tracking-[0.2em]
-          border border-white/10 rounded-full
-          hover:bg-white/5 hover:text-white hover:border-white/20
+          px-6 py-2.5 text-[11px] font-bold text-slate-400 dark:text-indigo-100/40 uppercase tracking-[0.2em]
+          border border-black/5 dark:border-white/10 rounded-full
+          hover:bg-black/5 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white hover:border-black/10 dark:hover:border-white/20
           transition-all duration-300 kz-animate-fade-in
         "
                 style={{ animationDelay: "1s" }}
@@ -125,7 +125,7 @@ export function SplashOverlay() {
                 Skip Entrance
             </button>
 
-            <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[9px] text-white/20 font-medium uppercase tracking-widest">
+            <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[9px] text-slate-400 dark:text-white/20 font-medium uppercase tracking-widest">
                 Press ESC to dismiss
             </span>
         </div>

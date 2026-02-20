@@ -56,7 +56,7 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
                     </div>
                     <div className="flex-1 space-y-4 text-center sm:text-left">
                         <div className="flex flex-col sm:flex-row items-center gap-4">
-                            <h3 className="font-heading font-black text-3xl text-white tracking-tighter uppercase leading-none">
+                            <h3 className="font-heading font-black text-3xl text-slate-900 dark:text-white tracking-tighter uppercase leading-none">
                                 Problem Statement
                             </h3>
                             <span className="px-2 py-0.5 rounded-md text-[9px] font-mono-tech font-black bg-white/5 text-slate-500 border border-white/5 uppercase tracking-[0.2em]">
@@ -95,7 +95,7 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
                 <div className="w-5 h-5 rounded-full flex items-center justify-center bg-indigo-500 text-white text-[10px] font-bold shadow-[0_0_10px_rgba(99,102,241,0.3)]">
                     <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
                 </div>
-                <h3 className="text-[12px] font-bold text-white tracking-widest uppercase">
+                <h3 className="text-[12px] font-bold text-slate-900 dark:text-white tracking-widest uppercase">
                     Problem Statement
                 </h3>
                 <span className="px-2 py-0.5 rounded-md text-[9px] font-mono-tech font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-[0.2em] animate-pulse">
@@ -117,7 +117,7 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
                                 </span>
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h4 className="font-heading font-black text-white text-xl tracking-tighter group-hover:text-indigo-400 transition-colors truncate">
+                                <h4 className="font-heading font-black text-slate-900 dark:text-white text-xl tracking-tighter group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
                                     {stmt.title}
                                 </h4>
                                 {stmt.description && (
@@ -143,7 +143,7 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
 
                     {/* Modal */}
                     <div
-                        className="relative w-full max-w-xl bg-[#080808] border border-white/10 rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-300 max-h-[85vh] flex flex-col"
+                        className="relative w-full max-w-xl bg-white dark:bg-[#080808] border border-black/10 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-300 max-h-[85vh] flex flex-col"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Top accent */}
@@ -167,7 +167,7 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
                                     <p className="text-[10px] font-mono-tech font-bold text-indigo-400 uppercase tracking-[0.2em] mb-2">
                                         Problem Statement
                                     </p>
-                                    <h2 className="font-heading font-black text-3xl text-white tracking-tighter leading-tight uppercase">
+                                    <h2 className="font-heading font-black text-3xl text-slate-900 dark:text-white tracking-tighter leading-tight uppercase">
                                         {selectedStmt.title}
                                     </h2>
                                 </div>

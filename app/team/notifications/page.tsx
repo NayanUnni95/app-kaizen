@@ -75,25 +75,25 @@ export default function TeamNotificationsPage() {
             key={n.id}
             onClick={() => handleMarkAsRead(n.id, n.isRead, listType)}
             className={`
-                group relative flex items-stretch gap-6 p-6 rounded-[2rem] bg-white border transition-all duration-500 cursor-pointer
+                group relative flex items-stretch gap-6 p-6 rounded-[2rem] bg-white dark:bg-[#0D0D0D] border transition-all duration-500 cursor-pointer
                 kz-animate-slide-up
                 ${!n.isRead
-                    ? "border-blue-100 shadow-[0_8px_30px_rgb(37,99,235,0.04)] ring-1 ring-blue-50/50"
-                    : "border-slate-100 hover:border-slate-200 opacity-80 hover:opacity-100"
+                    ? "border-blue-100 dark:border-indigo-500/30 shadow-[0_8px_30px_rgb(37,99,235,0.04)] dark:shadow-[0_8px_30px_rgb(99,102,241,0.04)] ring-1 ring-blue-50/50 dark:ring-indigo-500/10"
+                    : "border-slate-100 dark:border-white/5 hover:border-slate-200 dark:hover:border-white/10 opacity-80 hover:opacity-100"
                 }
             `}
             style={{ animationDelay: `${i * 0.08}s` }}
         >
             {/* Left: Time & Status */}
-            <div className="flex flex-col items-center justify-center w-20 flex-shrink-0 border-r border-slate-100 pr-6">
-                <span className={`text-base font-bold tracking-tight ${n.status === 'CURRENT' ? 'text-blue-600' : 'text-slate-900'}`}>
+            <div className="flex flex-col items-center justify-center w-20 flex-shrink-0 border-r border-slate-100 dark:border-white/5 pr-6">
+                <span className={`text-base font-bold tracking-tight ${n.status === 'CURRENT' ? 'text-blue-600 dark:text-indigo-400' : 'text-slate-900 dark:text-white'}`}>
                     {n.time}
                 </span>
                 {n.status && (
                     <span className={`
                         text-[9px] font-bold uppercase tracking-[0.15em] mt-1.5 px-2 py-0.5 rounded-full
-                        ${n.status === 'CURRENT' ? 'bg-emerald-50 text-emerald-600' :
-                            n.status === 'UPCOMING' ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-500'}
+                        ${n.status === 'CURRENT' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' :
+                            n.status === 'UPCOMING' ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400' : 'bg-slate-50 dark:bg-white/5 text-slate-500 dark:text-slate-400'}
                     `}>
                         {n.status}
                     </span>
@@ -103,11 +103,11 @@ export default function TeamNotificationsPage() {
             {/* Middle: Content */}
             <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-1.5">
-                    <h3 className={`font-heading font-bold text-lg truncate ${!n.isRead ? 'text-[#0F172A]' : 'text-slate-600'}`}>
+                    <h3 className={`font-heading font-bold text-lg truncate ${!n.isRead ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>
                         {n.title}
                     </h3>
                     {!n.isRead && (
-                        <div className="w-2 h-2 rounded-full bg-blue-600 flex-shrink-0" />
+                        <div className="w-2 h-2 rounded-full bg-blue-600 dark:bg-indigo-500 flex-shrink-0" />
                     )}
                 </div>
 
@@ -118,13 +118,13 @@ export default function TeamNotificationsPage() {
                 )}
 
                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-100/50">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                        <span className="text-[11px] font-semibold text-slate-600">{n.venue}</span>
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100/50 dark:border-white/5">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
+                        <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">{n.venue}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-100/50">
-                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                        <span className="text-[11px] font-semibold text-slate-600">
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100/50 dark:border-white/5">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
+                        <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
                             {new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </span>
                     </div>
@@ -135,7 +135,7 @@ export default function TeamNotificationsPage() {
             <div className="flex items-center justify-center flex-shrink-0">
                 <div className={`
                     w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300
-                    ${!n.isRead ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-400'}
+                    ${!n.isRead ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400' : 'bg-slate-50 dark:bg-white/5 text-slate-400 dark:text-slate-600'}
                     group-hover:scale-110
                 `}>
                     <ChevronRight className="w-5 h-5" />
@@ -150,19 +150,19 @@ export default function TeamNotificationsPage() {
             <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 kz-animate-fade-in px-1">
                 <div>
                     <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                        <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200 dark:shadow-indigo-500/20">
                             <Bell className="w-5 h-5" strokeWidth={2.5} />
                         </div>
-                        <h1 className="font-heading font-bold text-3xl text-[#0F172A] tracking-tight">Updates</h1>
+                        <h1 className="font-heading font-bold text-3xl text-slate-900 dark:text-white tracking-tight">Updates</h1>
                     </div>
-                    <p className="text-[#64748B] text-sm font-medium">
+                    <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
                         Stay synchronized with the latest hackathon events and announcements.
                     </p>
                 </div>
                 {unreadCount > 0 && (
-                    <div className="px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100/50 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-                        <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">{unreadCount} New Updates</span>
+                    <div className="px-4 py-1.5 rounded-full bg-blue-50 dark:bg-indigo-500/10 border border-blue-100/50 dark:border-indigo-500/30 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-indigo-500 animate-pulse" />
+                        <span className="text-xs font-bold text-blue-700 dark:text-indigo-400 uppercase tracking-wider">{unreadCount} New Updates</span>
                     </div>
                 )}
             </header>
@@ -184,8 +184,8 @@ export default function TeamNotificationsPage() {
                     {announcements.length > 0 && (
                         <div className="space-y-6">
                             <div className="flex items-center gap-3 px-1">
-                                <h2 className="text-xl font-bold text-[#0F172A]">Announcements</h2>
-                                <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent" />
+                                <h2 className="text-xl font-bold text-slate-900 dark:text-white">Announcements</h2>
+                                <div className="h-px flex-1 bg-gradient-to-r from-slate-200 dark:from-white/10 to-transparent" />
                             </div>
                             <div className="space-y-4">
                                 {announcements.map((n, i) => (
@@ -199,8 +199,8 @@ export default function TeamNotificationsPage() {
                     {notifications.length > 0 && (
                         <div className="space-y-6">
                             <div className="flex items-center gap-3 px-1">
-                                <h2 className="text-xl font-bold text-[#0F172A]">Notifications</h2>
-                                <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent" />
+                                <h2 className="text-xl font-bold text-slate-900 dark:text-white">Notifications</h2>
+                                <div className="h-px flex-1 bg-gradient-to-r from-slate-200 dark:from-white/10 to-transparent" />
                             </div>
                             <div className="space-y-4">
                                 {notifications.map((n, i) => (

@@ -18,7 +18,7 @@ export function UserBottomNav() {
     return (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-md lg:hidden">
             <nav
-                className="kz-float-dock rounded-full py-2 px-3"
+                className="bg-[var(--kz-glass-bg)] backdrop-blur-md border border-[var(--kz-glass-border)] rounded-full py-2 px-3 shadow-xl shadow-black/5"
                 aria-label="Mobile navigation"
             >
                 <div className="flex items-center justify-between gap-1">
@@ -35,8 +35,8 @@ export function UserBottomNav() {
                                 className={`
                                     relative flex flex-col items-center justify-center w-12 h-12 rounded-full transition-all duration-300
                                     ${isActive
-                                        ? "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-                                        : "text-slate-500 hover:text-white"
+                                        ? "bg-black/5 dark:bg-white/10 text-slate-900 dark:text-white shadow-sm"
+                                        : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                                     }
                                 `}
                                 aria-current={isActive ? "page" : undefined}
@@ -44,7 +44,7 @@ export function UserBottomNav() {
                                 <Icon className="w-5 h-5" strokeWidth={1.5} />
 
                                 {isActive && (
-                                    <div className="absolute -bottom-1.5 w-1 h-1 bg-white rounded-full" />
+                                    <div className="absolute -bottom-1.5 w-1 h-1 bg-slate-900 dark:bg-white rounded-full" />
                                 )}
                             </Link>
                         )

@@ -32,25 +32,25 @@ export function UserSideNav() {
 
     return (
         <aside
-            className="hidden lg:flex flex-col gap-10 w-52 flex-shrink-0 pt-12 pl-0 pr-6 border-r border-white/5 bg-transparent"
+            className="hidden lg:flex flex-col gap-10 w-52 flex-shrink-0 pt-12 pl-0 pr-6 border-r border-black/5 dark:border-white/5 bg-transparent"
             aria-label="Main navigation"
         >
             {/* Workspace Header - Human SaaS Pattern */}
             <div className="flex flex-col gap-4 mb-8">
-                <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/[0.08] cursor-pointer transition-all group">
+                <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 hover:bg-black/[0.08] dark:hover:bg-white/[0.08] cursor-pointer transition-all group">
                     <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-[0_0_15px_rgba(99,102,241,0.3)]">
                         <Terminal className="w-4.5 h-4.5" strokeWidth={2} />
                     </div>
                     <div className="flex flex-col min-w-0">
-                        <span className="text-[12px] font-bold text-white leading-none">Kaizen ‘26</span>
-                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">Hackathon</span>
+                        <span className="text-[12px] font-bold text-slate-900 dark:text-white leading-none">Kaizen ‘26</span>
+                        <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1">Hackathon</span>
                     </div>
-                    <ChevronRight className="w-3 h-3 ml-auto text-slate-600 group-hover:text-slate-400 rotate-90" />
+                    <ChevronRight className="w-3 h-3 ml-auto text-slate-500 dark:text-slate-600 group-hover:text-slate-900 dark:group-hover:text-white rotate-90" />
                 </div>
 
                 <div className="flex items-center justify-between px-3">
-                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Navigation</p>
-                    <button className="text-slate-600 hover:text-white transition-colors">
+                    <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Navigation</p>
+                    <button className="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
                         <Search className="w-3 h-3" strokeWidth={2.5} />
                     </button>
                 </div>
@@ -71,8 +71,8 @@ export function UserSideNav() {
                             className={`
                                 group relative flex items-center justify-between gap-4 px-3 py-2.5 rounded-lg transition-all duration-300
                                 ${isActive
-                                    ? "bg-white/5 text-white"
-                                    : "text-slate-500 hover:text-white hover:bg-white/[0.02]"
+                                    ? "bg-black/5 dark:bg-white/5 text-slate-900 dark:text-white"
+                                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
                                 }
                             `}
                             aria-current={isActive ? "page" : undefined}
@@ -85,7 +85,7 @@ export function UserSideNav() {
                             <div className="flex items-center gap-3">
                                 <div className={`
                                     relative w-4.5 h-4.5 flex items-center justify-center transition-all duration-300
-                                    ${isActive ? "text-indigo-400" : "text-slate-600 group-hover:text-indigo-400"}
+                                    ${isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400"}
                                 `}>
                                     <Icon
                                         className="w-full h-full"
@@ -93,7 +93,7 @@ export function UserSideNav() {
                                     />
                                 </div>
 
-                                <span className={`text-[13px] tracking-tight ${isActive ? "font-semibold" : "font-medium"}`}>
+                                <span className={`text-[13px] tracking-tight ${isActive ? "font-semibold" : "font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"}`}>
                                     {item.label}
                                 </span>
                             </div>
@@ -101,12 +101,12 @@ export function UserSideNav() {
                             {/* Supplementary Metadata */}
                             <div className="flex items-center gap-2">
                                 {item.tag && (
-                                    <div className={`px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${isActive ? "bg-indigo-600 text-white" : "bg-white/5 text-slate-500 border border-white/5"}`}>
+                                    <div className={`px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${isActive ? "bg-indigo-600 text-white" : "bg-black/5 dark:bg-white/5 text-slate-500 border border-black/5 dark:border-white/5"}`}>
                                         {item.tag}
                                     </div>
                                 )}
                                 {item.badge && !isActive && (
-                                    <div className="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[9px] font-extrabold border-2 border-[#0B0E14]">
+                                    <div className="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[9px] font-extrabold border-2 border-white dark:border-[#0B0E14]">
                                         {item.badge}
                                     </div>
                                 )}
@@ -115,7 +115,7 @@ export function UserSideNav() {
 
                             {/* Command Hint - Linear Pattern */}
                             {isActive && (
-                                <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white/5 border border-white/5 text-[9px] font-bold text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 text-[9px] font-bold text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <Command className="w-2 h-2" />
                                     <span>G</span>
                                 </div>
@@ -126,15 +126,15 @@ export function UserSideNav() {
             </nav>
 
             {/* Official Branding Block — Refined */}
-            <div className="mt-auto pb-8 pt-8 border-t border-white/5">
+            <div className="mt-auto pb-8 pt-8 border-t border-black/5 dark:border-white/5">
                 <div className="flex flex-col gap-1 px-1">
-                    <span className="font-heading font-semibold text-xl text-white tracking-widest uppercase leading-none">
+                    <span className="font-heading font-semibold text-xl text-slate-900 dark:text-white tracking-widest uppercase leading-none">
                         KAIZEN
                     </span>
-                    <span className="text-[9px] font-bold text-indigo-400/60 uppercase tracking-[0.2em]">
+                    <span className="text-[9px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.2em]">
                         part of SATHWA 26
                     </span>
-                    <span className="text-[9px] font-medium text-slate-600 uppercase tracking-widest mt-1.5 leading-relaxed">
+                    <span className="text-[9px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1.5 leading-relaxed">
                         College of Engineering,<br />Muttathara
                     </span>
                 </div>

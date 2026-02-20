@@ -69,7 +69,7 @@ export default async function Home() {
                         </div>
                     ) : (
                         <Link
-                            href="/user"
+                            href="/hackathon-login"
                             className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-indigo-600 text-white shadow-[0_0_30px_rgba(99,102,241,0.3)] rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] hover:bg-indigo-500 hover:scale-[1.02] active:scale-[0.98] transition-all"
                         >
                             Enter Platform

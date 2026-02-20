@@ -28,7 +28,7 @@ export default auth((req) => {
 
     // 3. Protected Routes
     if (!isLoggedIn && !isPublicRoute) {
-        return NextResponse.redirect(new URL("/user", nextUrl))
+        return NextResponse.redirect(new URL("/hackathon-login", nextUrl))
     }
 
     // 4. Role Guards
