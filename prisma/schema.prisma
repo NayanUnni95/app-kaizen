@@ -50,38 +50,41 @@ model User {
   email         String    @unique
   name          String?
   username      String?   @unique
-  passwordHash  String?   // null for OAuth users
+  passwordHash  String? // null for OAuth users
   image         String?
   role          UserRole  @default(USER)
   isActive      Boolean   @default(true)
   isVerified    Boolean   @default(false)
   emailVerified DateTime?
 
-  accounts      Account[]
-  sessions      Session[]
+  accounts       Account[]
+  sessions       Session[]
   authenticators Authenticator[]
 
   // Relationships
-  createdEvents   Event[] @relation("EventCreator")
-  updatedEvents   Event[] @relation("EventUpdater")
+  createdEvents Event[] @relation("EventCreator")
+  updatedEvents Event[] @relation("EventUpdater")
 
-  createdTeams    Team[] @relation("TeamCreator")
-  updatedTeams    Team[] @relation("TeamUpdater")
+  createdTeams Team[] @relation("TeamCreator")
+  updatedTeams Team[] @relation("TeamUpdater")
 
-  createdMembers  TeamMember[] @relation("MemberCreator")
-  updatedMembers  TeamMember[] @relation("MemberUpdater")
+  createdMembers TeamMember[] @relation("MemberCreator")
+  updatedMembers TeamMember[] @relation("MemberUpdater")
 
   createdNotifications Notification[] @relation("NotificationCreator")
   notifications        Notification[] @relation("UserNotification")
 
-  createdSubmissions   Submission[] @relation("SubmissionCreator")
-  updatedSubmissions   Submission[] @relation("SubmissionUpdater")
+  createdSubmissions Submission[] @relation("SubmissionCreator")
+  updatedSubmissions Submission[] @relation("SubmissionUpdater")
 
-  createdCheckpoints   Checkpoint[] @relation("CheckpointCreator")
-  updatedCheckpoints   Checkpoint[] @relation("CheckpointUpdater")
+  createdCheckpoints Checkpoint[] @relation("CheckpointCreator")
+  updatedCheckpoints Checkpoint[] @relation("CheckpointUpdater")
 
-  createdProgress      CheckpointProgress[] @relation("ProgressCreator")
-  updatedProgress      CheckpointProgress[] @relation("ProgressUpdater")
+  createdProgress CheckpointProgress[] @relation("ProgressCreator")
+  updatedProgress CheckpointProgress[] @relation("ProgressUpdater")
+
+  createdProblems ProblemStatement[] @relation("ProblemCreator")
+  updatedProblems ProblemStatement[] @relation("ProblemUpdater")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -90,7 +93,7 @@ model User {
 }
 
 model Account {
-  userId            String   @db.Uuid
+  userId            String  @db.Uuid
   type              String
   provider          String
   providerAccountId String
@@ -101,21 +104,21 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  
-  // Profile snapshot
-  email             String?
-  email_verified    Boolean @default(false)
-  name              String?
-  given_name        String?
-  family_name       String?
-  picture_url       String?
-  locale            String?
-  hd                String? // Hosted domain
-  raw_data          Json?
 
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Profile snapshot
+  email          String?
+  email_verified Boolean @default(false)
+  name           String?
+  given_name     String?
+  family_name    String?
+  picture_url    String?
+  locale         String?
+  hd             String? // Hosted domain
+  raw_data       Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
   @@unique([userId, provider]) // uq_oauth_user_provider
@@ -165,100 +168,101 @@ model Event {
   settings             Json?     @db.JsonB
 
   // Audit
-  createdById          String    @db.Uuid
-  updatedById          String    @db.Uuid
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  createdById String   @db.Uuid
+  updatedById String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  createdBy            User      @relation("EventCreator", fields: [createdById], references: [id])
-  updatedBy            User      @relation("EventUpdater", fields: [updatedById], references: [id])
-  
-  teams                Team[]
-  checkpoints          Checkpoint[]
-  notifications        Notification[]
-  submissions          Submission[]
-  checkpointProgress   CheckpointProgress[]
+  createdBy User @relation("EventCreator", fields: [createdById], references: [id])
+  updatedBy User @relation("EventUpdater", fields: [updatedById], references: [id])
+
+  teams              Team[]
+  checkpoints        Checkpoint[]
+  notifications      Notification[]
+  submissions        Submission[]
+  checkpointProgress CheckpointProgress[]
+  ProblemStatement   ProblemStatement[]
 }
 
 model Team {
-  id             String    @id @default(uuid()) @db.Uuid
-  eventId        String    @db.Uuid
-  name           String
-  email          String?
-  username       String    @unique
-  passwordHash   String
-  meta           Json?     @db.JsonB
-  isActive       Boolean   @default(true)
-  settings       Json?     @db.JsonB
+  id           String  @id @default(uuid()) @db.Uuid
+  eventId      String  @db.Uuid
+  name         String
+  email        String?
+  username     String  @unique
+  passwordHash String
+  meta         Json?   @db.JsonB
+  isActive     Boolean @default(true)
+  settings     Json?   @db.JsonB
 
   // Audit
-  createdById    String    @db.Uuid
-  updatedById    String    @db.Uuid
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdById String   @db.Uuid
+  updatedById String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  event          Event     @relation(fields: [eventId], references: [id])
-  createdBy      User      @relation("TeamCreator", fields: [createdById], references: [id])
-  updatedBy      User      @relation("TeamUpdater", fields: [updatedById], references: [id])
-  
-  members        TeamMember[]
-  submissions    Submission[]
-  progress       CheckpointProgress[]
-  notifications  Notification[]
+  event     Event @relation(fields: [eventId], references: [id])
+  createdBy User  @relation("TeamCreator", fields: [createdById], references: [id])
+  updatedBy User  @relation("TeamUpdater", fields: [updatedById], references: [id])
+
+  members       TeamMember[]
+  submissions   Submission[]
+  progress      CheckpointProgress[]
+  notifications Notification[]
 
   @@unique([eventId, username])
   @@unique([eventId, email])
 }
 
 model TeamMember {
-  id           String    @id @default(uuid()) @db.Uuid
-  teamId       String    @db.Uuid
-  name         String
-  role         TeamRole  @default(MEMBER)
-  isAccepted   Boolean   @default(false)
-  meta         Json?     @db.JsonB
-  invitedAt    DateTime  @default(now())
-  acceptedAt   DateTime?
+  id         String    @id @default(uuid()) @db.Uuid
+  teamId     String    @db.Uuid
+  name       String
+  role       TeamRole  @default(MEMBER)
+  isAccepted Boolean   @default(false)
+  meta       Json?     @db.JsonB
+  invitedAt  DateTime  @default(now())
+  acceptedAt DateTime?
 
   // Audit
-  createdById  String    @db.Uuid
-  updatedById  String    @db.Uuid
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdById String   @db.Uuid
+  updatedById String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  team         Team      @relation(fields: [teamId], references: [id])
-  createdBy    User      @relation("MemberCreator", fields: [createdById], references: [id])
-  updatedBy    User      @relation("MemberUpdater", fields: [updatedById], references: [id])
-  
-  @@unique([teamId]) // Only one "TeamMember" entry per team? (based on user's UniqueConstraint("team_id", name="uq_team_member"))
+  team      Team @relation(fields: [teamId], references: [id])
+  createdBy User @relation("MemberCreator", fields: [createdById], references: [id])
+  updatedBy User @relation("MemberUpdater", fields: [updatedById], references: [id])
   // Wait, if it's many TeamMembers, that constraint seems wrong in user's code. 
   // But I will follow the user's provided Python code which had a UniqueConstraint("team_id").
+
+  @@unique([teamId]) // Only one "TeamMember" entry per team? (based on user's UniqueConstraint("team_id", name="uq_team_member"))
 }
 
 model Notification {
-  id          String           @id @default(uuid()) @db.Uuid
-  eventId     String           @db.Uuid
-  teamId      String?          @db.Uuid
-  userId      String?          @db.Uuid
-  type        NotificationType @default(INFO)
-  title       String
-  body        String?          @db.Text
-  meta        Json?            @db.JsonB
-  isRead      Boolean          @default(false)
-  readAt      DateTime?
-  createdAt   DateTime         @default(now())
+  id        String           @id @default(uuid()) @db.Uuid
+  eventId   String           @db.Uuid
+  teamId    String?          @db.Uuid
+  userId    String?          @db.Uuid
+  type      NotificationType @default(INFO)
+  title     String
+  body      String?          @db.Text
+  meta      Json?            @db.JsonB
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
 
   // Audit (Creator is enough for notification)
-  createdById String           @db.Uuid
+  createdById String @db.Uuid
 
   // Relations
-  event       Event            @relation(fields: [eventId], references: [id])
-  team        Team?            @relation(fields: [teamId], references: [id])
-  user        User?            @relation("UserNotification", fields: [userId], references: [id])
-  createdBy   User             @relation("NotificationCreator", fields: [createdById], references: [id])
+  event     Event @relation(fields: [eventId], references: [id])
+  team      Team? @relation(fields: [teamId], references: [id])
+  user      User? @relation("UserNotification", fields: [userId], references: [id])
+  createdBy User  @relation("NotificationCreator", fields: [createdById], references: [id])
 }
 
 model Submission {
@@ -275,16 +279,16 @@ model Submission {
   submittedAt DateTime?
 
   // Audit
-  createdById String?          @db.Uuid
-  updatedById String?          @db.Uuid
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  createdById String?  @db.Uuid
+  updatedById String?  @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  event       Event            @relation(fields: [eventId], references: [id])
-  team        Team             @relation(fields: [teamId], references: [id])
-  createdBy   User?            @relation("SubmissionCreator", fields: [createdById], references: [id])
-  updatedBy   User?            @relation("SubmissionUpdater", fields: [updatedById], references: [id])
+  event     Event @relation(fields: [eventId], references: [id])
+  team      Team  @relation(fields: [teamId], references: [id])
+  createdBy User? @relation("SubmissionCreator", fields: [createdById], references: [id])
+  updatedBy User? @relation("SubmissionUpdater", fields: [updatedById], references: [id])
 }
 
 model Checkpoint {
@@ -298,17 +302,17 @@ model Checkpoint {
   requirements Json?     @db.JsonB
 
   // Audit
-  createdById  String    @db.Uuid
-  updatedById  String    @db.Uuid
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdById String   @db.Uuid
+  updatedById String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  event        Event     @relation(fields: [eventId], references: [id])
-  createdBy    User      @relation("CheckpointCreator", fields: [createdById], references: [id])
-  updatedBy    User      @relation("CheckpointUpdater", fields: [updatedById], references: [id])
-  
-  progress     CheckpointProgress[]
+  event     Event @relation(fields: [eventId], references: [id])
+  createdBy User  @relation("CheckpointCreator", fields: [createdById], references: [id])
+  updatedBy User  @relation("CheckpointUpdater", fields: [updatedById], references: [id])
+
+  progress CheckpointProgress[]
 }
 
 model CheckpointProgress {
@@ -323,21 +327,40 @@ model CheckpointProgress {
   completedAt    DateTime?
 
   // Audit
-  createdById    String?          @db.Uuid
-  updatedById    String?          @db.Uuid
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  createdById String?  @db.Uuid
+  updatedById String?  @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  checkpoint     Checkpoint       @relation(fields: [checkpointId], references: [id])
-  team           Team             @relation(fields: [teamId], references: [id])
-  event          Event            @relation(fields: [eventId], references: [id])
-  createdBy      User?            @relation("ProgressCreator", fields: [createdById], references: [id])
-  updatedBy      User?            @relation("ProgressUpdater", fields: [updatedById], references: [id])
+  checkpoint Checkpoint @relation(fields: [checkpointId], references: [id])
+  team       Team       @relation(fields: [teamId], references: [id])
+  event      Event      @relation(fields: [eventId], references: [id])
+  createdBy  User?      @relation("ProgressCreator", fields: [createdById], references: [id])
+  updatedBy  User?      @relation("ProgressUpdater", fields: [updatedById], references: [id])
 
   @@unique([checkpointId, teamId])
 }
 
+model ProblemStatement {
+  id          String  @id @default(uuid()) @db.Uuid
+  eventId     String  @db.Uuid
+  title       String
+  description String? @db.Text
+  assetUrl    String?
+  meta        Json?   @db.JsonB
+
+  createdById String   @db.Uuid
+  updatedById String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  event     Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  createdBy User  @relation("ProblemCreator", fields: [createdById], references: [id])
+  updatedBy User  @relation("ProblemUpdater", fields: [updatedById], references: [id])
+
+  @@index([eventId])
+}
 
 model AppFeedback {
   id          String   @id @default(uuid()) @db.Uuid

@@ -1,4 +1,5 @@
 import { auth } from "@/auth"
+import { ProblemStatementSection } from "@/components/hackathon/ProblemStatementSection"
 import { getTeamById } from "@/lib/hackathon/teams"
 import { prisma } from "@/lib/prisma"
 import { Avatar } from "@/components/ui/Avatar"
@@ -189,41 +190,8 @@ export default async function TeamDashboard() {
                         </div>
                     </div>
 
-                    {/* Problem Statement Card */}
-                    <div className="md:col-span-2 kz-card-premium p-1 relative overflow-hidden group">
-                        {/* Background subtle mesh */}
-                        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(at_top_right,_#2563EB_0%,_transparent_50%)]" />
-
-                        <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center gap-6 h-full">
-                            <div className="kz-icon-container w-20 h-20 bg-slate-50 flex-shrink-0">
-                                <Activity className="w-10 h-10 text-slate-400 group-hover:text-blue-600 transition-colors" />
-                            </div>
-
-                            <div className="flex-1 space-y-2">
-                                <div className="flex items-center gap-2">
-                                    <h3 className="font-heading font-bold text-xl text-[#0F172A]">
-                                        Problem Statement
-                                    </h3>
-                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 uppercase tracking-wider">
-                                        Coming Soon
-                                    </span>
-                                </div>
-                                <p className="text-sm text-[#64748B] leading-relaxed max-w-md">
-                                    The problem statement for your track will be officially released at the start of the hackathon. Prepare your tools!
-                                </p>
-
-                                <div className="pt-2 flex items-center gap-3">
-                                    <button disabled className="px-4 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold flex items-center gap-2 cursor-not-allowed border border-slate-200">
-                                        <Clock className="w-3.5 h-3.5" />
-                                        Unlocking Soon
-                                    </button>
-                                    <p className="text-[10px] font-medium text-slate-400">
-                                        Release: {team.event.startsAt ? new Date(team.event.startsAt).toLocaleDateString() : 'TBD'}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {/* Problem Statement Card - Dynamic via API */}
+                    <ProblemStatementSection startsAt={team.event.startsAt?.toISOString()} />
                 </div>
             </section>
 

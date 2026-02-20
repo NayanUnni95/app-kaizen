@@ -2,6 +2,9 @@ import { prisma } from "@/lib/prisma"
 
 export async function getAllEvents() {
     return await prisma.event.findMany({
+        include: {
+            _count: { select: { teams: true, ProblemStatement: true } }
+        },
         orderBy: { startsAt: 'desc' }
     })
 }

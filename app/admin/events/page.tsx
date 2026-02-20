@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { DataTable } from "@/components/hackathon/DataTable"
-import { Plus, MoreHorizontal, Calendar, Users, MapPin, Clock } from "lucide-react"
+import { Plus, MoreHorizontal, Calendar, Users, MapPin, Clock, FileText, ToggleLeft, ToggleRight, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { StatusBadge } from "@/components/hackathon/StatusBadge"
 import { CreateEventModal } from "@/components/hackathon/CreateEventModal"
@@ -12,6 +12,7 @@ export default function EventsPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [search, setSearch] = useState("")
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [togglingRelease, setTogglingRelease] = useState<string | null>(null)
 
     useEffect(() => {
         fetchEvents()
@@ -28,6 +29,24 @@ export default function EventsPage() {
             toast.error("Could not load events")
         } finally {
             setIsLoading(false)
+        }
+    }
+
+    const handleTogglePBRelease = async (eventId: string, current: boolean) => {
+        setTogglingRelease(eventId)
+        try {
+            const res = await fetch("/api/hackathon/admin/problem-statements/release", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ eventId, is_pb_statement_released: !current }),
+            })
+            if (!res.ok) throw new Error("Failed")
+            toast.success(!current ? "Problem statements released!" : "Problem statements hidden")
+            fetchEvents()
+        } catch {
+            toast.error("Failed to toggle release")
+        } finally {
+            setTogglingRelease(null)
         }
     }
 
@@ -86,6 +105,18 @@ export default function EventsPage() {
                     </div>
                 </div>
             )
+        },
+        {
+            header: "PS Release",
+            accessor: (event: any) => {
+                const isReleased = (event.settings as any)?.is_pb_statement_released ?? false
+                return (
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${isReleased ? 'bg-emerald-500/10 text-emerald-400' : 'bg-zinc-800 text-zinc-500'
+                        }`}>
+                        {isReleased ? 'LIVE' : 'DRAFT'}
+                    </span>
+                )
+            }
         }
     ]
 
@@ -112,11 +143,34 @@ export default function EventsPage() {
                 searchPlaceholder="Search events..."
                 searchValue={search}
                 onSearchChange={setSearch}
-                actions={(event) => (
-                    <button className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
-                        <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
-                    </button>
-                )}
+                actions={(event: any) => {
+                    const isReleased = (event.settings as any)?.is_pb_statement_released ?? false
+                    const isToggling = togglingRelease === event.id
+                    return (
+                        <div className="flex items-center gap-2 justify-end">
+                            <button
+                                onClick={() => handleTogglePBRelease(event.id, isReleased)}
+                                disabled={isToggling}
+                                className={`p-2 rounded-lg transition-all ${isReleased
+                                        ? 'hover:bg-red-500/10 text-emerald-400 hover:text-red-400'
+                                        : 'hover:bg-emerald-500/10 text-zinc-500 hover:text-emerald-400'
+                                    }`}
+                                title={isReleased ? 'Revoke PS Release' : 'Release PS to Teams'}
+                            >
+                                {isToggling ? (
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                ) : isReleased ? (
+                                    <ToggleRight className="w-5 h-5" />
+                                ) : (
+                                    <ToggleLeft className="w-5 h-5" />
+                                )}
+                            </button>
+                            <button className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
+                                <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
+                            </button>
+                        </div>
+                    )
+                }}
             />
 
             <CreateEventModal

@@ -12,7 +12,8 @@ import {
     User,
     LogOut,
     Menu,
-    X
+    X,
+    FileText
 } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { useState, useEffect } from "react"
@@ -44,6 +45,7 @@ export function FloatingNav({ role }: FloatingNavProps) {
         { name: "Events", href: "/admin/events", icon: Calendar },
         { name: "Miles", href: "/admin/checkpoints", icon: CheckSquare },
         { name: "Subs", href: "/admin/submissions", icon: Upload },
+        { name: "PS", href: "/admin/problem-statements", icon: FileText },
         { name: "Alerts", href: "/admin/notifications", icon: Bell },
     ]
 
