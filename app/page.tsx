@@ -4,17 +4,29 @@ import Image from "next/image"
 import { DevLabel } from "@/components/DevLabel"
 import { UserRole } from "@prisma/client"
 import Link from "next/link"
+import { getTeamBySession } from "@/lib/hackathon/teams"
 
 export default async function Home() {
     const session = await auth()
 
     if (session?.user) {
         const role = (session.user as any).role
-        // If they have a specific role, redirect them to their dashboard
+
+        // Admin & Organizer are fine to redirect immediately
         if (role === UserRole.ADMIN) redirect("/admin")
         if (role === UserRole.ORGANIZER) redirect("/organizer")
-        if (role === UserRole.TEAM) redirect("/team")
-        // If they are just a regular USER, we stay on this page
+
+        // TEAM role MUST verify actual team existence
+        if (role === UserRole.TEAM) {
+            const team = await getTeamBySession(session.user)
+
+            if (team) {
+                redirect("/team")
+            } else {
+                redirect("/team/join") // onboarding instead of looping
+            }
+        }
+        // Regular USER continues to homepage UI
     }
 
     return (
@@ -26,11 +38,6 @@ export default async function Home() {
             </div>
 
             <main className="relative z-10 flex flex-col items-center gap-8 px-6 text-center">
-                {/* Logo */}
-                {/* <div className="relative w-20 h-20">
-                    <Image src="/assets/favicon.png" alt="Logo" fill className="object-contain animate-pulse" />
-                </div> */}
-
                 <div className="flex flex-col items-center gap-2">
                     <div className="flex items-center gap-2">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-500">
@@ -38,7 +45,9 @@ export default async function Home() {
                         </h1>
                         <DevLabel />
                     </div>
-                    <p className="text-zinc-500 font-medium tracking-widest uppercase text-xs">Hackathon Management Platform</p>
+                    <p className="text-zinc-500 font-medium tracking-widest uppercase text-xs">
+                        Hackathon Management Platform
+                    </p>
                 </div>
 
                 <p className="text-zinc-400 text-base max-w-sm leading-relaxed">
@@ -48,7 +57,9 @@ export default async function Home() {
                 <div className="flex flex-col gap-4 w-full max-w-xs mt-4">
                     {session?.user ? (
                         <div className="flex flex-col gap-2">
-                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-2">Authenticated as {(session.user as any).role}</p>
+                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-2">
+                                Authenticated as {(session.user as any).role}
+                            </p>
                             <Link
                                 href="/profile"
                                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-zinc-900 border border-white/10 text-white rounded-2xl font-black italic uppercase tracking-tighter text-base hover:bg-zinc-800 transition-all shadow-2xl"
