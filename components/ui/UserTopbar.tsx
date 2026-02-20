@@ -48,9 +48,9 @@ export function UserTopbar({ teamName, unreadCount = 0, endsAt, startsAt }: User
 
     return (
         <header
-            className="fixed top-0 left-0 right-0 z-50 kz-glass-surface border-b border-white/5 transition-all duration-300"
+            className="fixed top-4 left-4 right-4 lg:left-8 lg:right-8 z-50 kz-glass-surface border border-white/10 rounded-2xl transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
         >
-            <div className="max-w-[1600px] mx-auto px-8 lg:px-12 h-16 flex items-center justify-between gap-8">
+            <div className="max-w-[1600px] mx-auto px-6 h-14 flex items-center justify-between gap-8">
                 {/* Left: Branding & Status */}
                 <div className="flex items-center gap-3 sm:gap-6 min-w-0 flex-1">
                     <Link href="/team" className="flex items-center gap-2 sm:gap-3 min-w-0 group">

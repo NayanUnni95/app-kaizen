@@ -24,7 +24,7 @@ export default async function GeneralPage() {
             <header className="kz-animate-fade-in px-2">
                 <h1 className="font-heading font-black text-3xl sm:text-4xl text-white tracking-tighter leading-none mb-3 uppercase">Neural Link</h1>
                 <p className="font-mono-tech text-slate-500 text-[10px] font-bold uppercase tracking-widest">
-                    SYS_METADATA: GLOBAL_INTELLIGENCE_LAYER
+                    Executive overview, global stats, and event intelligence.
                 </p>
             </header>
 
@@ -44,7 +44,7 @@ export default async function GeneralPage() {
                         <Users className="w-5 h-5" strokeWidth={1.5} />
                     </div>
                     <div>
-                        <p className="text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-1">TOTAL_OPERATIVES</p>
+                        <p className="text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-1">TOTAL STUDENTS</p>
                         <h3 className="text-3xl font-mono-tech font-bold text-white tracking-tight">{totalMembers}</h3>
                     </div>
                 </div>
@@ -74,8 +74,26 @@ export default async function GeneralPage() {
                         </h2>
                         <div className="space-y-3">
                             {[
-                                { q: "How are checkpoints verified?", a: "Mentors will visit your table to verify milestone completion in person." },
-                                { q: "Can we change track midway?", a: "Track changes require admin approval and must be done within 6 hours of start." }
+                                { q: "When will be the Problem statements released?", a: "Problem statements will be released at the start of the hackathon." },
+                                {
+                                    q: "Can we work on a pre-built or existing project?",
+                                    a: "No. Projects must be developed entirely during the hackathon. Pre-built or previously submitted projects are strictly prohibited."
+                                },
+
+                                {
+                                    q: "Are we allowed to use open-source libraries or APIs?",
+                                    a: "Yes. Use of open-source libraries, frameworks, and APIs is encouraged, provided they are properly credited."
+                                },
+
+                                {
+                                    q: "What happens in case of misconduct?",
+                                    a: "There is zero tolerance for misconduct. Participants must respect mentors, organizers, and fellow participants at all times."
+                                },
+
+                                {
+                                    q: "Is this a continuous 24-hour event?",
+                                    a: "Yes. This is a 24-hour hackathon. Rest areas for boys and girls will be available during the event."
+                                }
                             ].map((faq, i) => (
                                 <div key={i} className="bg-white/[0.02] rounded-[1.5rem] border border-white/5 p-6 border-l-4 border-l-indigo-500/40">
                                     <h4 className="font-bold text-white text-sm mb-2">{faq.q}</h4>

@@ -49,34 +49,34 @@ export function ProblemStatementSection({ startsAt }: { startsAt?: string | null
     // Not released or no visible statements — show Coming Soon
     if (!isReleased || statements.length === 0) {
         return (
-            <div className="md:col-span-2 kz-card-rich p-8 relative overflow-hidden group bg-white/[0.02] border-white/5">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8 h-full">
-                    <div className="kz-icon-rich w-20 h-20 bg-white/5 flex-shrink-0 border-white/10 group-hover:border-indigo-500/30 transition-all">
-                        <Activity className="w-10 h-10 text-slate-600 group-hover:text-indigo-400 transition-colors" strokeWidth={1.5} />
+            <div className="kz-card-rich p-10 relative overflow-hidden group bg-white/[0.02] border-white/5">
+                <div className="flex flex-col sm:flex-row items-center gap-10 h-full">
+                    <div className="w-16 h-16 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-indigo-500/30 transition-all duration-500">
+                        <Activity className="w-8 h-8 text-slate-600 group-hover:text-indigo-400 transition-colors" strokeWidth={1} />
                     </div>
-                    <div className="flex-1 space-y-3">
-                        <div className="flex items-center gap-3">
-                            <h3 className="font-heading font-black text-2xl text-white tracking-tighter uppercase leading-none">
+                    <div className="flex-1 space-y-4 text-center sm:text-left">
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                            <h3 className="font-heading font-black text-3xl text-white tracking-tighter uppercase leading-none">
                                 Problem Statement
                             </h3>
-                            <span className="px-2 py-0.5 rounded-md text-[9px] font-mono-tech font-bold bg-white/5 text-slate-500 border border-white/5 uppercase tracking-[0.2em]">
+                            <span className="px-2 py-0.5 rounded-md text-[9px] font-mono-tech font-black bg-white/5 text-slate-500 border border-white/5 uppercase tracking-[0.2em]">
                                 ENCRYPTED
                             </span>
                         </div>
-                        <p className="text-[13px] text-slate-500 leading-relaxed font-semibold max-w-md">
+                        <p className="text-[14px] text-slate-500 leading-relaxed font-bold max-w-xl">
                             The problem statement for your track will be officially released at
                             the start of the hackathon. Prepare your tools!
                         </p>
-                        <div className="pt-2 flex items-center gap-3">
+                        <div className="pt-2 flex flex-col sm:flex-row items-center gap-6">
                             <button
                                 disabled
-                                className="px-4 py-2 rounded-xl bg-white/5 text-slate-700 text-[10px] font-mono-tech font-bold flex items-center gap-2 cursor-not-allowed border border-white/5"
+                                className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-700 text-[10px] font-mono-tech font-black flex items-center gap-2.5 cursor-not-allowed border border-white/5 uppercase tracking-widest"
                             >
                                 <Lock className="w-3.5 h-3.5" strokeWidth={2} />
                                 Unlocking Soon
                             </button>
-                            <p className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase tracking-widest">
-                                Release:{" "}
+                            <p className="text-[10px] font-mono-tech font-bold text-slate-600 uppercase tracking-[0.2em]">
+                                RELEASE:{" "}
                                 {startsAt
                                     ? new Date(startsAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
                                     : "TBD_WINDOW"}
