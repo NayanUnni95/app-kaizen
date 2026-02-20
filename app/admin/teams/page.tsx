@@ -41,6 +41,14 @@ export default function TeamsPage() {
             if (!res.ok) throw new Error("Failed to fetch teams")
             const data = await res.json()
             setTeams(data)
+
+            // Refresh selectedTeam if it's currently open
+            if (selectedTeam) {
+                const updatedTeam = data.find((t: any) => t.id === selectedTeam.id)
+                if (updatedTeam) {
+                    setSelectedTeam(updatedTeam)
+                }
+            }
         } catch (error) {
             toast.error("Could not load teams")
         } finally {
