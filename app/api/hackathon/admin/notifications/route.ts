@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const eventId = searchParams.get("eventId") || undefined
 
     try {
-        const notifications = await notifyService.getAllNotifications({ eventId })
+        const notifications = await notifyService.getAllNotifications({ eventId, isAdmin: true })
         return NextResponse.json(notifications)
     } catch (error) {
         return NextResponse.json({ error: "Failed to fetch notifications" }, { status: 500 })

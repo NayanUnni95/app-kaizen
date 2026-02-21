@@ -13,6 +13,9 @@ export default function SubmissionsPage() {
     const [selectedEventId, setSelectedEventId] = useState<string>("all")
     const [search, setSearch] = useState("")
 
+    const [viewingSub, setViewingSub] = useState<any>(null)
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+
     useEffect(() => {
         fetchSubmissions()
         fetchEvents()
@@ -53,6 +56,7 @@ export default function SubmissionsPage() {
             if (!res.ok) throw new Error("Review failed")
             toast.success(`Submission ${status.toLowerCase()}ed`)
             fetchSubmissions()
+            if (viewingSub?.id === id) setIsViewModalOpen(false)
         } catch (error) {
             toast.error("Failed to update status")
         }
@@ -83,13 +87,22 @@ export default function SubmissionsPage() {
             )
         },
         {
-            header: "Deliverable",
-            accessor: (sub: any) => (
-                <button className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    View Link
-                </button>
-            )
+            header: "Execution Log",
+            accessor: (sub: any) => {
+                const items = (sub.submissionData as any)?.items || []
+                return (
+                    <button
+                        onClick={() => {
+                            setViewingSub(sub)
+                            setIsViewModalOpen(true)
+                        }}
+                        className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
+                    >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        {items.length} {items.length === 1 ? 'Entry' : 'Entries'}
+                    </button>
+                )
+            }
         }
     ]
 
@@ -145,6 +158,62 @@ export default function SubmissionsPage() {
                     </div>
                 )}
             />
+
+            {/* View Modal */}
+            {isViewModalOpen && viewingSub && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="w-full max-w-2xl bg-zinc-950 border border-white/10 rounded-3xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+                        <div className="p-8 space-y-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-2xl font-black tracking-tight text-white">{viewingSub.team.name}</h2>
+                                    <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest leading-loose mt-1">
+                                        {viewingSub.event.name} &bull; {viewingSub.checkpoint.title}
+                                    </p>
+                                </div>
+                                <button onClick={() => setIsViewModalOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
+                                    <XCircle className="w-6 h-6" />
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Execution Log Data</h3>
+                                <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+                                    {((viewingSub.submissionData as any)?.items || []).map((item: string, idx: number) => (
+                                        <div key={idx} className="p-4 rounded-xl bg-white/5 border border-white/5 flex gap-4 items-start">
+                                            <span className="w-6 h-6 rounded-md bg-zinc-900 flex items-center justify-center text-[10px] font-black text-zinc-500 shrink-0 mt-0.5">{idx + 1}</span>
+                                            <p className="text-sm font-medium text-zinc-300 leading-relaxed">{item}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                                <div className="flex items-center gap-3">
+                                    <StatusBadge status={viewingSub.status} />
+                                    <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                                        Last Updated: {new Date(viewingSub.updatedAt).toLocaleString()}
+                                    </span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleReview(viewingSub.id, 'REJECTED')}
+                                        className="h-10 px-6 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+                                    >
+                                        Reject
+                                    </button>
+                                    <button
+                                        onClick={() => handleReview(viewingSub.id, 'APPROVED')}
+                                        className="h-10 px-6 bg-green-500/10 text-green-400 rounded-xl hover:bg-green-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+                                    >
+                                        Approve
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

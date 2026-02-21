@@ -42,12 +42,12 @@ export async function GET(
 
         const response = {
             ...checkpoint,
-            teamProgress: progress ? {
-                status: progress.status,
-                items: (progress.submissionData as any)?.items || [],
-                reviewerNotes: progress.reviewerNotes,
-                updatedAt: progress.updatedAt
-            } : null
+            teamProgress: {
+                status: progress?.status || 'PENDING',
+                items: (progress?.submissionData as any)?.items || [],
+                reviewerNotes: progress?.reviewerNotes || null,
+                updatedAt: progress?.updatedAt || null
+            }
         }
 
         return NextResponse.json(response)

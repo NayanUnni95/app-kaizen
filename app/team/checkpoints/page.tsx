@@ -46,10 +46,13 @@ export default function TeamCheckpointsPage() {
         { id: 'mock-3', title: 'Optimization & Polish', description: 'System stress testing, finalizing documentation, and refining the final pitch.', order: 3 },
     ]
 
-    const displayCheckpoints = MOCK_CHECKPOINTS.map(mock => {
-        const real = checkpoints.find(c => c.order === mock.order)
-        return real || mock
+    const displayCheckpoints = [...checkpoints]
+    MOCK_CHECKPOINTS.forEach(mock => {
+        if (!displayCheckpoints.find(c => c.order === mock.order)) {
+            displayCheckpoints.push(mock as any)
+        }
     })
+    displayCheckpoints.sort((a, b) => a.order - b.order)
     if (!isLoading && checkpoints.length === 0) {
         return (
             <div className="max-w-6xl mx-auto py-20 px-4">

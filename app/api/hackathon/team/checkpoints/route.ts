@@ -38,12 +38,12 @@ export async function GET(req: NextRequest) {
                 progressId: p?.id || null,
                 completedAt: p?.completedAt || null,
                 reviewerNotes: p?.reviewerNotes || null,
-                // New field: teamProgress expected by the redesigned UI
-                teamProgress: p ? {
-                    status: p.status,
-                    submissionData: p.submissionData,
-                    reviewerNotes: p.reviewerNotes,
-                } : null
+                // Ensure teamProgress is active so the UI allows access
+                teamProgress: {
+                    status: p?.status || 'PENDING',
+                    submissionData: p?.submissionData || null,
+                    reviewerNotes: p?.reviewerNotes || null,
+                }
             }
         })
 
