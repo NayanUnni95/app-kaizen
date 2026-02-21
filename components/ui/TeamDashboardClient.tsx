@@ -318,7 +318,7 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                                 <div className="flex-col min-w-0">
                                     <span className="font-heading font-black text-xl text-slate-900 dark:text-white leading-none uppercase tracking-tighter">Notifications</span>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
                                         <span className="text-[10px] text-indigo-500/80 dark:text-indigo-400 font-black uppercase tracking-widest">Latest Transmissions</span>
                                     </div>
                                 </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Bell, X, Info, Zap, Layout, ChevronRight, MessageSquare } from "lucide-react"
+import { Bell, X, Info, Zap, Layout, ChevronRight, MessageSquare, AlertCircle } from "lucide-react"
 import { toast } from "sonner"
 
 interface NotificationsModalProps {
@@ -28,11 +28,11 @@ export function NotificationsModal({ isOpen, onClose, teamId, eventId }: Notific
             if (!res.ok) throw new Error("Failed")
             const { announcements, notifications } = await res.json()
 
-            // Combine and sort by date for the modal feed
-            const combined = [...announcements, ...notifications].sort((a, b) =>
+            // Show only actual notifications in this modal
+            const filtered = notifications.sort((a: any, b: any) =>
                 new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
             )
-            setMessages(combined)
+            setMessages(filtered)
         } catch {
             toast.error("Could not load notifications")
         } finally {
@@ -51,16 +51,16 @@ export function NotificationsModal({ isOpen, onClose, teamId, eventId }: Notific
             />
 
             {/* Modal */}
-            <div className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden kz-animate-scale-in flex flex-col max-h-[80vh]">
+            <div className="relative w-full max-w-lg bg-white dark:bg-[#08080A] rounded-[2.5rem] shadow-2xl overflow-hidden kz-animate-scale-in flex flex-col max-h-[80vh] border border-black/5 dark:border-white/5">
                 {/* Header */}
-                <div className="p-8 border-b border-slate-100 flex items-center justify-between">
+                <div className="p-8 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
                     <div>
-                        <h2 className="font-heading font-black text-2xl text-black tracking-tight">Updates & Alerts</h2>
-                        <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Live Feed</p>
+                        <h2 className="font-heading font-black text-2xl text-slate-900 dark:text-white tracking-tight uppercase">Updates & Alerts</h2>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-[0.2em] mt-2">Live Feed</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-black transition-all"
+                        className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-indigo-600 dark:hover:bg-indigo-500 hover:text-white transition-all"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -70,44 +70,37 @@ export function NotificationsModal({ isOpen, onClose, teamId, eventId }: Notific
                 <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
                     {isLoading ? (
                         <div className="py-20 text-center">
-                            <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                            <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Syncing Intelligence</p>
                         </div>
                     ) : messages.length === 0 ? (
                         <div className="py-20 text-center">
-                            <Bell className="w-12 h-12 text-slate-100 mx-auto mb-4" strokeWidth={1.5} />
+                            <Bell className="w-12 h-12 text-slate-200 dark:text-slate-800 mx-auto mb-4" strokeWidth={1.5} />
                             <p className="text-sm font-semibold text-slate-400">No new updates right now</p>
                         </div>
                     ) : (
                         messages.map((m, i) => (
                             <div
                                 key={m.id}
-                                className="group p-5 rounded-3xl bg-slate-50 border border-slate-100/50 hover:bg-white hover:border-blue-100 transition-all duration-300"
+                                className="group p-6 rounded-[2rem] bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 hover:bg-white dark:hover:bg-white/[0.04] hover:border-indigo-100 dark:hover:border-indigo-500/20 transition-all duration-300 shadow-sm"
                                 style={{ animationDelay: `${i * 0.05}s` }}
                             >
-                                <div className="flex gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0">
-                                        {m.category === 'ANNOUNCEMENT' ? (
-                                            <MessageSquare className="w-5 h-5 text-amber-500" />
-                                        ) : m.type === 'ERROR' ? (
+                                <div className="flex gap-5">
+                                    <div className="w-11 h-11 rounded-xl bg-white dark:bg-white/5 shadow-inner border border-black/5 dark:border-white/10 flex items-center justify-center flex-shrink-0 text-slate-400 dark:text-slate-500">
+                                        {m.type === 'ERROR' ? (
                                             <Zap className="w-5 h-5 text-rose-500" />
+                                        ) : m.type === 'WARNING' ? (
+                                            <AlertCircle className="w-5 h-5 text-amber-500" />
                                         ) : (
-                                            <Bell className="w-5 h-5 text-blue-500" />
+                                            <Bell className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
                                         )}
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <div className="flex items-center gap-2">
-                                                <h3 className="font-bold text-slate-900 text-sm">{m.title}</h3>
-                                                {m.category === 'ANNOUNCEMENT' && (
-                                                    <span className="px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-600 text-[8px] font-black uppercase tracking-wider border border-amber-100/50">
-                                                        Announcement
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <span className="text-[10px] font-bold text-slate-400">{new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <h3 className="font-heading font-black text-slate-900 dark:text-white text-base tracking-tight uppercase leading-none">{m.title}</h3>
+                                            <span className="text-[9px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest">{new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                         </div>
-                                        <p className="text-xs text-slate-500 leading-relaxed">{m.body}</p>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-bold opacity-70 group-hover:opacity-100 transition-opacity">{m.body}</p>
                                     </div>
                                 </div>
                             </div>
@@ -116,8 +109,8 @@ export function NotificationsModal({ isOpen, onClose, teamId, eventId }: Notific
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 bg-slate-50 border-t border-slate-100">
-                    <p className="text-[10px] text-center font-black text-slate-400 uppercase tracking-[0.2em]">End of Transmission</p>
+                <div className="p-6 bg-slate-50 dark:bg-white/[0.02] border-t border-slate-100 dark:border-white/5">
+                    <p className="text-[10px] text-center font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.3em]">End of Transmission</p>
                 </div>
             </div>
         </div>

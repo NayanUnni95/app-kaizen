@@ -7,7 +7,7 @@ import { NotificationType } from "@prisma/client"
 
 export default async function TeamDashboardPage() {
     const session = await auth()
-    if (!session?.user) redirect("/user")
+    if (!session?.user) redirect("/hackathon-login")
 
     const team = await getTeamBySession(session.user)
     if (!team) redirect("/team/join")
@@ -16,8 +16,9 @@ export default async function TeamDashboardPage() {
         where: {
             eventId: team.eventId,
             teamId: null,
-            type: NotificationType.INFO,
-        },
+            // @ts-ignore - category exists but prisma client might be out of sync
+            category: 'ANNOUNCEMENT',
+        } as any,
         orderBy: { createdAt: 'desc' },
         take: 5,
     })
