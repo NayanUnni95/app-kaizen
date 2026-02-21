@@ -118,20 +118,26 @@ export function StatusDashboardClient({ initialTeams }: { initialTeams: Team[] }
                         <div className="flex flex-col xl:flex-row items-center gap-12">
                             {/* Larger Analog Clock */}
                             <div className="relative shrink-0">
-                                <div className="absolute -inset-12 bg-indigo-500/[0.04] blur-[80px] rounded-full" />
+                                <div className="absolute -inset-16 bg-indigo-500/[0.08] blur-[100px] rounded-full" />
+                                <div className="absolute inset-0 bg-indigo-500/[0.02] rounded-full blur-2xl" />
                                 <svg width="320" height="320" viewBox="0 0 220 220" className="relative z-10 drop-shadow-[0_15px_40px_rgba(0,0,0,0.6)]">
-                                    <circle cx="110" cy="110" r="105" fill="#050507" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                                    <circle cx="110" cy="110" r="105" fill="#050507" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
 
-                                    {[...Array(12)].map((_, i) => (
-                                        <line
-                                            key={i}
-                                            x1="110" y1="15" x2="110" y2="24"
-                                            transform={`rotate(${i * 30}, 110, 110)`}
-                                            stroke={i % 3 === 0 ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.15)"}
-                                            strokeWidth={i % 3 === 0 ? "3" : "1.5"}
-                                            strokeLinecap="round"
-                                        />
-                                    ))}
+                                    {/* Tick marks */}
+                                    {[...Array(60)].map((_, i) => {
+                                        const isMain = i % 5 === 0;
+                                        const isQuarter = i % 15 === 0;
+                                        return (
+                                            <line
+                                                key={i}
+                                                x1="110" y1="12" x2="110" y2={isMain ? "24" : "18"}
+                                                transform={`rotate(${i * 6}, 110, 110)`}
+                                                stroke={isQuarter ? "rgba(255,255,255,0.7)" : isMain ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.15)"}
+                                                strokeWidth={isMain ? "2" : "1"}
+                                                strokeLinecap="round"
+                                            />
+                                        );
+                                    })}
 
                                     {/* Hour Hand */}
                                     <line
@@ -147,17 +153,21 @@ export function StatusDashboardClient({ initialTeams }: { initialTeams: Team[] }
                                     <line
                                         x1="110" y1="110" x2="110" y2="45"
                                         transform={`rotate(${minuteDegrees}, 110, 110)`}
-                                        stroke="rgba(255,255,255,0.5)"
-                                        strokeWidth="3"
+                                        stroke="rgba(255,255,255,0.75)"
+                                        strokeWidth="3.5"
                                         strokeLinecap="round"
                                         className="transition-transform duration-1000 ease-in-out"
                                     />
 
                                     {/* Second Hand */}
                                     <g transform={`rotate(${secondDegrees}, 110, 110)`}>
-                                        <line x1="110" y1="120" x2="110" y2="30" stroke="#6366F1" strokeWidth="1.5" />
-                                        <circle cx="110" cy="110" r="3" fill="#6366F1" />
+                                        <line x1="110" y1="125" x2="110" y2="30" stroke="#6366F1" strokeWidth="2.2" />
+                                        <circle cx="110" cy="110" r="4.5" fill="#6366F1" />
+                                        <circle cx="110" cy="110" r="1.5" fill="white" />
                                     </g>
+
+                                    {/* Center Hub Cover */}
+                                    <circle cx="110" cy="110" r="2.5" fill="#050507" />
                                 </svg>
                             </div>
 
