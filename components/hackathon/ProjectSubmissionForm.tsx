@@ -148,7 +148,7 @@ export function ProjectSubmissionForm() {
             </div>
 
             <div className="space-y-1.5">
-                <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">PPT Link</label>
+                <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Drive Link</label>
                 <div className="relative">
                     <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
@@ -156,7 +156,7 @@ export function ProjectSubmissionForm() {
                         value={submission.demoUrl}
                         readOnly={isFormDisabled}
                         onChange={(e) => setSubmission({ ...submission, demoUrl: e.target.value })}
-                        placeholder="https://my-app.vercel.app"
+                        placeholder="https://drive.google.com"
                         className={`w-full h-12 pl-11 pr-4 rounded-xl border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] text-xs font-bold focus:outline-none focus:border-indigo-500/50 transition-all ${isFormDisabled ? 'text-slate-500 cursor-not-allowed opacity-60' : 'text-slate-900 dark:text-white'}`}
                     />
                 </div>
