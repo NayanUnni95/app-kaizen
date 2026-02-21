@@ -12,6 +12,8 @@ export default function SubmissionsPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [selectedEventId, setSelectedEventId] = useState<string>("all")
     const [search, setSearch] = useState("")
+    const [mainFilter, setMainFilter] = useState<"checkpoint" | "presentation">("checkpoint")
+    const [subFilter, setSubFilter] = useState<"all" | "1" | "2" | "other">("all")
 
     const [viewingSub, setViewingSub] = useState<any>(null)
     const [isViewModalOpen, setIsViewModalOpen] = useState(false)
@@ -119,25 +121,69 @@ export default function SubmissionsPage() {
                     const matchesEvent = selectedEventId === "all" ? true : s.eventId === selectedEventId
                     const matchesSearch = s.team.name.toLowerCase().includes(search.toLowerCase()) ||
                         s.checkpoint.title.toLowerCase().includes(search.toLowerCase())
-                    return matchesEvent && matchesSearch
+
+                    const isPresentation = s.checkpoint.title.toLowerCase().includes("presentation") || s.checkpoint.title.toLowerCase().includes("submission")
+                    const matchesMain = mainFilter === "presentation" ? isPresentation : !isPresentation
+
+                    let matchesSub = true
+                    if (mainFilter === "checkpoint") {
+                        const order = s.checkpoint.order
+                        if (subFilter === "1") matchesSub = order === 1
+                        else if (subFilter === "2") matchesSub = order === 2
+                        else if (subFilter === "other") matchesSub = order > 2
+                    }
+
+                    return matchesEvent && matchesSearch && matchesMain && matchesSub
                 })}
                 isLoading={isLoading}
                 searchPlaceholder="Search submissions..."
                 searchValue={search}
                 onSearchChange={setSearch}
                 filterSlot={
-                    <select
-                        value={selectedEventId}
-                        onChange={(e) => setSelectedEventId(e.target.value)}
-                        className="h-12 bg-zinc-900 border border-white/5 rounded-2xl pl-4 pr-10 text-sm font-bold text-zinc-400 focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
-                    >
-                        <option value="all">All Events</option>
-                        {events.map((e) => (
-                            <option key={e.id} value={e.id}>
-                                {e.name}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="flex items-center gap-3">
+                        {/* Main Category Filter */}
+                        <div className="flex p-1 bg-zinc-900 border border-white/5 rounded-2xl">
+                            <button
+                                onClick={() => setMainFilter("checkpoint")}
+                                className={`px-4 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${mainFilter === "checkpoint" ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+                            >
+                                Checkpoints
+                            </button>
+                            <button
+                                onClick={() => setMainFilter("presentation")}
+                                className={`px-4 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${mainFilter === "presentation" ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+                            >
+                                Final Presentation
+                            </button>
+                        </div>
+
+                        {/* Checkpoint Specific Sub-Filter */}
+                        {mainFilter === "checkpoint" && (
+                            <select
+                                value={subFilter}
+                                onChange={(e) => setSubFilter(e.target.value as any)}
+                                className="h-12 bg-zinc-900 border border-white/5 rounded-2xl pl-4 pr-10 text-xs font-bold text-zinc-400 focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
+                            >
+                                <option value="all">All Checkpoints</option>
+                                <option value="1">1st Checkpoint</option>
+                                <option value="2">2nd Checkpoint</option>
+                                <option value="other">Other</option>
+                            </select>
+                        )}
+
+                        <select
+                            value={selectedEventId}
+                            onChange={(e) => setSelectedEventId(e.target.value)}
+                            className="h-12 bg-zinc-900 border border-white/5 rounded-2xl pl-4 pr-10 text-xs font-bold text-zinc-400 focus:outline-none focus:border-blue-500/50 transition-colors appearance-none"
+                        >
+                            <option value="all">All Events</option>
+                            {events.map((e) => (
+                                <option key={e.id} value={e.id}>
+                                    {e.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 }
                 actions={(sub: any) => (
                     <div className="flex items-center justify-end gap-2">

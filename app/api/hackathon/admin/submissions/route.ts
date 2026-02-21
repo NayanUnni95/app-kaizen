@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
             where: { status: { in: ['SUBMITTED', 'APPROVED', 'REJECTED'] } },
             include: {
                 team: { select: { name: true } },
-                checkpoint: { select: { title: true } },
+                checkpoint: { select: { title: true, order: true } },
                 event: { select: { name: true } }
             },
             orderBy: { updatedAt: 'desc' }
