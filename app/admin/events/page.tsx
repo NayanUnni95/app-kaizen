@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { DataTable } from "@/components/hackathon/DataTable"
-import { Plus, MoreHorizontal, Calendar, Users, MapPin, Clock, FileText, ToggleLeft, ToggleRight, Loader2 } from "lucide-react"
+import { Plus, MoreHorizontal, Calendar, Users, MapPin, Clock, FileText, ToggleLeft, ToggleRight, Loader2, Pencil } from "lucide-react"
 import { toast } from "sonner"
 import { StatusBadge } from "@/components/hackathon/StatusBadge"
 import { CreateEventModal } from "@/components/hackathon/CreateEventModal"
@@ -13,10 +13,24 @@ export default function EventsPage() {
     const [search, setSearch] = useState("")
     const [selectedStatus, setSelectedStatus] = useState<string>("all")
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [editingEvent, setEditingEvent] = useState<any | null>(null)
     const [togglingRelease, setTogglingRelease] = useState<string | null>(null)
+    const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+    const menuRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         fetchEvents()
+    }, [])
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setOpenMenuId(null)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [])
 
     const fetchEvents = async () => {
@@ -49,6 +63,22 @@ export default function EventsPage() {
         } finally {
             setTogglingRelease(null)
         }
+    }
+
+    const handleEditEvent = (event: any) => {
+        setEditingEvent(event)
+        setIsModalOpen(true)
+        setOpenMenuId(null)
+    }
+
+    const handleCreateNew = () => {
+        setEditingEvent(null)
+        setIsModalOpen(true)
+    }
+
+    const handleModalClose = () => {
+        setIsModalOpen(false)
+        setEditingEvent(null)
     }
 
     const filteredEvents = events
@@ -145,7 +175,7 @@ export default function EventsPage() {
                     <p className="text-zinc-500 font-medium italic">Scheduling and orchestration of hackathon activities.</p>
                 </div>
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleCreateNew}
                     className="flex items-center justify-center gap-2 px-8 h-14 bg-white text-black rounded-2xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-all shadow-xl shadow-white/5 active:scale-[0.98]"
                 >
                     <Plus className="w-5 h-5" />
@@ -194,9 +224,26 @@ export default function EventsPage() {
                                     <ToggleLeft className="w-5 h-5" />
                                 )}
                             </button>
-                            <button className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
-                                <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
-                            </button>
+                            <div className="relative" ref={openMenuId === event.id ? menuRef : null}>
+                                <button
+                                    onClick={() => setOpenMenuId(openMenuId === event.id ? null : event.id)}
+                                    className="p-2 hover:bg-white/5 rounded-lg transition-colors group"
+                                >
+                                    <MoreHorizontal className="w-5 h-5 text-zinc-600 group-hover:text-white" />
+                                </button>
+
+                                {openMenuId === event.id && (
+                                    <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl shadow-black/50 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                                        <button
+                                            onClick={() => handleEditEvent(event)}
+                                            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+                                        >
+                                            <Pencil className="w-4 h-4" />
+                                            Edit Event Details
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )
                 }}
@@ -204,8 +251,9 @@ export default function EventsPage() {
 
             <CreateEventModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={handleModalClose}
                 onSuccess={fetchEvents}
+                event={editingEvent}
             />
         </div>
     )

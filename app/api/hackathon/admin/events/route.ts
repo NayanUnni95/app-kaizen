@@ -30,3 +30,22 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Failed to create event" }, { status: 500 })
     }
 }
+
+export async function PATCH(req: NextRequest) {
+    const session = await protect([UserRole.ADMIN, UserRole.ORGANIZER])
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    try {
+        const body = await req.json()
+        const { id, ...data } = body
+        if (!id) return NextResponse.json({ error: "Event ID is required" }, { status: 400 })
+
+        const event = await eventService.updateEvent(id, {
+            ...data,
+            updatedById: session?.user?.id || 'system'
+        })
+        return NextResponse.json(event)
+    } catch (error) {
+        return NextResponse.json({ error: "Failed to update event" }, { status: 500 })
+    }
+}
