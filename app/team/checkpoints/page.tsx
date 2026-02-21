@@ -39,21 +39,16 @@ export default function TeamCheckpointsPage() {
         }
     }
 
-    // Ensure exactly 3 checkpoints are shown. Merge real data with placeholders.
-    const MOCK_CHECKPOINTS = [
-        { id: 'mock-1', title: 'Ideation & Genesis', description: 'Define your core solution, establish initial system architecture, and map the user journey.', order: 1 },
-        { id: 'mock-2', title: 'Functional Prototyping', description: 'Implement the minimum viable features and demonstrate core technical integrity.', order: 2 },
-        { id: 'mock-3', title: 'Optimization & Polish', description: 'System stress testing, finalizing documentation, and refining the final pitch.', order: 3 },
-    ]
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                <Loader2 className="w-8 h-8 animate-spin text-indigo-500 mb-4" />
+                <p className="text-sm font-mono-tech text-slate-500 uppercase tracking-widest">Initialising Pipeline Stream...</p>
+            </div>
+        )
+    }
 
-    const displayCheckpoints = [...checkpoints]
-    MOCK_CHECKPOINTS.forEach(mock => {
-        if (!displayCheckpoints.find(c => c.order === mock.order)) {
-            displayCheckpoints.push(mock as any)
-        }
-    })
-    displayCheckpoints.sort((a, b) => a.order - b.order)
-    if (!isLoading && checkpoints.length === 0) {
+    if (checkpoints.length === 0) {
         return (
             <div className="max-w-6xl mx-auto py-20 px-4">
                 <EmptyState
@@ -64,6 +59,8 @@ export default function TeamCheckpointsPage() {
             </div>
         )
     }
+
+    const displayCheckpoints = [...checkpoints].sort((a, b) => a.order - b.order)
 
     return (
         <div className="max-w-none mx-auto space-y-12 pb-24 pt-8 px-4 sm:px-6 kz-mesh-bg min-h-screen">
