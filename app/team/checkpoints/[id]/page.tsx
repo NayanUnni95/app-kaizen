@@ -68,8 +68,8 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
 
     if (isLoading) return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Accessing Record</p>
+            <Loader2 className="w-8 h-8 animate-spin text-indigo-600 dark:text-indigo-400" />
+            <p className="text-slate-400 dark:text-slate-500 font-black uppercase tracking-[0.2em] text-[10px]">Accessing Secure Node</p>
         </div>
     )
 
@@ -92,27 +92,27 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
             {/* Header */}
             <div className="kz-animate-fade-in relative space-y-4">
                 <div className="flex items-center gap-3">
-                    <div className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 text-[9px] font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                        Stage 0{checkpoint.order}
+                    <div className="px-3 py-1 rounded-md bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-[9px] font-black text-slate-900 dark:text-white uppercase tracking-widest">
+                        stage_0{checkpoint.order}
                     </div>
                     {isApproved ? (
-                        <div className="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold uppercase tracking-wider border border-emerald-100 dark:border-emerald-500/20">
+                        <div className="px-3 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest border border-emerald-500/20">
                             Verified
                         </div>
                     ) : isSubmitted ? (
-                        <div className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[9px] font-bold uppercase tracking-wider border border-blue-100 dark:border-blue-500/20">
-                            Review in progress
+                        <div className="px-3 py-1 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[9px] font-black uppercase tracking-widest border border-indigo-500/20">
+                            Review_Pending
                         </div>
                     ) : (
-                        <div className="px-3 py-1 rounded-full bg-slate-50 dark:bg-white/10 text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase tracking-wider border border-slate-100 dark:border-white/20">
+                        <div className="px-3 py-1 rounded-md bg-slate-500/10 text-slate-600 dark:text-slate-400 text-[9px] font-black uppercase tracking-widest border border-slate-500/20">
                             Operational
                         </div>
                     )}
                 </div>
-                <h1 className="font-heading font-bold text-4xl text-slate-900 dark:text-white tracking-tight leading-none">
+                <h1 className="font-heading font-black text-4xl sm:text-5xl text-slate-900 dark:text-white tracking-tighter leading-none uppercase">
                     {checkpoint.title}
                 </h1>
-                <p className="text-slate-500 dark:text-slate-400 text-lg font-medium leading-relaxed max-w-2xl">
+                <p className="text-slate-600 dark:text-slate-400 text-lg font-medium leading-relaxed max-w-2xl">
                     {checkpoint.description}
                 </p>
             </div>
@@ -121,10 +121,10 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
             {!isSubmitted && !isApproved && (
                 <form
                     onSubmit={handleAddItem}
-                    className="flex items-center gap-4 p-3 pr-3 rounded-2xl bg-white dark:bg-[#0D0D0D] border border-slate-100 dark:border-white/5 shadow-sm hover:border-indigo-500 dark:hover:border-indigo-400 transition-all group kz-animate-slide-up"
+                    className="flex items-center gap-4 p-3 pr-3 rounded-2xl bg-white dark:bg-[#0D0D12] border border-black/5 dark:border-white/5 shadow-sm hover:border-indigo-500/30 transition-all group kz-animate-slide-up"
                     style={{ animationDelay: '0.1s' }}
                 >
-                    <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 group-focus-within:bg-indigo-600 dark:group-focus-within:bg-indigo-500 group-focus-within:text-white transition-all duration-300">
+                    <div className="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center text-slate-400 group-focus-within:bg-indigo-600 dark:group-focus-within:bg-indigo-500 group-focus-within:text-white transition-all duration-300">
                         <Plus className="w-5 h-5" />
                     </div>
                     <input
@@ -132,11 +132,11 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
                         value={newItem}
                         onChange={(e) => setNewItem(e.target.value)}
                         placeholder="Log your progress..."
-                        className="flex-1 bg-transparent border-none focus:ring-0 text-base font-medium text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                        className="flex-1 bg-transparent border-none focus:ring-0 text-base font-bold text-slate-900 dark:text-white placeholder:text-slate-400/50 dark:placeholder:text-slate-600 uppercase tracking-tight"
                     />
                     <button
                         type="submit"
-                        className="px-6 h-10 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-600 dark:hover:bg-indigo-400 transition-all"
+                        className="px-6 h-10 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 dark:hover:bg-indigo-500 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-black/5 dark:shadow-none"
                     >
                         Commit
                     </button>
@@ -145,7 +145,7 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 {/* Requirements / Guidelines */}
-                <section className="space-y-6">
+                {/* <section className="space-y-6">
                     <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                         <ListTodo className="w-4 h-4" /> Protocol
                     </h3>
@@ -160,7 +160,7 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
                             </div>
                         ))}
                     </div>
-                </section>
+                </section> */}
 
                 {/* PROGRESS LIST */}
                 <section className="space-y-6">
@@ -180,18 +180,18 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
                             progressItems.map((item, idx) => (
                                 <div
                                     key={idx}
-                                    className="group relative p-5 rounded-2xl bg-white dark:bg-[#0D0D0D] border border-slate-100 dark:border-white/5 hover:border-indigo-500 dark:hover:border-indigo-400 transition-all flex items-center justify-between"
+                                    className="group relative p-5 rounded-2xl bg-white dark:bg-[#0D0D12] border border-black/5 dark:border-white/5 hover:border-indigo-500/30 transition-all flex items-center justify-between shadow-sm"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-900 dark:text-white font-bold text-[11px]">
+                                        <div className="w-8 h-8 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center text-slate-900 dark:text-white font-black text-[11px] border border-black/5 dark:border-white/5">
                                             {idx + 1}
                                         </div>
-                                        <p className="text-slate-900 dark:text-white font-bold text-sm tracking-tight">{item}</p>
+                                        <p className="text-slate-900 dark:text-white font-bold text-sm tracking-tight uppercase leading-tight">{item}</p>
                                     </div>
                                     {!isSubmitted && !isApproved && (
                                         <button
                                             onClick={() => handleRemoveItem(idx)}
-                                            className="w-8 h-8 rounded-full bg-slate-50 dark:bg-white/5 text-slate-400 dark:text-slate-600 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-500 transition-all"
+                                            className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 text-slate-400 dark:text-slate-600 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-rose-500/10 hover:text-rose-500 transition-all"
                                         >
                                             <X className="w-4 h-4" />
                                         </button>
@@ -209,14 +209,14 @@ export default function CheckpointDetailPage({ params }: { params: Promise<{ id:
                     <button
                         onClick={handleSubmit}
                         disabled={isSubmitting}
-                        className="w-full h-16 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl shadow-slate-200 dark:shadow-none flex items-center justify-center gap-3 hover:bg-indigo-600 dark:hover:bg-indigo-400 hover:shadow-indigo-200 dark:hover:shadow-none hover:-translate-y-1 transition-all"
+                        className="w-full h-16 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-black shadow-2xl shadow-black/10 dark:shadow-none flex items-center justify-center gap-3 hover:bg-indigo-600 dark:hover:bg-indigo-500 hover:-translate-y-1 transition-all"
                     >
                         {isSubmitting ? (
                             <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
                             <>
                                 <Send className="w-5 h-5" />
-                                <span className="text-[11px] font-bold uppercase tracking-widest">Transmit Record</span>
+                                <span className="text-[11px] font-black uppercase tracking-widest">Transmit Record</span>
                             </>
                         )}
                     </button>

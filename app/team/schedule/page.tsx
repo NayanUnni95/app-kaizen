@@ -14,7 +14,7 @@ export default async function TeamSchedulePage() {
         { id: '8', time: '09:30 PM onwards', name: 'Overnight Hack', startsAt: '2026-02-21T21:30:00+05:30', endsAt: '2026-02-22T09:00:00+05:30', tag: 'Overnight' },
 
         // Day 2 — 22 Feb 2026
-        { id: '9', time: '06:00 AM', name: 'Second Evaluation', startsAt: '2026-02-22T06:00:00+05:30', tag: 'Review' },
+        { id: '9', time: '01:00 AM', name: 'Second Evaluation', startsAt: '2026-02-22T01:00:00+05:30', tag: 'Review' },
         { id: '10', time: '09:00 AM', name: 'Breakfast & Tea', startsAt: '2026-02-22T09:00:00+05:30', tag: 'Refresh' },
         { id: '11', time: '10:30 AM', name: 'HACKATHON ENDS', startsAt: '2026-02-22T10:30:00+05:30', tag: 'Finish' },
         { id: '12', time: '10:30 AM – 02:00 PM', name: 'Project Presentations', startsAt: '2026-02-22T10:30:00+05:30', endsAt: '2026-02-22T14:00:00+05:30', tag: 'Demo' },
