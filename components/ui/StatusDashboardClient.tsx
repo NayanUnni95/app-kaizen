@@ -98,10 +98,10 @@ export function StatusDashboardClient({ initialTeams }: { initialTeams: Team[] }
 
                     <div className="flex items-center gap-10">
                         <div className="flex flex-col items-end">
-                            <span className="text-[9px] font-bold text-white/30 uppercase tracking-[0.3em] mb-1">Event Runtime</span>
+                            <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.3em] mb-1">Event Runtime</span>
                             <div className="flex items-center gap-4">
-                                <span className="text-xl font-black font-mono tracking-tighter tabular-nums">{progressPct}%</span>
-                                <div className="w-32 h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                <span className="text-3xl font-black font-mono tracking-tighter tabular-nums">{progressPct}%</span>
+                                <div className="w-32 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
                                     <div
                                         className="h-full bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)] transition-all duration-1000 ease-out"
                                         style={{ width: `${progressPct}%` }}
@@ -112,10 +112,10 @@ export function StatusDashboardClient({ initialTeams }: { initialTeams: Team[] }
                     </div>
                 </header>
 
-                <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center overflow-hidden">
-                    {/* Left & Time Section (Cols 1-7) - Expanded */}
-                    <div className="lg:col-span-7 space-y-12 flex flex-col justify-center">
-                        <div className="flex flex-col xl:flex-row items-center gap-10">
+                <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center overflow-hidden">
+                    {/* Left & Time Section (Cols 1-8) - Further Expanded */}
+                    <div className="lg:col-span-8 space-y-12 flex flex-col justify-center">
+                        <div className="flex flex-col xl:flex-row items-center gap-12">
                             {/* Larger Analog Clock */}
                             <div className="relative shrink-0">
                                 <div className="absolute -inset-12 bg-indigo-500/[0.04] blur-[80px] rounded-full" />
@@ -167,44 +167,47 @@ export function StatusDashboardClient({ initialTeams }: { initialTeams: Team[] }
                                         <Clock className="w-4 h-4 text-white/20" />
                                         <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.5em]">Current Time</span>
                                     </div>
-                                    <div className="text-7xl font-black font-mono tracking-tighter text-white/95 leading-none">
-                                        {currentTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
+                                    <div className="text-7xl font-black font-mono tracking-tighter text-white/95 leading-none flex items-baseline gap-4">
+                                        <span>{currentTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).split(' ')[0]}</span>
+                                        <span className="text-3xl text-white/40 uppercase font-bold tracking-widest">{currentTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).split(' ')[1]}</span>
                                     </div>
                                 </div>
 
                                 <div className="space-y-6">
-                                    <div className="flex items-center gap-4">
-                                        <Timer className="w-4 h-4 text-indigo-400/60" />
-                                        <span className="text-[10px] font-bold text-indigo-400/60 uppercase tracking-[0.5em]">Time Remaining</span>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <Timer className="w-4 h-4 text-indigo-400/60" />
+                                            <span className="text-[12px] font-bold text-indigo-400/60 uppercase tracking-[0.5em]">Time Remaining</span>
+                                        </div>
+                                        <div className="flex gap-x-12">
+                                            {[
+                                                { val: t.hours, label: 'HRS' },
+                                                { val: t.minutes, label: 'MIN' },
+                                                { val: t.seconds, label: 'SEC' }
+                                            ].map((unit, i) => (
+                                                <div key={i} className="flex flex-col min-w-[140px]">
+                                                    <span className="text-9xl font-black tracking-tightest tabular-nums text-indigo-500 leading-none">
+                                                        {unit.val.toString().padStart(2, '0')}
+                                                    </span>
+                                                    <span className="text-[15px] font-bold text-white/20 uppercase tracking-[0.5em] mt-3">{unit.label}</span>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-10">
-                                        {[
-                                            { val: t.hours, label: 'HRS' },
-                                            { val: t.minutes, label: 'MIN' },
-                                            { val: t.seconds, label: 'SEC' }
-                                        ].map((unit, i) => (
-                                            <div key={i} className="flex flex-col min-w-[100px]">
-                                                <span className="text-8xl font-black tracking-tighter tabular-nums text-indigo-500 leading-none">
-                                                    {unit.val.toString().padStart(2, '0')}
-                                                </span>
-                                                <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.5em] mt-3">{unit.label}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
 
-                                <div className="inline-flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">
-                                        Deadline: 10:00 AMIST, Feb 22
-                                    </span>
+                                    <div className="inline-flex items-center mt-5 gap-4 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                        <span className="text-[12px] font-bold text-white/40 uppercase tracking-[0.3em]">
+                                            Deadline: 10:00 AM, Feb 22
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Team Spotlight Section (Cols 8-12) - Narrower */}
-                    <div className="lg:col-span-5 flex items-center h-full py-4">
+                    {/* Team Spotlight Section (Cols 9-12) - More Focused */}
+                    <div className="lg:col-span-4 flex items-center h-full py-4">
                         <div className={`w-full h-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-[0.98] blur-xl translate-y-4'}`}>
                             {currentTeam ? (
                                 <div className="relative group h-full">
@@ -228,24 +231,24 @@ export function StatusDashboardClient({ initialTeams }: { initialTeams: Team[] }
                                             </div>
                                         </div>
 
-                                        {/* Members Grid - More Compact Scrollable if needed */}
-                                        <div className="flex-1 min-h-0 overflow-y-auto pr-2 custom-scrollbar">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* Members Grid - Optimized for 4 members */}
+                                        <div className="flex-1 flex flex-col justify-center min-h-0">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                                 {currentTeam.members.map((member, idx) => (
-                                                    <div key={member.id} className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group/member">
-                                                        <div className="w-10 h-10 shrink-0 rounded-lg bg-white/5 flex items-center justify-center text-white/40 font-mono text-xs group-hover/member:bg-indigo-500 group-hover/member:text-white transition-colors">
+                                                    <div key={member.id} className="flex items-center gap-4 p-5 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all group/member">
+                                                        <div className="w-12 h-12 shrink-0 rounded-xl bg-white/5 flex items-center justify-center text-white/40 font-mono text-xs group-hover/member:bg-indigo-500 group-hover/member:text-white transition-colors border border-white/5">
                                                             {idx + 1}
                                                         </div>
-                                                        <div className="space-y-0.5 truncate">
-                                                            <div className="text-sm font-bold uppercase tracking-tight text-white/90 truncate">{member.name}</div>
-                                                            <div className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em]">{member.role || "Team Member"}</div>
+                                                        <div className="space-y-1 truncate">
+                                                            <div className="text-[15px] font-bold uppercase tracking-tight text-white/90 truncate leading-tight">{member.name}</div>
+                                                            <div className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em]">{member.role || "Innovator"}</div>
                                                         </div>
                                                     </div>
                                                 ))}
                                                 {currentTeam.members.length === 0 && (
-                                                    <div className="col-span-full py-10 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl text-white/20">
-                                                        <User className="w-6 h-6 mb-3 stroke-1" />
-                                                        <span className="text-[9px] font-bold uppercase tracking-[0.3em]">No registered members</span>
+                                                    <div className="col-span-full py-16 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-3xl text-white/20">
+                                                        <User className="w-8 h-8 mb-4 stroke-1 opacity-20" />
+                                                        <span className="text-[10px] font-bold uppercase tracking-[0.4em]">No Members Assigned</span>
                                                     </div>
                                                 )}
                                             </div>
@@ -285,8 +288,8 @@ export function StatusDashboardClient({ initialTeams }: { initialTeams: Team[] }
                 <footer className="shrink-0 flex items-center justify-between py-2 text-white/20 border-t border-white/5">
                     <div className="flex items-center gap-4">
                         <span className="text-[9px] font-bold uppercase tracking-[0.3em]">Official Status Dashboard</span>
-                        <div className="w-4 h-[1px] bg-white/10" />
-                        <span className="text-[9px] font-bold uppercase tracking-[0.3em]">Control Node Active</span>
+                        {/* <div className="w-4 h-[1px] bg-white/10" /> */}
+                        {/* <span className="text-[9px] font-bold uppercase tracking-[0.3em]">Control Node Active</span> */}
                     </div>
                     <div className="text-[9px] font-bold uppercase tracking-[0.4em]">
                         POWERED BY <span className="text-white/40">KAIZEN 26 Team</span>
