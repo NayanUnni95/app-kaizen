@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { DataTable } from "@/components/hackathon/DataTable"
-import { CheckCircle2, XCircle, Clock, ExternalLink, MessageSquare } from "lucide-react"
+import { CheckCircle2, XCircle, Clock, ExternalLink, MessageSquare, Github, Eye } from "lucide-react"
 import { toast } from "sonner"
 import { StatusBadge } from "@/components/hackathon/StatusBadge"
 
 export default function SubmissionsPage() {
     const [submissions, setSubmissions] = useState<any[]>([])
+    const [projectSubmissions, setProjectSubmissions] = useState<any[]>([])
     const [events, setEvents] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [selectedEventId, setSelectedEventId] = useState<string>("all")
@@ -20,6 +21,7 @@ export default function SubmissionsPage() {
 
     useEffect(() => {
         fetchSubmissions()
+        fetchProjectSubmissions()
         fetchEvents()
     }, [])
 
@@ -34,6 +36,17 @@ export default function SubmissionsPage() {
             toast.error("Could not load submissions")
         } finally {
             setIsLoading(false)
+        }
+    }
+
+    const fetchProjectSubmissions = async () => {
+        try {
+            const res = await fetch("/api/hackathon/admin/project-submissions")
+            if (!res.ok) throw new Error("Failed")
+            const data = await res.json()
+            setProjectSubmissions(data)
+        } catch {
+            console.error("Could not load project submissions")
         }
     }
 
@@ -64,49 +77,134 @@ export default function SubmissionsPage() {
         }
     }
 
-    const columns = [
-        {
-            header: "Team/Event",
-            accessor: (sub: any) => (
-                <div>
-                    <p className="font-bold text-white">{sub.team.name}</p>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">{sub.event.name}</p>
-                </div>
-            )
-        },
-        {
-            header: "Milestone",
-            accessor: (sub: any) => (
-                <div className="flex items-center gap-2">
-                    <span className="text-zinc-400 font-medium">{sub.checkpoint.title}</span>
-                </div>
-            )
-        },
-        {
-            header: "Status",
-            accessor: (sub: any) => (
-                <StatusBadge status={sub.status} />
-            )
-        },
-        {
-            header: "Execution Log",
-            accessor: (sub: any) => {
-                const items = (sub.submissionData as any)?.items || []
-                return (
-                    <button
-                        onClick={() => {
-                            setViewingSub(sub)
-                            setIsViewModalOpen(true)
-                        }}
-                        className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
-                    >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        {items.length} {items.length === 1 ? 'Entry' : 'Entries'}
-                    </button>
-                )
-            }
+    const getColumns = () => {
+        if (mainFilter === "checkpoint") {
+            return [
+                {
+                    header: "Team/Event",
+                    accessor: (sub: any) => (
+                        <div>
+                            <p className="font-bold text-white">{sub.team.name}</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">{sub.event.name}</p>
+                        </div>
+                    )
+                },
+                {
+                    header: "Milestone",
+                    accessor: (sub: any) => (
+                        <div className="flex items-center gap-2">
+                            <span className="text-zinc-400 font-medium">{sub.checkpoint.title}</span>
+                        </div>
+                    )
+                },
+                {
+                    header: "Status",
+                    accessor: (sub: any) => (
+                        <StatusBadge status={sub.status} />
+                    )
+                },
+                {
+                    header: "Execution Log",
+                    accessor: (sub: any) => {
+                        const items = (sub.submissionData as any)?.items || []
+                        return (
+                            <button
+                                onClick={() => {
+                                    setViewingSub(sub)
+                                    setIsViewModalOpen(true)
+                                }}
+                                className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
+                            >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                                {items.length} {items.length === 1 ? 'Entry' : 'Entries'}
+                            </button>
+                        )
+                    }
+                }
+            ]
+        } else {
+            return [
+                {
+                    header: "Team",
+                    accessor: (sub: any) => (
+                        <div>
+                            <p className="font-bold text-white">{sub.team.name}</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-black">{sub.event.name}</p>
+                        </div>
+                    )
+                },
+                {
+                    header: "Project Details",
+                    accessor: (sub: any) => (
+                        <div>
+                            <p className="font-bold text-zinc-300">{sub.title}</p>
+                            <p className="text-xs text-zinc-500 truncate max-w-xs">{sub.description}</p>
+                        </div>
+                    )
+                },
+                {
+                    header: "Uplinks",
+                    accessor: (sub: any) => (
+                        <div className="flex items-center gap-3">
+                            {sub.repoUrl && (
+                                <a href={sub.repoUrl} target="_blank" className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors text-zinc-400 hover:text-white">
+                                    <Github className="w-4 h-4" />
+                                </a>
+                            )}
+                            {sub.demoUrl && (
+                                <a href={sub.demoUrl} target="_blank" className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors text-zinc-400 hover:text-white">
+                                    <ExternalLink className="w-4 h-4" />
+                                </a>
+                            )}
+                            <button
+                                onClick={() => {
+                                    setViewingSub({ ...sub, _isProject: true })
+                                    setIsViewModalOpen(true)
+                                }}
+                                className="p-2 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-500 hover:text-white transition-all"
+                                title="View Details"
+                            >
+                                <Eye className="w-4 h-4" />
+                            </button>
+                        </div>
+                    )
+                },
+                {
+                    header: "Version",
+                    accessor: (sub: any) => (
+                        <span className="px-2 py-1 bg-indigo-500/10 text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-md border border-indigo-500/20">
+                            v{sub.version}
+                        </span>
+                    )
+                }
+            ]
         }
-    ]
+    }
+
+    const filteredData = mainFilter === "checkpoint"
+        ? submissions.filter(s => {
+            const matchesEvent = selectedEventId === "all" ? true : s.eventId === selectedEventId
+            const matchesSearch = s.team.name.toLowerCase().includes(search.toLowerCase()) ||
+                s.checkpoint.title.toLowerCase().includes(search.toLowerCase())
+
+            // Filter out presentation/final from checkpoints
+            const isPresentation = s.checkpoint.title.toLowerCase().includes("presentation") || s.checkpoint.title.toLowerCase().includes("submission")
+            if (isPresentation) return false
+
+            let matchesSub = true
+            const order = s.checkpoint.order
+            if (subFilter === "1") matchesSub = order === 1
+            else if (subFilter === "2") matchesSub = order === 2
+            else if (subFilter === "other") matchesSub = order > 2
+
+            return matchesEvent && matchesSearch && matchesSub
+        })
+        : projectSubmissions.filter(s => {
+            const matchesEvent = selectedEventId === "all" ? true : s.eventId === selectedEventId
+            const matchesSearch = s.team.name.toLowerCase().includes(search.toLowerCase()) ||
+                s.title.toLowerCase().includes(search.toLowerCase())
+            return matchesEvent && matchesSearch
+        })
 
     return (
         <div className="space-y-10">
@@ -116,25 +214,8 @@ export default function SubmissionsPage() {
             </header>
 
             <DataTable
-                columns={columns}
-                data={submissions.filter(s => {
-                    const matchesEvent = selectedEventId === "all" ? true : s.eventId === selectedEventId
-                    const matchesSearch = s.team.name.toLowerCase().includes(search.toLowerCase()) ||
-                        s.checkpoint.title.toLowerCase().includes(search.toLowerCase())
-
-                    const isPresentation = s.checkpoint.title.toLowerCase().includes("presentation") || s.checkpoint.title.toLowerCase().includes("submission")
-                    const matchesMain = mainFilter === "presentation" ? isPresentation : !isPresentation
-
-                    let matchesSub = true
-                    if (mainFilter === "checkpoint") {
-                        const order = s.checkpoint.order
-                        if (subFilter === "1") matchesSub = order === 1
-                        else if (subFilter === "2") matchesSub = order === 2
-                        else if (subFilter === "other") matchesSub = order > 2
-                    }
-
-                    return matchesEvent && matchesSearch && matchesMain && matchesSub
-                })}
+                columns={getColumns()}
+                data={filteredData}
                 isLoading={isLoading}
                 searchPlaceholder="Search submissions..."
                 searchValue={search}
@@ -185,7 +266,7 @@ export default function SubmissionsPage() {
                         </select>
                     </div>
                 }
-                actions={(sub: any) => (
+                actions={mainFilter === "checkpoint" ? (sub: any) => (
                     <div className="flex items-center justify-end gap-2">
                         <button
                             onClick={() => handleReview(sub.id, 'REJECTED')}
@@ -202,7 +283,7 @@ export default function SubmissionsPage() {
                             <CheckCircle2 className="w-5 h-5" />
                         </button>
                     </div>
-                )}
+                ) : undefined}
             />
 
             {/* View Modal */}
@@ -214,7 +295,7 @@ export default function SubmissionsPage() {
                                 <div>
                                     <h2 className="text-2xl font-black tracking-tight text-white">{viewingSub.team.name}</h2>
                                     <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest leading-loose mt-1">
-                                        {viewingSub.event.name} &bull; {viewingSub.checkpoint.title}
+                                        {viewingSub.event.name} &bull; {viewingSub?._isProject ? "Project Submission" : viewingSub.checkpoint.title}
                                     </p>
                                 </div>
                                 <button onClick={() => setIsViewModalOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
@@ -222,39 +303,82 @@ export default function SubmissionsPage() {
                                 </button>
                             </div>
 
-                            <div className="space-y-4">
-                                <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Execution Log Data</h3>
-                                <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
-                                    {((viewingSub.submissionData as any)?.items || []).map((item: string, idx: number) => (
-                                        <div key={idx} className="p-4 rounded-xl bg-white/5 border border-white/5 flex gap-4 items-start">
-                                            <span className="w-6 h-6 rounded-md bg-zinc-900 flex items-center justify-center text-[10px] font-black text-zinc-500 shrink-0 mt-0.5">{idx + 1}</span>
-                                            <p className="text-sm font-medium text-zinc-300 leading-relaxed">{item}</p>
+                            {viewingSub?._isProject ? (
+                                <div className="space-y-6">
+                                    <div className="space-y-4">
+                                        <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Project Title</h3>
+                                        <p className="text-xl font-bold text-white uppercase tracking-tight">{viewingSub.title}</p>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Project Description</h3>
+                                        <p className="text-sm text-zinc-400 leading-relaxed font-medium">{viewingSub.description || "No description provided."}</p>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-3">
+                                            <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Source Code</h3>
+                                            {viewingSub.repoUrl ? (
+                                                <a href={viewingSub.repoUrl} target="_blank" className="flex items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/5 text-sm font-bold text-blue-400 hover:text-blue-300 transition-colors">
+                                                    <Github className="w-4 h-4" /> Repository
+                                                </a>
+                                            ) : (
+                                                <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-xs text-zinc-600 font-bold uppercase tracking-widest">Not Provided</div>
+                                            )}
                                         </div>
-                                    ))}
+                                        <div className="space-y-3">
+                                            <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Demo / PPT</h3>
+                                            {viewingSub.demoUrl ? (
+                                                <a href={viewingSub.demoUrl} target="_blank" className="flex items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/5 text-sm font-bold text-indigo-400 hover:text-indigo-300 transition-colors">
+                                                    <ExternalLink className="w-4 h-4" /> View Site / Slides
+                                                </a>
+                                            ) : (
+                                                <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-xs text-zinc-600 font-bold uppercase tracking-widest">Not Provided</div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Execution Log Data</h3>
+                                    <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+                                        {((viewingSub.submissionData as any)?.items || []).map((item: string, idx: number) => (
+                                            <div key={idx} className="p-4 rounded-xl bg-white/5 border border-white/5 flex gap-4 items-start">
+                                                <span className="w-6 h-6 rounded-md bg-zinc-900 flex items-center justify-center text-[10px] font-black text-zinc-500 shrink-0 mt-0.5">{idx + 1}</span>
+                                                <p className="text-sm font-medium text-zinc-300 leading-relaxed">{item}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="flex items-center justify-between pt-4 border-t border-white/5">
                                 <div className="flex items-center gap-3">
-                                    <StatusBadge status={viewingSub.status} />
+                                    {!viewingSub?._isProject && <StatusBadge status={viewingSub.status} />}
                                     <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
-                                        Last Updated: {new Date(viewingSub.updatedAt).toLocaleString()}
+                                        {viewingSub?._isProject ? `Version v${viewingSub.version}` : 'Last Updated'}: {new Date(viewingSub.updatedAt || viewingSub.submittedAt).toLocaleString()}
                                     </span>
                                 </div>
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() => handleReview(viewingSub.id, 'REJECTED')}
-                                        className="h-10 px-6 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
-                                    >
-                                        Reject
+                                {viewingSub?._isProject ? (
+                                    <button onClick={() => setIsViewModalOpen(false)} className="h-10 px-8 bg-white text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all">
+                                        Close Terminal
                                     </button>
-                                    <button
-                                        onClick={() => handleReview(viewingSub.id, 'APPROVED')}
-                                        className="h-10 px-6 bg-green-500/10 text-green-400 rounded-xl hover:bg-green-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
-                                    >
-                                        Approve
-                                    </button>
-                                </div>
+                                ) : (
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => handleReview(viewingSub.id, 'REJECTED')}
+                                            className="h-10 px-6 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+                                        >
+                                            Reject
+                                        </button>
+                                        <button
+                                            onClick={() => handleReview(viewingSub.id, 'APPROVED')}
+                                            className="h-10 px-6 bg-green-500/10 text-green-400 rounded-xl hover:bg-green-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+                                        >
+                                            Approve
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

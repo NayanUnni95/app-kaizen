@@ -164,6 +164,18 @@ export default function EventsPage() {
                     </span>
                 )
             }
+        },
+        {
+            header: "Submissions",
+            accessor: (event: any) => {
+                const isOpen = (event.settings as any)?.is_submission_enabled ?? false
+                return (
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${isOpen ? 'bg-indigo-500/10 text-indigo-400' : 'bg-zinc-800 text-zinc-500'
+                        }`}>
+                        {isOpen ? 'OPEN' : 'LOCKED'}
+                    </span>
+                )
+            }
         }
     ]
 

@@ -7,6 +7,7 @@ import {
     Phone, Linkedin, ExternalLink, Upload, Github, Info,
     Terminal, Activity, Zap
 } from "lucide-react"
+import { ProjectSubmissionForm } from "@/components/hackathon/ProjectSubmissionForm"
 // import { Activity } from "react"
 
 const STATUS_BADGE_MAP: Record<string, { label: string, cls: string }> = {
@@ -31,7 +32,9 @@ export default async function TeamProfilePage() {
     )
 
     const isActive = team.isActive
-    const statusKey = isActive ? "active" : "paused"
+    const meta = team.meta as any || {}
+    const hasSubmitted = meta.hasSubmittedProject
+    const statusKey = hasSubmitted ? "submitted" : (isActive ? "active" : "paused")
     const statusBadge = STATUS_BADGE_MAP[statusKey]
 
     return (
@@ -192,54 +195,15 @@ export default async function TeamProfilePage() {
 
                 {/* ─── Mission Submission ───────────────────────── */}
                 <section className="space-y-8 kz-animate-slide-up px-2" style={{ animationDelay: "300ms" }}>
-                    <div className="border-b border-black/5 dark:border-white/10 pb-4">
-                        <h2 className="font-heading font-black text-2xl text-slate-900 dark:text-white tracking-tight uppercase">Project Pipeline</h2>
+                    <div className="border-b border-black/5 dark:border-white/10 pb-4 text-left">
+                        <h2 className="font-heading font-black text-2xl text-slate-900 dark:text-white tracking-tight uppercase">Project Submission</h2>
                         <p className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Final Deployment Link</p>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
                         {/* Pipeline Content */}
-                        <div className="lg:col-span-3 kz-card-rich p-8 bg-black/[0.02] dark:bg-white/[0.02] border-black/5 dark:border-white/5">
-                            <div className="flex items-start gap-4 p-5 bg-amber-500/10 rounded-2xl border border-amber-500/20 mb-8">
-                                <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-                                <div>
-                                    <p className="text-xs font-black text-amber-400 uppercase tracking-widest leading-none mb-2">Submissions currently locked</p>
-                                    <p className="text-[11px] text-amber-400/60 font-bold leading-relaxed">
-                                        The project pipeline is not yet synchronized for deployment.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="space-y-6 opacity-40 select-none">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="space-y-1.5">
-                                        <label className="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em]">Source Code Repository</label>
-                                        <div className="relative">
-                                            <Github className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-700" />
-                                            <div className="w-full h-12 pl-11 pr-4 rounded-xl border border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5 flex items-center text-xs font-bold text-slate-500 dark:text-slate-700">
-                                                https://github.com/squad-alpha/kaizen...
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-1.5">
-                                        <label className="text-[9px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em]">Deployment Summary</label>
-                                        <div className="w-full h-12 p-3 rounded-xl border border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5 text-xs font-bold text-slate-500 dark:text-slate-700 truncate leading-none flex items-center">
-                                            Executive summary of the mission outcome...
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="border-2 border-dashed border-black/5 dark:border-white/5 rounded-2xl p-8 text-center bg-black/5 dark:bg-white/[0.01]">
-                                    <Upload className="w-8 h-8 text-slate-200 dark:text-slate-800 mx-auto mb-3" />
-                                    <p className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Uplink Assets</p>
-                                    <p className="text-[8px] text-slate-500 font-bold mt-1 uppercase">PPTX | PDF | MP4 [MAX 50MB]</p>
-                                </div>
-
-                                <button className="w-full py-4 rounded-xl bg-black/5 dark:bg-white/5 text-slate-400 dark:text-slate-700 text-[11px] font-black uppercase tracking-[0.2em] cursor-not-allowed border border-black/5 dark:border-white/5">
-                                    EXECUTE DEPLOYMENT
-                                </button>
-                            </div>
+                        <div className="lg:col-span-3 kz-card-rich p-8 bg-black/[0.02] dark:bg-white/[0.02] border-black/5 dark:border-white/5 text-left">
+                            <ProjectSubmissionForm />
                         </div>
 
                         {/* Security Actions */}

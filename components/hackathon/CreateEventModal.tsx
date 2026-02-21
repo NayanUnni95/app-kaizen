@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X, Calendar, Type, FileText, Users, Loader2, Clock, Eye, EyeOff, Hash } from "lucide-react"
+import { X, Calendar, Type, FileText, Users, Loader2, Clock, Eye, EyeOff, Hash, Send } from "lucide-react"
 import { toast } from "sonner"
 
 interface CreateEventModalProps {
@@ -19,6 +19,8 @@ export function CreateEventModal({ isOpen, onClose, onSuccess, event }: CreateEv
     const [maxTeamSize, setMaxTeamSize] = useState(4)
     const [minTeamSize, setMinTeamSize] = useState(1)
     const [isPublic, setIsPublic] = useState(true)
+    const [isSubmissionEnabled, setIsSubmissionEnabled] = useState(false)
+    const [isResubmissionAllowed, setIsResubmissionAllowed] = useState(true)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
@@ -31,6 +33,8 @@ export function CreateEventModal({ isOpen, onClose, onSuccess, event }: CreateEv
                 setMaxTeamSize(event.maxTeamSize ?? 4)
                 setMinTeamSize(event.minTeamSize ?? 1)
                 setIsPublic(event.isPublic ?? true)
+                setIsSubmissionEnabled((event.settings as any)?.is_submission_enabled ?? false)
+                setIsResubmissionAllowed((event.settings as any)?.resubmission_allowed ?? true)
             } else {
                 setName("")
                 setDescription("")
@@ -39,6 +43,8 @@ export function CreateEventModal({ isOpen, onClose, onSuccess, event }: CreateEv
                 setMaxTeamSize(4)
                 setMinTeamSize(1)
                 setIsPublic(true)
+                setIsSubmissionEnabled(false)
+                setIsResubmissionAllowed(true)
             }
         }
     }, [isOpen, event])
@@ -59,6 +65,11 @@ export function CreateEventModal({ isOpen, onClose, onSuccess, event }: CreateEv
                 maxTeamSize: Number(maxTeamSize),
                 minTeamSize: Number(minTeamSize),
                 isPublic,
+                settings: {
+                    ...(event?.settings as any || {}),
+                    is_submission_enabled: isSubmissionEnabled,
+                    resubmission_allowed: isResubmissionAllowed
+                }
             }
 
             if (isEditing) {
@@ -193,12 +204,36 @@ export function CreateEventModal({ isOpen, onClose, onSuccess, event }: CreateEv
                             type="button"
                             onClick={() => setIsPublic(!isPublic)}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all ${isPublic
-                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                                    : 'bg-zinc-900 border-white/5 text-zinc-500'
+                                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                                : 'bg-zinc-900 border-white/5 text-zinc-500'
                                 }`}
                         >
                             {isPublic ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                             {isPublic ? "Public Event" : "Private Event"}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setIsSubmissionEnabled(!isSubmissionEnabled)}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all ${isSubmissionEnabled
+                                ? 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+                                : 'bg-zinc-900 border-white/5 text-zinc-500'
+                                }`}
+                        >
+                            <Send className="w-3.5 h-3.5" />
+                            {isSubmissionEnabled ? "Submissions Open" : "Submissions Closed"}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setIsResubmissionAllowed(!isResubmissionAllowed)}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all ${isResubmissionAllowed
+                                ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400'
+                                : 'bg-zinc-900 border-white/5 text-zinc-500'
+                                }`}
+                        >
+                            <Calendar className="w-3.5 h-3.5" />
+                            {isResubmissionAllowed ? "Resubmission ON" : "Resubmission OFF"}
                         </button>
                     </div>
 

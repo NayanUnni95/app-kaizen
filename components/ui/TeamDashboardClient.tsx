@@ -290,6 +290,7 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                     <div className="flex flex-col gap-5">
                         {[
                             { href: "/team/checkpoints", icon: CheckSquare, label: "Milestones", desc: "Your Progress", color: "indigo" },
+                            { href: "/team/profile", icon: Layout, label: "Submission", desc: "Project Uplink", color: "indigo" },
                             { href: "/team/schedule", icon: Calendar, label: "Schedule", desc: "Event Timeline", color: "slate" },
                             { href: "/team/general", icon: Layout, label: "Overview", desc: "General Info", color: "indigo" },
                         ].map((item, i) => (
