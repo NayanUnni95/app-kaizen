@@ -51,17 +51,19 @@ export default function AdminNotificationsPage() {
 
         try {
             const isEditing = !!editingId
+            const payload: any = {
+                title,
+                body,
+                type,
+                category,
+                eventId: targetEvent
+            }
+            if (isEditing) payload.id = editingId
+
             const res = await fetch("/api/hackathon/admin/notifications", {
                 method: isEditing ? "PATCH" : "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    id: editingId,
-                    title,
-                    body,
-                    type,
-                    category,
-                    eventId: targetEvent
-                })
+                body: JSON.stringify(payload)
             })
             if (!res.ok) throw new Error(isEditing ? "Update failed" : "Broadcast failed")
             toast.success(isEditing ? "Notification updated!" : "Notification broadcasted successfully!")
