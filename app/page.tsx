@@ -78,8 +78,11 @@ export default async function Home() {
                 </div>
             </main>
 
-            <footer className="absolute bottom-8 text-slate-700 text-[10px] font-black tracking-[0.3em] uppercase">
-                © 2026 Sathwa • Engineering Excellence
+            <footer className="absolute bottom-8 left-0 right-0 text-center space-y-2">
+                <p className="text-zinc-600 text-sm">© 2026 Sathwa, College of Engineering Muttathara.</p>
+                <p className="text-zinc-500 text-[10px] font-bold capitalize tracking-widest">
+                    Platform developed by <a href="https://github.com/NayanUnni95" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors underline decoration-zinc-700 underline-offset-4">Nayan</a> and <a href="https://www.linkedin.com/in/clifincletus" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors underline decoration-zinc-700 underline-offset-4">Clifin</a>
+                </p>
             </footer>
         </div>
     )

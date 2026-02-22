@@ -58,6 +58,13 @@ export default async function TeamLayout({
                         {children}
                     </main>
                 </div>
+
+                <footer className="py-8 text-center space-y-2">
+                    <p className="text-zinc-600 text-sm">© 2026 Sathwa, College of Engineering Muttathara.</p>
+                    <p className="text-zinc-500 text-[10px] font-bold capitalize tracking-widest">
+                        Platform developed by <a href="https://github.com/NayanUnni95" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors underline decoration-zinc-700 underline-offset-4">Nayan</a> and <a href="https://www.linkedin.com/in/clifincletus" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors underline decoration-zinc-700 underline-offset-4">Clifin</a>
+                    </p>
+                </footer>
             </div>
 
             {/* Bottom nav — mobile only */}
