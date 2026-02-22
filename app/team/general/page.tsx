@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { getTeamBySession } from "@/lib/hackathon/teams"
 import { redirect } from "next/navigation"
 import { Layout, Users, Info, MessageSquare, ChevronRight, ShieldCheck, Heart } from "lucide-react"
+import { FeedbackModal } from "@/components/FeedbackModal"
 
 export default async function GeneralPage() {
     const session = await auth()
@@ -16,7 +17,7 @@ export default async function GeneralPage() {
         where: { team: { eventId: team?.eventId } }
     })
 
-    const isFeedbackUnlocked = false // Admin controlled
+    const isFeedbackUnlocked = true // Admin controlled
 
     return (
         <div className="max-w-none mx-auto space-y-12 pb-20 pt-4 px-4 overflow-hidden">
@@ -109,18 +110,20 @@ export default async function GeneralPage() {
                             <Heart className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
                             Insights
                         </h2>
-                        <div className="kz-card-rich p-8 text-center space-y-4 bg-black/5 dark:bg-white/5 border-black/5 dark:border-white/10">
-                            <div className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center mx-auto text-slate-500 border border-black/5 dark:border-white/5">
-                                <MessageSquare className="w-5 h-5" />
+                        <FeedbackModal>
+                            <div className="kz-card-rich p-8 text-center space-y-4 bg-black/5 dark:bg-white/5 border-black/5 dark:border-white/10 cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 transition-all">
+                                <div className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center mx-auto text-slate-500 border border-black/5 dark:border-white/5">
+                                    <MessageSquare className="w-5 h-5" />
+                                </div>
+                                <h3 className="font-mono-tech font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-widest">Feedback Terminal</h3>
+                                <p className="text-[10px] font-mono-tech font-bold text-slate-500 leading-relaxed uppercase tracking-widest">
+                                    {isFeedbackUnlocked ? 'CHANNEL_OPEN' : 'ENCRYPTION_ACTIVE'}
+                                </p>
+                                <button className="w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black text-[10px] font-bold uppercase tracking-widest">
+                                    Launch
+                                </button>
                             </div>
-                            <h3 className="font-mono-tech font-bold text-slate-900 dark:text-white text-[11px] uppercase tracking-widest">Feedback Terminal</h3>
-                            <p className="text-[10px] font-mono-tech font-bold text-slate-500 leading-relaxed uppercase tracking-widest">
-                                {isFeedbackUnlocked ? 'CHANNEL_OPEN' : 'ENCRYPTION_ACTIVE'}
-                            </p>
-                            <button disabled={!isFeedbackUnlocked} className="w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black text-[10px] font-bold uppercase tracking-widest disabled:opacity-20">
-                                Launch
-                            </button>
-                        </div>
+                        </FeedbackModal>
                     </div>
                 </aside>
             </div>

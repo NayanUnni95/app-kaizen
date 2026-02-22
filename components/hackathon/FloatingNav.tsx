@@ -13,6 +13,7 @@ import {
     LogOut,
     Menu,
     X,
+    MessageSquare,
     FileText
 } from "lucide-react"
 import { signOut } from "next-auth/react"
@@ -47,6 +48,7 @@ export function FloatingNav({ role }: FloatingNavProps) {
         { name: "Subs", href: "/admin/submissions", icon: Upload },
         { name: "PS", href: "/admin/problem-statements", icon: FileText },
         { name: "Alerts", href: "/admin/notifications", icon: Bell },
+        { name: "Feedback", href: "/admin/feedback", icon: MessageSquare },
     ]
 
     const organizerItems: NavItem[] = [

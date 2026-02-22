@@ -4,15 +4,71 @@ import { useState, useEffect, useRef } from "react"
 import { Play, Pause, RotateCcw, Timer, AlertCircle, X, ChevronUp, ChevronDown } from "lucide-react"
 
 export default function TimerPage() {
-    const [maxTime, setMaxTime] = useState(180) // Default 3 minutes
+    const [maxTime, setMaxTime] = useState(180)
     const [timeLeft, setTimeLeft] = useState(maxTime)
     const [isActive, setIsActive] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [halfTimeReached, setHalfTimeReached] = useState(false)
     const [inputMinutes, setInputMinutes] = useState(3)
     const [inputSeconds, setInputSeconds] = useState(0)
+    const [isLoaded, setIsLoaded] = useState(false)
 
     const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+    // Load from Local Storage
+    useEffect(() => {
+        const saved = localStorage.getItem("kaizen_timer_state")
+        if (saved) {
+            try {
+                const state = JSON.parse(saved)
+                setMaxTime(state.maxTime)
+                setInputMinutes(state.inputMinutes)
+                setInputSeconds(state.inputSeconds)
+                setHalfTimeReached(state.halfTimeReached)
+
+                if (state.isActive) {
+                    const elapsedSinceLastUpdate = Math.floor((Date.now() - state.lastUpdated) / 1000)
+                    const remaining = Math.max(0, state.timeLeft - elapsedSinceLastUpdate)
+
+                    // If it was supposed to stop at half time while we were away
+                    const halfPoint = Math.floor(state.maxTime / 2)
+                    if (!state.halfTimeReached && state.timeLeft > halfPoint && remaining <= halfPoint) {
+                        setTimeLeft(halfPoint)
+                        setIsActive(false)
+                        setHalfTimeReached(true)
+                    } else if (remaining <= 0) {
+                        setTimeLeft(0)
+                        setIsActive(false)
+                        setShowAlert(true)
+                    } else {
+                        setTimeLeft(remaining)
+                        setIsActive(true)
+                    }
+                } else {
+                    setTimeLeft(state.timeLeft)
+                    setIsActive(false)
+                }
+            } catch (e) {
+                console.error("Failed to restore timer state", e)
+            }
+        }
+        setIsLoaded(true)
+    }, [])
+
+    // Save to Local Storage
+    useEffect(() => {
+        if (!isLoaded) return
+        const state = {
+            maxTime,
+            timeLeft,
+            isActive,
+            halfTimeReached,
+            inputMinutes,
+            inputSeconds,
+            lastUpdated: Date.now()
+        }
+        localStorage.setItem("kaizen_timer_state", JSON.stringify(state))
+    }, [maxTime, timeLeft, isActive, halfTimeReached, inputMinutes, inputSeconds, isLoaded])
 
     const playBeep = () => {
         try {

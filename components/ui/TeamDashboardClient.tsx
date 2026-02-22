@@ -19,8 +19,11 @@ import {
     Zap,
     Shield,
     Terminal,
-    ListChecks
+    ListChecks,
+    MessageSquare,
+    Heart
 } from "lucide-react"
+import { FeedbackModal } from "@/components/FeedbackModal"
 
 export default function TeamDashboardClient({ team, allTeams, announcements }: any) {
     const [notificationsOpen, setNotificationsOpen] = useState(false)
@@ -307,6 +310,24 @@ export default function TeamDashboardClient({ team, allTeams, announcements }: a
                                 </div>
                             </Link>
                         ))}
+
+                        <FeedbackModal>
+                            <div className="group relative cursor-pointer">
+                                <div className="kz-card-rich p-8 flex items-center gap-6 bg-emerald-600/[0.03] dark:bg-emerald-500/[0.05] hover:bg-emerald-600/[0.08] hover:scale-[1.02] transition-all duration-500 active:scale-95 border-emerald-500/20">
+                                    <div className="kz-icon-rich w-14 h-14 bg-emerald-600 text-white border-emerald-400 shrink-0 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                                        <MessageSquare className="w-6 h-6 relative z-10" />
+                                    </div>
+                                    <div className="flex-col min-w-0">
+                                        <span className="font-heading font-black text-xl text-slate-900 dark:text-white leading-none uppercase tracking-tighter">Support</span>
+                                        <div className="flex items-center gap-2 mt-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                            <span className="text-[10px] text-emerald-500/80 dark:text-emerald-400 font-black uppercase tracking-widest">Connect with Us</span>
+                                        </div>
+                                    </div>
+                                    <ChevronRight className="w-5 h-5 text-emerald-500/40 ml-auto group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:translate-x-2 transition-all" />
+                                </div>
+                            </div>
+                        </FeedbackModal>
 
                         <button
                             onClick={() => setNotificationsOpen(true)}
